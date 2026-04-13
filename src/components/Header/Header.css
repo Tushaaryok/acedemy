@@ -1,0 +1,226 @@
+/* header sticky styling + on scroll */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 24px 0;
+  transition: var(--transition);
+  background-color: transparent;
+}
+
+.header.scrolled {
+  background-color: #ffffff;
+  padding: 16px 0;
+  box-shadow: 0 4px 20px rgba(92, 64, 54, 0.08); /* subtle shadow */
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Left: Logo + Title */
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1002;
+}
+
+.header-logo {
+  height: 60px;
+  width: auto;
+  transition: var(--transition);
+}
+
+.header.scrolled .header-logo {
+  height: 50px;
+}
+
+.header-title {
+  font-family: 'Playfair Display', serif; /* Playfair Display explicitly required */
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #5C4036; /* explicitly #5C4036 */
+}
+
+@media (max-width: 480px) {
+  .header-logo {
+    height: 40px;
+  }
+  .header.scrolled .header-logo {
+    height: 32px;
+  }
+  .header-title {
+    font-size: 1.25rem;
+  }
+}
+
+/* Center: Nav links desktop */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.mobile-menu-header {
+  display: none;
+}
+
+.nav-link {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #1C1410;
+  position: relative;
+  text-decoration: none;
+  padding: 8px 0;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: #C9A044; /* active/hover underline */
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: #5C4036;
+}
+
+.nav-link:hover::after, .nav-link.active::after {
+  width: 100%; /* active link gold underline */
+}
+
+/* Right: Enroll button CTA */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 1002;
+}
+
+.btn-enroll {
+  background-color: #C9A044;
+  color: #ffffff;
+  border-radius: 9999px; /* rounded pill shape */
+  font-weight: 600;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  padding: 12px 32px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(201, 160, 68, 0.3);
+}
+
+.btn-enroll:hover {
+  background-color: #B28D38; /* slightly darker gold */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(201, 160, 68, 0.4);
+}
+
+.hamburger-btn {
+  display: none;
+  font-size: 2rem;
+  color: #5C4036;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.desktop-only {
+  display: inline-flex;
+}
+
+.mobile-only {
+  display: none;
+}
+
+/* Mobile sliding drawer */
+@media (max-width: 1024px) {
+  .header-nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 320px;
+    max-width: 80vw;
+    height: 100vh;
+    background-color: #ffffff;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px 24px;
+    box-shadow: -4px 0 24px rgba(0,0,0,0.1);
+    transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+    z-index: 1001;
+    overflow-y: auto;
+  }
+
+  .header-nav.mobile-open {
+    right: 0;
+  }
+
+  .mobile-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .close-menu-btn {
+    font-size: 1.5rem;
+    color: #5C4036;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+  }
+
+  .nav-link {
+    width: 100%;
+    font-size: 1.25rem;
+    padding: 14px 0;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: block;
+    width: 100%;
+    margin-top: 32px;
+    font-size: 1.1rem;
+    padding: 16px;
+  }
+
+  .hamburger-btn {
+    display: block;
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(28, 20, 16, 0.6);
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}

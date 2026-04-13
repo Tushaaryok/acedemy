@@ -1,0 +1,134 @@
+.footer {
+  background-color: #1C1410;
+  color: #F5EDD8;
+  padding: 80px 0 24px;
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  margin-bottom: 60px;
+}
+
+@media (min-width: 600px) {
+  .footer-top {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 992px) {
+  .footer-top {
+    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  }
+}
+
+.footer-brand .footer-logo {
+  height: 80px;
+  width: auto;
+  margin-bottom: 24px;
+}
+
+.footer-tagline {
+  line-height: 1.6;
+  opacity: 0.8;
+  margin-bottom: 24px;
+  max-width: 300px;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 16px;
+}
+
+.footer-socials a {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(201, 160, 68, 0.1);
+  color: #C9A044;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-family: 'Playfair Display', serif;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.footer-socials a:hover {
+  background-color: #C9A044;
+  color: #1C1410;
+  transform: translateY(-2px);
+}
+
+.footer-title {
+  color: #C9A044;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  margin-bottom: 24px;
+  position: relative;
+  display: inline-block;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  color: #F5EDD8;
+  opacity: 0.8;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.footer-links a:hover {
+  color: #C9A044;
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+.footer-contact {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-contact li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+.footer-contact a {
+  color: #F5EDD8;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-contact a:hover {
+  color: #C9A044;
+}
+
+.contact-icon {
+  margin-top: 4px;
+  font-size: 1rem;
+}
+
+.footer-bottom {
+  border-top: 1px solid #C9A044;
+  padding-top: 24px;
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.6;
+}
