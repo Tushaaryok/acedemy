@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './Preloader.css';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/logo.jpeg';
 
 export default function Preloader() {
   const [loading, setLoading] = useState(true);
