@@ -12,6 +12,7 @@ const supabase = (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY)
   : null;
 
 router.post('/enquiry', enquiryLimiter, validate, asyncHandler(async (req, res, next) => {
+  console.log('[API] New enquiry request received:', req.body);
   const { studentName, parentName, phone, classVal, board, message } = req.validatedData;
 
   // 1. SUPABASE SAVE
@@ -32,6 +33,8 @@ router.post('/enquiry', enquiryLimiter, validate, asyncHandler(async (req, res, 
         
       if (error) {
         console.error('[SUPABASE INSERT ERROR]', error);
+      } else {
+        console.log('[SUPABASE INSERT SUCCESS]');
       }
     } else {
         console.warn('Supabase not initialized. Skipping DB save.');
@@ -65,7 +68,8 @@ router.post('/enquiry', enquiryLimiter, validate, asyncHandler(async (req, res, 
       if (!emailResponse.ok) {
         const errorData = await emailResponse.json();
         console.error('[RESEND API ERROR]', errorData);
-        // Error is logged, we still send success to user
+      } else {
+        console.log('[RESEND EMAIL SUCCESS]');
       }
     } else {
       console.warn('Resend API key or Academy Email not found. Skipping email sending.');
