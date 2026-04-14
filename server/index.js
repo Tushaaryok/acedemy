@@ -14,7 +14,7 @@ app.use(helmet());
 // 2. CORS setup
 app.use(cors({ 
     origin: process.env.NODE_ENV === 'production' 
-        ? (process.env.FRONTEND_URL || 'https://krishna-academy-upleta.vercel.app')
+        ? [process.env.FRONTEND_URL || 'https://krishnaacademyupleta.vercel.app', /\.vercel\.app$/]
         : /^http:\/\/localhost:\d+$/
 }));
 
