@@ -1,10 +1,9 @@
 import './Faculty.css';
 
 const facultyData = [
-  { id: 1, name: 'Dr. Vivek Joshi', subject: 'Physics', exp: '15 Years', initials: 'VJ', bio: 'Renowned expert in simplifying complex quantum physics concepts.' },
-  { id: 2, name: 'Megha Vyas', subject: 'Mathematics', exp: '10 Years', initials: 'MV', bio: 'Specialist in shortcut techniques for IIT-JEE and board exams.' },
-  { id: 3, name: 'Prof. Ramesh Patel', subject: 'Chemistry', exp: '12 Years', initials: 'RP', bio: 'Known for masterclass practical sessions and organic chemistry.' },
-  { id: 4, name: 'Sonal Desai', subject: 'Biology', exp: '8 Years', initials: 'SD', bio: 'Helps students achieve top medical entrance exam scores seamlessly.' },
+  { id: 1, name: 'Ram Sir', subject: 'Maths & Science', exp: '14 Years', initials: 'RS', bio: <>Std 9 & 10: Maths & Science<br/>Std 11 & 12: Account & Stat</>, fb: 'https://www.facebook.com/share/19uF9nXqPV/', ig: 'https://www.instagram.com/ramsinghvihara?igsh=MXJiNTR0cnhpejA1cw==' },
+  { id: 2, name: 'Yashvant Sir', subject: 'English', exp: '14 Years', initials: 'YS', bio: 'Std 9 to 12: English', fb: 'https://www.facebook.com/share/1J2HGLatr6/', ig: 'https://www.instagram.com/yashvant_singh_vihara?igsh=MTJtbG5sem56cDNhdg==' },
+  { id: 3, name: 'Jayesh Sir', subject: 'Social Science', exp: '9 Years', initials: 'JS', bio: <>Std 9 & 10: Social Science<br/>Std 11 & 12: Economics, Sociology, Geography, Psychology</>, fb: 'https://www.facebook.com/share/1BDVtYnq8C/', ig: 'https://www.instagram.com/jb_ahir__8?igsh=MTE2cTl2eTdrenRpaA==' }
 ];
 
 export default function Faculty() {
@@ -27,8 +26,12 @@ export default function Faculty() {
               </div>
               <p className="faculty-bio">{teacher.bio}</p>
               <div className="faculty-socials">
-                <a href="#linkedin" className="social-icon">in</a>
-                <a href="#twitter" className="social-icon">tw</a>
+                <a href={teacher.fb} target="_blank" rel="noopener noreferrer" className="social-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2.039C6.5 2.039 2 6.539 2 12.04c0 5.004 3.657 9.143 8.438 9.878v-6.987h-2.54V12.04h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562v1.876h2.773l-.443 2.89h-2.33v6.988C18.343 21.182 22 17.044 22 12.04c0-5.5-4.5-10.001-10-10.001z"/></svg>
+                </a>
+                <a href={teacher.ig} target="_blank" rel="noopener noreferrer" className="social-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                </a>
               </div>
             </div>
           ))}

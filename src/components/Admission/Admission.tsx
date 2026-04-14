@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import './Admission.css';
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:5000' : '');
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 export default function Admission() {
   const [formData, setFormData] = useState({
@@ -51,13 +51,14 @@ export default function Admission() {
       
       if (response.ok && data.success) {
         showToast(data.message || 'Enquiry sent successfully! We will contact you soon.', 'success');
+        alert(data.message || 'Enquiry sent successfully! We will contact you soon.');
         setFormData({ studentName: '', parentName: '', phone: '', classVal: '', board: '', message: '' });
       } else {
         showToast(data.message || 'Failed to submit enquiry. Please try again.', 'error');
       }
     } catch (error) {
       console.error('Submission error:', error);
-      showToast('Connection error. Please call us at +91 81609 91166 or WhatsApp us directly.', 'error');
+      showToast('Connection error. Please call us at +91 81609 91166 / +91 94096 68196 or WhatsApp us directly.', 'error');
     } finally {
       setIsSubmitting(false);
     }
