@@ -28,7 +28,7 @@ export default function Contact() {
             <div className="contact-item">
               <div className="contact-icon">📞</div>
               <div className="contact-text">
-                <h3>Call Us</h3>
+                <h3>Krishna Academy Upleta Contact Number</h3>
                 <p><a href="tel:+918160991166">+91 81609 91166</a></p>
                 <p><a href="tel:+919409668196">+91 94096 68196</a></p>
               </div>

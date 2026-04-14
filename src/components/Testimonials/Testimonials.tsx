@@ -76,8 +76,9 @@ export default function Testimonials() {
     <section id="results" className="testimonials-section">
       <div className="container">
         <h2 className="section-title text-center">
-          What Parents &amp; Students Say
+          Krishna Academy Upleta Reviews
         </h2>
+        <p style={{ textAlign: 'center', marginBottom: '30px', color: '#555' }}>Read what parents and students say about our institute.</p>
         
         <div className="carousel-container">
           <div 

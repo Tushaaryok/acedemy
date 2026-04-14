@@ -23,8 +23,8 @@ export default function Courses() {
     <section id="courses" className="courses-section">
       <div className="container">
         <div className="section-header">
-          <h2 className="section-title">Best Coaching Classes in Upleta</h2>
-          <p className="section-subtitle">From primary to board exams — the best commerce & science coaching in Upleta</p>
+          <h2 className="section-title">Krishna Academy Upleta Courses</h2>
+          <p className="section-subtitle">Explore the best coaching & tuition classes in Upleta for commerce and science.</p>
         </div>
 
         <div className="courses-filter">
