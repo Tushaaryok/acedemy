@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import './Admission.css';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:5000' : '');
 
 export default function Admission() {
   const [formData, setFormData] = useState({
@@ -32,9 +31,9 @@ export default function Admission() {
       return;
     }
 
-    const phoneRegex = /^[0-9]{10}$/;
+    const phoneRegex = /^[6-9]\d{9}$/;
     if (!phoneRegex.test(formData.phone)) {
-      showToast('Please enter a valid 10-digit phone number.', 'error');
+      showToast('Please enter a valid 10-digit Indian phone number.', 'error');
       return;
     }
 
