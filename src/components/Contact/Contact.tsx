@@ -5,7 +5,7 @@ export default function Contact() {
     <section id="contact" className="contact-section">
       <div className="container">
         <h2 className="section-title text-center" style={{ color: '#5C4036', marginBottom: '40px', fontFamily: '"Playfair Display", serif', textAlign: 'center' }}>
-          Get In Touch
+          Contact Krishna Academy Upleta
         </h2>
 
         <div className="contact-grid">

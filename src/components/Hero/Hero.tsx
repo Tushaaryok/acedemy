@@ -19,15 +19,15 @@ export default function Hero() {
         {/* Left side content */}
         <div className="hero-content">
           <div className="hero-badge">
-            Upleta's Most Trusted Academy
+            #1 Coaching Institute in Upleta, Gujarat
           </div>
           
           <h1 className="hero-heading">
-            Shape Your Future With Excellence
+            Krishna Academy Upleta: Best Coaching Classes
           </h1>
           
           <p className="hero-subheading">
-            Std 5 to 12 | GSEB & CBSE | Expert Faculty | Proven Results
+            Top Tuition Classes in Upleta | Std 5 to 12 | Commerce & Science Coaching
           </p>
           
           <div className="hero-btn-group">

@@ -56,7 +56,7 @@ export default function Features() {
     <section id="advantages" className="features section features-custom-bg">
       <div className="container">
         <div className="features-header">
-          <h2 className="section-title">Why Choose Krishna Academy?</h2>
+          <h2 className="section-title">Why Choose Krishna Academy Upleta?</h2>
         </div>
         
         <div className="features-grid">

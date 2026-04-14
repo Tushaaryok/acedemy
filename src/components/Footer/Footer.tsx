@@ -8,9 +8,9 @@ export default function Footer() {
         <div className="footer-top">
           
           <div className="footer-col footer-brand">
-            <img src={logo} alt="Krishna Academy" className="footer-logo" />
+            <img src={logo} alt="Krishna Academy Upleta Coaching" className="footer-logo" />
             <p className="footer-tagline">
-              Shape Your Future With Excellence. Best coaching institute for standard 5 to 12.
+              Shape Your Future With Excellence. Best coaching institute in Upleta for standard 5 to 12.
             </p>
             <div className="footer-socials">
               <a href="https://www.facebook.com/share/1KqsMzi9CW/" target="_blank" rel="noopener noreferrer">
