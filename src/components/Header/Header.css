@@ -47,7 +47,12 @@
   font-family: 'Playfair Display', serif; /* Playfair Display explicitly required */
   font-size: 1.5rem;
   font-weight: 700;
-  color: #5C4036; /* explicitly #5C4036 */
+  color: #ffffff; /* Initially white */
+  transition: var(--transition);
+}
+
+.header.scrolled .header-title {
+  color: #5C4036; /* explicitly #5C4036 when scrolled */
 }
 
 @media (max-width: 480px) {
@@ -79,10 +84,15 @@
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 600;
   font-size: 1.05rem;
-  color: #1C1410;
+  color: #ffffff; /* Initially white */
   position: relative;
   text-decoration: none;
   padding: 8px 0;
+  transition: var(--transition);
+}
+
+.header.scrolled .nav-link {
+  color: #1C1410; /* Back to original dark color when scrolled */
 }
 
 .nav-link::after {
@@ -134,11 +144,16 @@
 .hamburger-btn {
   display: none;
   font-size: 2rem;
-  color: #5C4036;
+  color: #ffffff; /* Initially white */
   background: none;
   border: none;
   cursor: pointer;
   padding: 4px;
+  transition: var(--transition);
+}
+
+.header.scrolled .hamburger-btn {
+  color: #5C4036; /* Back to original color when scrolled */
 }
 
 .desktop-only {
