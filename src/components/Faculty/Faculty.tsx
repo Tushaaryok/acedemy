@@ -11,7 +11,7 @@ const facultyData = [
   { 
     id: 2, name: 'Yashvant Sir', subject: 'English', exp: '14 Years', initials: 'YS', 
     img: '/imgs/syam sir.jpeg', 
-    imgStyle: { objectFit: 'cover', objectPosition: 'center 15%', transform: 'scale(1.3)', width: '100%', height: '100%' }, 
+    imgStyle: { objectFit: 'cover', objectPosition: 'center 15%', transform: 'scale(1)', width: '100%', height: '100%' }, 
     bio: 'Std 9 to 12: English', 
     fb: 'https://www.facebook.com/share/1J2HGLatr6/', ig: 'https://www.instagram.com/yashvant_singh_vihara?igsh=MTJtbG5sem56cDNhdg==' 
   },
