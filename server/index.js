@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const { generalLimiter } = require('./middleware/rateLimiter');
 const { errorHandler } = require('./middleware/errorHandler');
 const enquiryRoutes = require('./routes/enquiry');
+const otpRoutes     = require('./routes/otp');       // ← OTP verification routes
 
 const app = express();
 
@@ -45,8 +46,11 @@ app.get('/api/courses', (req, res) => {
   res.json({ success: true, count: courses.length, data: courses });
 });
 
-// Enquiry route
+// Enquiry route (legacy POST /api/enquiry)
 app.use('/api', enquiryRoutes);
+
+// OTP routes: POST /api/send-otp, /api/verify-otp, /api/submit-enquiry
+app.use('/api', otpRoutes);
 
 // 4. Error Handler Middleware
 app.use(errorHandler);
