@@ -1,51 +1,66 @@
 import { useEffect, useState } from 'react';
 import './Hero.css';
-import heroImg from '../../assets/hero-image.png';
+import ramImg from '/imgs/ram_new.jpeg';
+import yashwantImg from '/imgs/yashwant_new.jpeg';
+import jayeshImg from '/imgs/jayesh_new.jpeg';
 
 export default function Hero() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // Slight delay to ensure smooth entrance animation triggered after render
     const timer = setTimeout(() => setIsLoaded(true), 50);
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <section id="home" className={`hero ${isLoaded ? 'animate-in' : ''}`}>
-      <div className="hero-pattern-overlay"></div>
-      
       <div className="container hero-wrapper">
-        {/* Left side content */}
+        {/* Left: Content Side */}
         <div className="hero-content">
-          <div className="hero-badge">
-            #1 Coaching Institute in Upleta, Gujarat
+          <div className="hero-badge-pw">
+            Upleta’s #1 Coaching Institute
           </div>
           
           <h1 className="hero-heading">
-            Krishna Academy Upleta: Best Coaching Classes
+            Expert Faculty • Proven Results • Affordable Fees
           </h1>
           
-          <p className="hero-subheading">
-            Top Tuition Classes in Upleta | Std 5 to 12 | Commerce & Science Coaching
+          <p className="hero-description">
+            Join Krishna Academy and achieve your academic goals with experienced teachers and structured learning. We provide the best tuition classes for Std 5 to 12.
           </p>
+
+          {/* Trust Badges */}
+          <div className="trust-badges">
+            <div className="badge-item">
+              <span>👥</span> 500+ Students
+            </div>
+            <div className="badge-item">
+              <span>🏆</span> Top Results
+            </div>
+          </div>
           
           <div className="hero-btn-group">
-            <button className="btn-gold" onClick={() => document.getElementById('admissions')?.scrollIntoView({ behavior: 'smooth' })}>Enroll Now</button>
-            <button className="btn-outline-white" onClick={() => document.getElementById('courses')?.scrollIntoView({ behavior: 'smooth' })}>View Courses</button>
+            <button className="btn-pw-primary" onClick={() => document.getElementById('admissions')?.scrollIntoView({ behavior: 'smooth' })}>
+              Enroll Now
+            </button>
+            <button className="btn-pw-secondary" onClick={() => document.getElementById('courses')?.scrollIntoView({ behavior: 'smooth' })}>
+              Explore Courses
+            </button>
           </div>
         </div>
         
-        {/* Right side visual with 3D elements */}
+        {/* Right: Faculty Stack Visual */}
         <div className="hero-visual">
-          <div className="floating-elements">
-            <div className="float-item float-book">📚</div>
-            <div className="float-item float-cap">🎓</div>
-            <div className="float-item float-atom">⚛️</div>
-            <div className="float-item float-bulb">💡</div>
-          </div>
-          <div className="image-3d-wrapper">
-             <img src={heroImg} alt="Students studying at Krishna Academy" className="floating-img" />
+          <div className="faculty-card-stack">
+            <div className="fac-card fac-1">
+              <img src={ramImg} alt="Ram Sir" />
+            </div>
+            <div className="fac-card fac-2">
+              <img src={yashwantImg} alt="Yashwant Sir" />
+            </div>
+            <div className="fac-card fac-3">
+              <img src={jayeshImg} alt="Jayesh Sir" />
+            </div>
           </div>
         </div>
       </div>
