@@ -28,7 +28,7 @@ export default function Faculty() {
   return (
     <section id="faculty" className="faculty-section">
       <div className="container">
-        <h2 className="section-title text-center" style={{ color: '#5C4036', marginBottom: '48px', fontFamily: '"Playfair Display", serif', textAlign: 'center' }}>
+        <h2 className="section-title text-center" style={{ color: '#0070f3', marginBottom: '48px', fontFamily: '"Plus Jakarta Sans", sans-serif', textAlign: 'center' }}>
           Meet Our Expert Faculty
         </h2>
         

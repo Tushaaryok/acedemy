@@ -44,7 +44,7 @@
 }
 
 .header-title {
-  font-family: 'Playfair Display', serif; /* Playfair Display explicitly required */
+  font-family: 'Plus Jakarta Sans', sans-serif; /* Playfair Display explicitly required */
   font-size: 1.5rem;
   font-weight: 700;
   color: #ffffff; /* Initially white */
@@ -52,7 +52,7 @@
 }
 
 .header.scrolled .header-title {
-  color: #5C4036; /* explicitly #5C4036 when scrolled */
+  color: #0070f3; /* explicitly #0070f3 when scrolled */
 }
 
 @media (max-width: 480px) {
@@ -102,12 +102,12 @@
   left: 0;
   width: 0%;
   height: 2px;
-  background-color: #C9A044; /* active/hover underline */
+  background-color: #00A3FF; /* active/hover underline */
   transition: width 0.3s ease;
 }
 
 .nav-link:hover, .nav-link.active {
-  color: #5C4036;
+  color: #0070f3;
 }
 
 .nav-link:hover::after, .nav-link.active::after {
@@ -123,7 +123,7 @@
 }
 
 .btn-enroll {
-  background-color: #C9A044;
+  background-color: #00A3FF;
   color: #ffffff;
   border-radius: 9999px; /* rounded pill shape */
   font-weight: 600;
@@ -132,13 +132,13 @@
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(201, 160, 68, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 163, 255, 0.3);
 }
 
 .btn-enroll:hover {
-  background-color: #B28D38; /* slightly darker gold */
+  background-color: #0081cc; /* slightly darker gold */
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(201, 160, 68, 0.4);
+  box-shadow: 0 6px 16px rgba(0, 163, 255, 0.4);
 }
 
 .hamburger-btn {
@@ -153,7 +153,7 @@
 }
 
 .header.scrolled .hamburger-btn {
-  color: #5C4036; /* Back to original color when scrolled */
+  color: #0070f3; /* Back to original color when scrolled */
 }
 
 .desktop-only {
@@ -199,7 +199,7 @@
 
   .close-menu-btn {
     font-size: 1.5rem;
-    color: #5C4036;
+    color: #0070f3;
     background: none;
     border: none;
     cursor: pointer;

@@ -4,7 +4,7 @@ export default function Contact() {
   return (
     <section id="contact" className="contact-section">
       <div className="container">
-        <h2 className="section-title text-center" style={{ color: '#5C4036', marginBottom: '40px', fontFamily: '"Playfair Display", serif', textAlign: 'center' }}>
+        <h2 className="section-title text-center" style={{ color: '#0070f3', marginBottom: '40px', fontFamily: '"Plus Jakarta Sans", sans-serif', textAlign: 'center' }}>
           Contact Krishna Academy Upleta
         </h2>
 

@@ -24,14 +24,14 @@
 }
 
 .back-to-top {
-  background-color: #C9A044;
+  background-color: #00A3FF;
   color: #1C1410;
 }
 
 .back-to-top:hover {
   transform: translateY(-4px);
-  background-color: #5C4036;
-  color: #C9A044;
+  background-color: #0070f3;
+  color: #00A3FF;
 }
 
 .floating-whatsapp {

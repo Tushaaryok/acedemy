@@ -19,21 +19,21 @@
 }
 
 .admission-benefits {
-  background-color: #5C4036;
+  background-color: #0070f3;
   padding: 48px;
   color: #ffffff;
   flex: 1;
 }
 
 .benefits-title {
-  color: #C9A044;
-  font-family: 'Playfair Display', serif;
+  color: #00A3FF;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 2.25rem;
   margin-bottom: 12px;
 }
 
 .benefits-subtitle {
-  color: #F5EDD8;
+  color: #f0f9ff;
   font-size: 1.1rem;
   margin-bottom: 40px;
   opacity: 0.9;
@@ -53,7 +53,7 @@
 }
 
 .check-icon {
-  background-color: #C9A044;
+  background-color: #00A3FF;
   color: #1C1410;
   width: 28px;
   height: 28px;
@@ -68,7 +68,7 @@
 .benefits-list strong {
   display: block;
   font-size: 1.1rem;
-  color: #F5EDD8;
+  color: #f0f9ff;
   margin-bottom: 4px;
 }
 
@@ -88,7 +88,7 @@
 
 .form-title {
   color: #1C1410;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 1.8rem;
   margin-bottom: 32px;
 }
@@ -120,7 +120,7 @@
   display: block;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #5C4036;
+  color: #0070f3;
   margin-bottom: 8px;
 }
 
@@ -143,9 +143,9 @@
 .form-group select:focus, 
 .form-group textarea:focus {
   outline: none;
-  border-color: #C9A044;
+  border-color: #00A3FF;
   background-color: #ffffff;
-  box-shadow: 0 0 0 3px rgba(201, 160, 68, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 163, 255, 0.1);
 }
 
 .input-icon-wrapper {
@@ -166,7 +166,7 @@
 
 .submit-btn {
   width: 100%;
-  background-color: #C9A044;
+  background-color: #00A3FF;
   color: #ffffff;
   font-size: 1.1rem;
   padding: 14px;
@@ -178,7 +178,7 @@
 .submit-btn:hover {
   background-color: #B58C36;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(201, 160, 68, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 163, 255, 0.3);
 }
 
 /* Toast */

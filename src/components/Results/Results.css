@@ -10,14 +10,14 @@
 }
 
 .results-title {
-  color: #C9A044;
-  font-family: 'Playfair Display', serif;
+  color: #00A3FF;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 2.5rem;
   margin-bottom: 16px;
 }
 
 .results-subtitle {
-  color: #F5EDD8;
+  color: #f0f9ff;
   font-size: 1.1rem;
   opacity: 0.8;
 }
@@ -56,7 +56,7 @@
 
 .topper-card {
   background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(201, 160, 68, 0.2);
+  border: 1px solid rgba(0, 163, 255, 0.2);
   border-radius: 12px;
   padding: 24px;
   width: 250px;
@@ -68,25 +68,25 @@
 }
 
 .topper-card:hover {
-  background-color: rgba(201, 160, 68, 0.1);
-  border-color: rgba(201, 160, 68, 0.5);
+  background-color: rgba(0, 163, 255, 0.1);
+  border-color: rgba(0, 163, 255, 0.5);
   transform: translateY(-4px);
 }
 
 .topper-photo {
   width: 80px;
   height: 80px;
-  background-color: #5C4036;
-  color: #C9A044;
+  background-color: #0070f3;
+  color: #00A3FF;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 16px;
-  border: 2px solid #C9A044;
+  border: 2px solid #00A3FF;
 }
 
 .topper-info {
@@ -101,15 +101,15 @@
 }
 
 .topper-class {
-  color: rgba(201, 160, 68, 0.9);
+  color: rgba(0, 163, 255, 0.9);
   font-size: 0.85rem;
   font-weight: 600;
 }
 
 .topper-score {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 2.2rem;
-  color: #C9A044;
+  color: #00A3FF;
   font-weight: 700;
   line-height: 1;
 }
@@ -138,7 +138,7 @@
 
 .hl-value {
   color: #ffffff;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 4px;
@@ -149,7 +149,7 @@
 }
 
 .hl-label {
-  color: #C9A044;
+  color: #00A3FF;
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -159,7 +159,7 @@
   display: none;
   width: 1px;
   height: 40px;
-  background-color: rgba(201, 160, 68, 0.3);
+  background-color: rgba(0, 163, 255, 0.3);
 }
 
 @media (min-width: 768px) {
@@ -172,8 +172,8 @@
 
 .btn-outline-gold {
   background-color: transparent;
-  color: #C9A044;
-  border: 2px solid #C9A044;
+  color: #00A3FF;
+  border: 2px solid #00A3FF;
   padding: 14px 36px;
   border-radius: 9999px;
   font-family: 'Plus Jakarta Sans', sans-serif;
@@ -184,6 +184,6 @@
 }
 
 .btn-outline-gold:hover {
-  background-color: #C9A044;
+  background-color: #00A3FF;
   color: #1C1410;
 }
