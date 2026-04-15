@@ -36,9 +36,17 @@ export default function Hero() {
           </div>
         </div>
         
-        {/* Right side visual */}
+        {/* Right side visual with 3D elements */}
         <div className="hero-visual">
-          <img src={heroImg} alt="Students studying at Krishna Academy" className="floating-img" />
+          <div className="floating-elements">
+            <div className="float-item float-book">📚</div>
+            <div className="float-item float-cap">🎓</div>
+            <div className="float-item float-atom">⚛️</div>
+            <div className="float-item float-bulb">💡</div>
+          </div>
+          <div className="image-3d-wrapper">
+             <img src={heroImg} alt="Students studying at Krishna Academy" className="floating-img" />
+          </div>
         </div>
       </div>
       

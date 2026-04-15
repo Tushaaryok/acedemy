@@ -163,7 +163,8 @@
   align-items: center;
   opacity: 0;
   transform: translateY(40px);
-  transition: all 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s; /* sequential entrance */
+  transition: all 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s;
+  perspective: 1000px; /* Enable 3D perspective */
 }
 
 .hero.animate-in .hero-visual {
@@ -171,19 +172,61 @@
   transform: translateY(0);
 }
 
+.image-3d-wrapper {
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+  z-index: 2;
+}
+
+.image-3d-wrapper:hover {
+  transform: rotateY(-10deg) rotateX(10deg); /* 3D tilt on hover */
+}
+
 .floating-img {
   width: 100%;
   max-width: 520px;
   border-radius: 20px;
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
-  animation: float-img 5s ease-in-out infinite;
+  animation: float-img 6s ease-in-out infinite;
   border: 2px solid rgba(201, 160, 68, 0.2);
+  backface-visibility: hidden;
+}
+
+/* Floating 3D Elements */
+.floating-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.float-item {
+  position: absolute;
+  font-size: 2.5rem;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+  opacity: 0.6;
+  animation: float-3d 6s ease-in-out infinite;
+}
+
+.float-book { top: 10%; left: 0%; animation-delay: 0s; }
+.float-cap { top: 60%; right: 5%; animation-delay: -2s; font-size: 3rem; }
+.float-atom { bottom: 10%; left: 10%; animation-delay: -4s; }
+.float-bulb { top: 20%; right: 10%; animation-delay: -1s; }
+
+@keyframes float-3d {
+  0% { transform: translate(0, 0) rotate(0deg) translateZ(0); }
+  33% { transform: translate(15px, -25px) rotate(10deg) translateZ(50px); }
+  66% { transform: translate(-10px, -15px) rotate(-5deg) translateZ(-20px); }
+  100% { transform: translate(0, 0) rotate(0deg) translateZ(0); }
 }
 
 @keyframes float-img {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
+  0% { transform: translateY(0px) translateZ(0); }
+  50% { transform: translateY(-20px) translateZ(30px); }
+  100% { transform: translateY(0px) translateZ(0); }
 }
 
 /* Scroll indicator */
