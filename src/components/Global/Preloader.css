@@ -21,7 +21,9 @@
 
 .preloader-logo {
   height: 120px;
-  width: auto;
+  width: 120px;
+  object-fit: cover;
+  border-radius: 50%;
   animation: pulse 1.5s infinite alternate ease-in-out;
 }
 

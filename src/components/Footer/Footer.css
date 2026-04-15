@@ -25,7 +25,9 @@
 
 .footer-brand .footer-logo {
   height: 80px;
-  width: auto;
+  width: 80px;
+  object-fit: cover;
+  border-radius: 50%;
   margin-bottom: 24px;
 }
 

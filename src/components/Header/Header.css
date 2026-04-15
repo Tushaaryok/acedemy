@@ -31,13 +31,16 @@
 }
 
 .header-logo {
-  height: 70px; /* Increased from 60px */
-  width: auto;
+  height: 70px;
+  width: 70px;
+  object-fit: cover;
+  border-radius: 50%;
   transition: var(--transition);
 }
 
 .header.scrolled .header-logo {
-  height: 60px; /* Increased from 50px */
+  height: 60px;
+  width: 60px;
 }
 
 .header-title {
@@ -50,9 +53,11 @@
 @media (max-width: 480px) {
   .header-logo {
     height: 40px;
+    width: 40px;
   }
   .header.scrolled .header-logo {
     height: 32px;
+    width: 32px;
   }
   .header-title {
     font-size: 1.25rem;
