@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Enquiry - Sign In / Register</title>
+    <style>
+        :root {
+            --primary: #1D9E75;
+            --primary-hover: #158260;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --input-bg: #ffffff;
+            --ring-color: rgba(29, 158, 117, 0.3);
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #111827;
+                --card-bg: #1f2937;
+                --text-color: #f9fafb;
+                --text-muted: #9ca3af;
+                --border-color: #374151;
+                --input-bg: #374151;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 14px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            font-weight: 800;
+            box-shadow: 0 4px 10px rgba(29, 158, 117, 0.3);
+            letter-spacing: -1px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            transition: background-color 0.3s ease;
+        }
+
+        .tabs {
+            display: flex;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 1.25rem 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: color 0.3s;
+            background: none;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .tab.active {
+            color: var(--primary);
+        }
+        
+        .tab:hover:not(.active) {
+            color: var(--text-color);
+        }
+
+        .tab-indicator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            width: 50%;
+            background-color: var(--primary);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .form-container {
+            padding: 2.5rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-view {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .form-view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--ring-color);
+        }
+
+        .forgot-link {
+            display: block;
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--primary);
+            text-decoration: none;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.875rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 2px 4px rgba(29, 158, 117, 0.2);
+            margin-top: 1.5rem;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(29, 158, 117, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .divider:not(:empty)::before { margin-right: .75rem; }
+        .divider:not(:empty)::after { margin-left: .75rem; }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .password-strength {
+            margin-top: 0.75rem;
+        }
+
+        .strength-bars {
+            display: flex;
+            gap: 4px;
+            height: 4px;
+            margin-bottom: 0.4rem;
+        }
+
+        .strength-bar {
+            flex: 1;
+            background-color: var(--border-color);
+            border-radius: 2px;
+            transition: background-color 0.3s;
+        }
+
+        .strength-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: right;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .terms {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .terms a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .terms a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .form-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo-icon">KA</div>
+        </div>
+
+        <div class="card">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('signin')">Sign in</button>
+                <button class="tab" onclick="switchTab('register')">Create account</button>
+                <div class="tab-indicator" id="tabIndicator"></div>
+            </div>
+
+            <div class="form-container">
+                <!-- Sign In Form -->
+                <div class="form-view active" id="signinForm">
+                    <form onsubmit="event.preventDefault();">
+                        <div class="form-group">
+                            <label for="signinEmail">Email address</label>
+                            <input type="email" id="signinEmail" placeholder="name@example.com" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="signinPassword">Password</label>
+                            <input type="password" id="signinPassword" placeholder="••••••••" required>
+                            <a href="#" class="forgot-link">Forgot password?</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Sign in</button>
+                    </form>
+
+                    <div class="divider">or continue with</div>
+
+                    <button type="button" class="btn btn-outline">
+                        <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                        </svg>
+                        Google
+                    </button>
+                </div>
+
+                <!-- Registration Form -->
+                <div class="form-view" id="registerForm">
+                    <form onsubmit="event.preventDefault();">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="regFirstName">First name</label>
+                                <input type="text" id="regFirstName" placeholder="John" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="regLastName">Last name</label>
+                                <input type="text" id="regLastName" placeholder="Doe" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="regEmail">Email address</label>
+                            <input type="email" id="regEmail" placeholder="name@example.com" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="regPassword">Password</label>
+                            <input type="password" id="regPassword" placeholder="Create a password" required oninput="checkStrength(this.value)">
+                            <div class="password-strength" id="strengthContainer">
+                                <div class="strength-bars">
+                                    <div class="strength-bar" id="bar1"></div>
+                                    <div class="strength-bar" id="bar2"></div>
+                                    <div class="strength-bar" id="bar3"></div>
+                                    <div class="strength-bar" id="bar4"></div>
+                                </div>
+                                <div class="strength-text" id="strengthText">Password strength</div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create account</button>
+                    </form>
+
+                    <div class="divider">or continue with</div>
+
+                    <button type="button" class="btn btn-outline">
+                        <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                        </svg>
+                        Google
+                    </button>
+
+                    <div class="terms">
+                        By creating an account, you agree to our <br />
+                        <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            const signinTab = document.querySelectorAll('.tab')[0];
+            const registerTab = document.querySelectorAll('.tab')[1];
+            const signinForm = document.getElementById('signinForm');
+            const registerForm = document.getElementById('registerForm');
+            const indicator = document.getElementById('tabIndicator');
+
+            if (tab === 'signin') {
+                signinTab.classList.add('active');
+                registerTab.classList.remove('active');
+                signinForm.classList.add('active');
+                registerForm.classList.remove('active');
+                indicator.style.transform = 'translateX(0)';
+            } else {
+                signinTab.classList.remove('active');
+                registerTab.classList.add('active');
+                signinForm.classList.remove('active');
+                registerForm.classList.add('active');
+                indicator.style.transform = 'translateX(100%)';
+            }
+        }
+
+        function checkStrength(password) {
+            let strength = 0;
+            
+            // Length check
+            if (password.length >= 8) strength++;
+            
+            // Uppercase & Lowercase check
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+            
+            // Number check
+            if (password.match(/\d/)) strength++;
+            
+            // Symbol check
+            if (password.match(/[^a-zA-Z\d]/)) strength++;
+
+            const bars = [
+                document.getElementById('bar1'),
+                document.getElementById('bar2'),
+                document.getElementById('bar3'),
+                document.getElementById('bar4')
+            ];
+            const text = document.getElementById('strengthText');
+            
+            // Reset all bars
+            bars.forEach(bar => bar.style.backgroundColor = 'var(--border-color)');
+            
+            if (password.length === 0) {
+                text.textContent = 'Password strength';
+                text.style.color = 'var(--text-muted)';
+                return;
+            }
+
+            if (strength <= 1 || password.length < 8) {
+                // Weak
+                bars[0].style.backgroundColor = 'var(--danger)';
+                text.textContent = 'Weak';
+                text.style.color = 'var(--danger)';
+            } else if (strength === 2 || strength === 3) {
+                // Medium
+                bars[0].style.backgroundColor = 'var(--warning)';
+                bars[1].style.backgroundColor = 'var(--warning)';
+                if(strength === 3) bars[2].style.backgroundColor = 'var(--warning)';
+                text.textContent = 'Medium';
+                text.style.color = 'var(--warning)';
+            } else if (strength >= 4) {
+                // Strong
+                bars.forEach(bar => bar.style.backgroundColor = 'var(--success)');
+                text.textContent = 'Strong';
+                text.style.color = 'var(--success)';
+            }
+        }
+    </script>
+</body>
+</html>
