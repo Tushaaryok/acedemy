@@ -32,7 +32,7 @@ export default function Gallery() {
   return (
     <section id="gallery" className="gallery-section">
       <div className="container">
-        <h2 className="section-title text-center" style={{ color: '#0070f3', marginBottom: '40px', fontFamily: '"Plus Jakarta Sans", sans-serif', textAlign: 'center' }}>
+        <h2 className="section-title text-center" style={{ color: '#6C6058', marginBottom: '40px', fontFamily: '"Plus Jakarta Sans", sans-serif', textAlign: 'center' }}>
           Life at Krishna Academy
         </h2>
         

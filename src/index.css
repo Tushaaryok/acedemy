@@ -2,19 +2,19 @@
 @import './styles/theme.css';
 
 :root {
-  /* Modern Blue & White Theme (PW Inspired) */
-  --clr-primary: #00A3FF; 
-  --clr-accent: #0081cc;
+  /* Brand Colors from Logo */
+  --clr-primary: #D0AB59; /* Logo Gold */
+  --clr-accent: #6C6058;  /* Logo Brown */
   --clr-bg: #FFFFFF; 
-  --clr-secondary: #0070f3; 
-  --clr-dark: #111827;
+  --clr-secondary: #A6823B; 
+  --clr-dark: #1C1410;
   --clr-white: #FFFFFF;
 
   /* Additional Tints & Shades */
-  --clr-primary-light: #e0f2fe;
-  --clr-accent-light: #f0f9ff;
-  --clr-bg-alt: #f8fafc;
-  --clr-text-main: #1C1410;
+  --clr-primary-light: #FAF7F0;
+  --clr-accent-light: #F8F5EE;
+  --clr-bg-alt: #FBFAF8;
+  --clr-text-main: #2A211D;
   --clr-text-muted: #6B5B53;
 
   /* Typography */
@@ -24,10 +24,10 @@
   /* Measurements */
   --border-radius: 16px;
   --border-radius-lg: 32px;
-  --shadow-sm: 0 4px 12px rgba(0, 163, 255, 0.08);
-  --shadow-md: 0 12px 32px rgba(0, 163, 255, 0.12);
-  --shadow-lg: 0 32px 64px rgba(17, 24, 39, 0.1);
-  --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-sm: 0 4px 12px rgba(208, 171, 89, 0.12);
+  --shadow-md: 0 12px 32px rgba(208, 171, 89, 0.18);
+  --shadow-lg: 0 32px 64px rgba(108, 96, 88, 0.15);
+  --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 *, *::before, *::after {
