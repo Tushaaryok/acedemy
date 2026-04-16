@@ -328,11 +328,8 @@
     align-items: center;
   }
   .hero-visual {
-    height: 320px;
+    display: none; /* Hide decorative visuals on mobile for focus */
   }
-  .fac-1 { width: 150px; left: 15%; top: 10%; }
-  .fac-2 { width: 130px; right: 15%; top: 40%; }
-  .fac-3 { display: none; }
 }
 
 @media (max-width: 640px) {
@@ -342,24 +339,7 @@
     min-height: auto;
   }
   .hero-wrapper {
-    gap: 24px;
-  }
-  .hero-visual {
-    height: 220px;
-    margin-top: 0;
-    width: 100%;
-  }
-  .fac-1 {
-    width: 130px;
-    left: 10%;
-    top: 5%;
-    border-width: 3px;
-  }
-  .fac-2 {
-    width: 110px;
-    right: 10%;
-    top: 25%;
-    border-width: 3px;
+    gap: 0;
   }
 }
 
