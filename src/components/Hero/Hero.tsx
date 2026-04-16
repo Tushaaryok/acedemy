@@ -1,8 +1,6 @@
+'use client';
 import { useEffect, useState } from 'react';
 import './Hero.css';
-import ramImg from '/imgs/ram_new.jpeg';
-import yashwantImg from '/imgs/yashwant_new.jpeg';
-import jayeshImg from '/imgs/jayesh_new.jpeg';
 
 export default function Hero() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -53,13 +51,13 @@ export default function Hero() {
         <div className="hero-visual">
           <div className="faculty-card-stack">
             <div className="fac-card fac-1">
-              <img src={ramImg} alt="Ram Sir" />
+              <img src="/imgs/ram_new.jpeg" alt="Ram Sir" />
             </div>
             <div className="fac-card fac-2">
-              <img src={yashwantImg} alt="Yashwant Sir" />
+              <img src="/imgs/yashwant_new.jpeg" alt="Yashwant Sir" />
             </div>
             <div className="fac-card fac-3">
-              <img src={jayeshImg} alt="Jayesh Sir" />
+              <img src="/imgs/jayesh_new.jpeg" alt="Jayesh Sir" />
             </div>
           </div>
         </div>

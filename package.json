@@ -12,15 +12,22 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.103.0",
+    "@supabase/auth-helpers-nextjs": "^0.15.0",
+    "@supabase/supabase-js": "^2.103.2",
+    "clsx": "^2.1.1",
     "cors": "^2.8.6",
+    "crypto-js": "^4.2.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-rate-limit": "^8.3.2",
     "helmet": "^8.1.0",
+    "lucide-react": "^1.8.0",
+    "next": "^14.2.23",
     "nodemailer": "^8.0.5",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
+    "razorpay": "^2.9.6",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^3.5.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
