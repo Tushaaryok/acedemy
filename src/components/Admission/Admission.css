@@ -1,6 +1,12 @@
 .admission-section {
-  padding: 80px 0;
+  padding: 60px 0;
   background-color: #F8F5EE;
+}
+
+@media (min-width: 768px) {
+  .admission-section {
+    padding: 80px 0;
+  }
 }
 
 .admission-container {
@@ -20,16 +26,34 @@
 
 .admission-benefits {
   background-color: #6C6058;
-  padding: 48px;
+  padding: 28px 20px;
   color: #ffffff;
   flex: 1;
+}
+
+@media (min-width: 768px) {
+  .admission-benefits {
+    padding: 40px;
+  }
+}
+
+@media (min-width: 992px) {
+  .admission-benefits {
+    padding: 48px;
+  }
 }
 
 .benefits-title {
   color: #D0AB59;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 2.25rem;
+  font-size: 1.75rem;
   margin-bottom: 12px;
+}
+
+@media (min-width: 768px) {
+  .benefits-title {
+    font-size: 2.25rem;
+  }
 }
 
 .benefits-subtitle {
@@ -81,9 +105,21 @@
 
 /* Form Styles */
 .admission-form-wrapper {
-  padding: 48px;
+  padding: 28px 20px;
   flex: 1;
   background-color: #ffffff;
+}
+
+@media (min-width: 768px) {
+  .admission-form-wrapper {
+    padding: 40px;
+  }
+}
+
+@media (min-width: 992px) {
+  .admission-form-wrapper {
+    padding: 48px;
+  }
 }
 
 .form-title {

@@ -1,12 +1,27 @@
 .faculty-section {
-  padding: 80px 0;
+  padding: 60px 0;
   background-color: #ffffff;
+}
+
+@media (min-width: 768px) {
+  .faculty-section {
+    padding: 80px 0;
+  }
 }
 
 .faculty-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 24px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .faculty-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 800px;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -37,8 +52,8 @@
 }
 
 .faculty-avatar {
-  width: 90px;
-  height: 90px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
   background-color: #D0AB59;
   color: #ffffff;

@@ -1,7 +1,13 @@
 .testimonials-section {
-  background-color: #F8F5EE; /* Warm cream background */
-  padding: 80px 0;
+  background-color: #F8F5EE;
+  padding: 60px 0;
   overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .testimonials-section {
+    padding: 80px 0;
+  }
 }
 
 .text-center {

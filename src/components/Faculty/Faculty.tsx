@@ -4,21 +4,21 @@ const facultyData = [
   { 
     id: 1, name: 'Ram Sir', subject: 'Maths & Science', exp: '14 Years', initials: 'RS', 
     img: '/imgs/ram_new.jpeg', 
-    imgStyle: { objectFit: 'cover', objectPosition: 'center 10%', transform: 'scale(1)', width: '100%', height: '100%' }, 
+    imgStyle: { objectFit: 'cover', objectPosition: 'center 20%', transform: 'scale(1)', width: '100%', height: '100%' }, 
     bio: <>Std 9 & 10: Maths & Science<br/>Std 11 & 12: Account & Stat</>, 
     fb: 'https://www.facebook.com/share/19uF9nXqPV/', ig: 'https://www.instagram.com/ramsinghvihara?igsh=MXJiNTR0cnhpejA1cw==' 
   },
   { 
     id: 2, name: 'Yashvant Sir', subject: 'English', exp: '14 Years', initials: 'YS', 
     img: '/imgs/yashwant_new.jpeg', 
-    imgStyle: { objectFit: 'cover', objectPosition: 'center 10%', transform: 'scale(1)', width: '100%', height: '100%' }, 
+    imgStyle: { objectFit: 'cover', objectPosition: 'center 20%', transform: 'scale(1)', width: '100%', height: '100%' }, 
     bio: 'Std 9 to 12: English', 
     fb: 'https://www.facebook.com/share/1J2HGLatr6/', ig: 'https://www.instagram.com/yashvant_singh_vihara?igsh=MTJtbG5sem56cDNhdg==' 
   },
   { 
     id: 3, name: 'Jayesh Sir', subject: 'Social Science', exp: '9 Years', initials: 'JS', 
     img: '/imgs/jayesh_new.jpeg', 
-    imgStyle: { objectFit: 'cover', objectPosition: 'center 10%', transform: 'scale(1)', width: '100%', height: '100%' }, 
+    imgStyle: { objectFit: 'cover', objectPosition: 'center 20%', transform: 'scale(1)', width: '100%', height: '100%' }, 
     bio: <>Std 9 & 10: Social Science<br/>Std 11 & 12: Economics, Sociology, Geography, Psychology</>, 
     fb: 'https://www.facebook.com/share/1BDVtYnq8C/', ig: 'https://www.instagram.com/jb_ahir__8?igsh=MTE2cTl2eTdrenRpaA==' 
   }
