@@ -1,13 +1,18 @@
 import { useState } from 'react';
 import './Courses.css';
 
+// Import custom cover images
+import primaryCover from '../../assets/course-primary.png';
+import secondaryCover from '../../assets/course-secondary.png';
+import higherCover from '../../assets/course-higher.png';
+
 const coursesData = [
-  { id: 1, class: 'Class 5 to 7', category: 'Primary', tags: ['Maths', 'Science', 'English'], time: '4 PM - 6 PM', board: 'GSEB & CBSE', duration: '1 Year', videoId: 'aqz-KE-bpKQ' },
-  { id: 2, class: 'Class 8', category: 'Secondary', tags: ['Maths', 'Science', 'Languages'], time: '4 PM - 7 PM', board: 'GSEB & CBSE', duration: '1 Year', videoId: 'dQw4w9WgXcQ' },
-  { id: 3, class: 'Class 9', category: 'Secondary', tags: ['Maths', 'Science', 'Languages'], time: '4 PM - 7 PM', board: 'GSEB & CBSE', duration: '1 Year', videoId: 'aqz-KE-bpKQ' },
-  { id: 4, class: 'Class 10', category: 'Secondary', tags: ['Maths', 'Science', 'English', 'SST'], time: '5 PM - 8 PM', board: 'GSEB & CBSE', duration: '1 Year (Board Prep)', videoId: 'dQw4w9WgXcQ' },
-  { id: 5, class: 'Class 11 (Science)', category: 'Higher Secondary', tags: ['Physics', 'Chemistry', 'Maths/Bio'], time: '7 AM - 12 PM', board: 'GSEB', duration: '1 Year', videoId: 'aqz-KE-bpKQ' },
-  { id: 6, class: 'Class 12 (Science)', category: 'Higher Secondary', tags: ['Physics', 'Chemistry', 'Maths/Bio'], time: '7 AM - 1 PM', board: 'GSEB', duration: '1 Year (Board Prep)', videoId: 'dQw4w9WgXcQ' },
+  { id: 1, class: 'Class 5 to 7', category: 'Primary', tags: ['Maths', 'Science', 'English'], time: '4 PM - 6 PM', board: 'GSEB & CBSE', duration: '1 Year', videoId: 'aqz-KE-bpKQ', thumbnail: primaryCover },
+  { id: 2, class: 'Class 8', category: 'Secondary', tags: ['Maths', 'Science', 'Languages'], time: '4 PM - 7 PM', board: 'GSEB & CBSE', duration: '1 Year', videoId: 'dQw4w9WgXcQ', thumbnail: secondaryCover },
+  { id: 3, class: 'Class 9', category: 'Secondary', tags: ['Maths', 'Science', 'Languages'], time: '4 PM - 7 PM', board: 'GSEB & CBSE', duration: '1 Year', videoId: 'aqz-KE-bpKQ', thumbnail: secondaryCover },
+  { id: 4, class: 'Class 10', category: 'Secondary', tags: ['Maths', 'Science', 'English', 'SST'], time: '5 PM - 8 PM', board: 'GSEB & CBSE', duration: '1 Year (Board Prep)', videoId: 'dQw4w9WgXcQ', thumbnail: secondaryCover },
+  { id: 5, class: 'Class 11 (Science)', category: 'Higher Secondary', tags: ['Physics', 'Chemistry', 'Maths/Bio'], time: '7 AM - 12 PM', board: 'GSEB', duration: '1 Year', videoId: 'aqz-KE-bpKQ', thumbnail: higherCover },
+  { id: 6, class: 'Class 12 (Science)', category: 'Higher Secondary', tags: ['Physics', 'Chemistry', 'Maths/Bio'], time: '7 AM - 1 PM', board: 'GSEB', duration: '1 Year (Board Prep)', videoId: 'dQw4w9WgXcQ', thumbnail: higherCover },
 ];
 
 const tabs = ['All', 'Primary', 'Secondary', 'Higher Secondary'];
@@ -53,13 +58,16 @@ export default function Courses() {
         <div className="courses-grid">
           {filteredCourses.map((course, index) => (
             <div key={course.id} className="course-card">
-              <div className={`course-banner ${index % 2 === 0 ? 'banner-brown' : 'banner-gold'}`}>
-                {course.videoId && (
-                  <button className="play-overlay-btn" onClick={() => openVideo(course.videoId)}>
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                  </button>
-                )}
+              <div className="course-thumbnail" onClick={() => course.videoId && openVideo(course.videoId)}>
+                <img src={course.thumbnail} alt={course.class} className="thumbnail-img" />
+                <div className="thumbnail-overlay">
+                  <div className="play-circle">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  </div>
+                  <span className="play-text">Watch Demo</span>
+                </div>
               </div>
+              <div className={`course-banner ${index % 2 === 0 ? 'banner-brown' : 'banner-gold'}`}></div>
               <div className="course-content">
                 <div className="course-header">
                   <div className="course-header-top">
