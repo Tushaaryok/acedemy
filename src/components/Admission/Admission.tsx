@@ -51,14 +51,13 @@ export default function Admission() {
       
       if (response.ok && data.success) {
         showToast(data.message || 'Enquiry sent successfully! We will contact you soon.', 'success');
-        alert(data.message || 'Enquiry sent successfully! We will contact you soon.');
         setFormData({ studentName: '', parentName: '', phone: '', classVal: '', board: '', message: '' });
       } else {
         showToast(data.message || 'Failed to submit enquiry. Please try again.', 'error');
       }
     } catch (error) {
       console.error('Submission error:', error);
-      showToast('Connection error. Please call us at +91 81609 91166 / +91 94096 68196 or WhatsApp us directly.', 'error');
+      showToast('Connection error. Please call us at +91 81609 91166.', 'error');
     } finally {
       setIsSubmitting(false);
     }

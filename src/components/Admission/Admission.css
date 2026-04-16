@@ -205,41 +205,53 @@
   background-color: #D0AB59;
   color: #ffffff;
   font-size: 1.1rem;
-  padding: 14px;
+  font-weight: 700;
+  padding: 16px;
   margin-top: 16px;
   border: none;
+  border-radius: 12px;
   cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(208, 171, 89, 0.2);
 }
 
-.submit-btn:hover {
+.submit-btn:hover:not(:disabled) {
   background-color: #B58C36;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(208, 171, 89, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(208, 171, 89, 0.35);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Toast */
 .toast-notification {
   position: fixed;
-  bottom: 30px;
+  bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 16px 24px;
-  border-radius: 8px;
+  padding: 18px 32px;
+  border-radius: 16px;
   color: #ffffff;
   font-weight: 600;
   z-index: 9999;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-  animation: slide-up 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: slide-up 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 .toast-notification.success {
-  background-color: #2e7d32;
-  border-left: 4px solid #81c784;
+  background-color: rgba(46, 125, 50, 0.95);
+  border-bottom: 4px solid #81c784;
 }
 
 .toast-notification.error {
-  background-color: #d32f2f;
-  border-left: 4px solid #e57373;
+  background-color: rgba(211, 47, 47, 0.95);
+  border-bottom: 4px solid #e57373;
 }
 
 @keyframes slide-up {
