@@ -10,12 +10,12 @@ export default function Preloader() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1800);
+    }, 3000);
     
     // Completely remove from DOM after animation finishes
     const removeTimer = setTimeout(() => {
       setShouldRender(false);
-    }, 2500);
+    }, 3500);
 
     return () => {
       clearTimeout(timer);
