@@ -1,7 +1,8 @@
+'use client';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import './Admission.css';
-const API_URL = import.meta.env.VITE_API_URL || '';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 export default function Admission() {
   const [formData, setFormData] = useState({

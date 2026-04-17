@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect } from 'react';
 import './Header.css';
 import logo from '../../assets/logo.jpeg';

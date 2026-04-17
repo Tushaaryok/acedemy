@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect } from 'react';
 import './Preloader.css';
 import logo from '../../assets/logo.jpeg';
@@ -31,13 +32,15 @@ export default function Preloader() {
           <img src={logo} alt="Krishna Academy" className="preloader-logo" />
         </div>
         <div className="preloader-text">
-          <span className="char">K</span>
-          <span className="char">R</span>
-          <span className="char">I</span>
-          <span className="char">S</span>
-          <span className="char">H</span>
-          <span className="char">N</span>
-          <span className="char">A</span>
+          {"KRISHNA ACADEMY".split('').map((char, index) => (
+            <span 
+              key={index} 
+              className="char" 
+              style={{ animationDelay: `${(index + 1) * 0.1}s` }}
+            >
+              {char === ' ' ? '\u00A0' : char}
+            </span>
+          ))}
         </div>
         <div className="progress-bar-container">
           <div className="progress-bar-fill"></div>
