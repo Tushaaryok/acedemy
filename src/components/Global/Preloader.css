@@ -44,6 +44,7 @@
 .preloader-text {
   display: flex;
   gap: 4px;
+  white-space: nowrap;
 }
 
 .char {
