@@ -24,9 +24,9 @@ export default async function DashboardLayout({
   const role = profile?.role as 'student' | 'teacher' | 'admin' || 'student';
 
   return (
-    <div className="flex bg-slate-50 min-h-screen">
+    <div className="flex bg-slate-50 min-h-screen relative overflow-x-hidden">
       <DashboardSidebar role={role} />
-      <div className="flex-1 ml-64 p-8">
+      <div className="flex-1 lg:ml-64 p-4 md:p-8 w-full">
         {children}
       </div>
     </div>
