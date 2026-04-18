@@ -11,9 +11,9 @@ import './StatsCounter.css';
 
 const stats = [
   { id: 1, label: 'Success Ratio', value: '98%', icon: <Trophy />, color: 'text-amber-500', bg: 'bg-amber-50' },
-  { id: 2, label: 'Alumni Network', value: '10K+', icon: <Users />, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-  { id: 3, label: 'Expert Faculty', value: '25+', icon: <GraduationCap />, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-  { id: 4, label: 'Board Toppers', value: '150+', icon: <Atom />, color: 'text-rose-600', bg: 'bg-rose-50' },
+  { id: 2, label: 'Active Scholars', value: '480+', icon: <Users />, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+  { id: 3, label: 'Expert Faculty', value: '15+', icon: <GraduationCap />, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  { id: 4, label: 'Distinction Wall', value: '150+', icon: <Atom />, color: 'text-rose-600', bg: 'bg-rose-50' },
 ];
 
 export default function StatsCounter() {

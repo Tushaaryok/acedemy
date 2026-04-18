@@ -94,13 +94,15 @@
 
 .nav-link {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-weight: 600;
-  font-size: 1.05rem;
-  color: #1C1410; /* Initial color visible on white */
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #0F172A; /* Slate 900 for maximum contrast */
   position: relative;
   text-decoration: none;
   padding: 8px 0;
   transition: var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .header.scrolled .nav-link {
@@ -155,12 +157,13 @@
 
 .hamburger-btn {
   display: none;
-  font-size: 2rem;
-  color: #1C1410; /* Initial color visible on white */
-  background: none;
-  border: none;
+  color: #0F172A; /* Slate 900 */
+  background: white;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-radius: 12px;
   cursor: pointer;
-  padding: 4px;
+  padding: 8px;
   transition: var(--transition);
 }
 
