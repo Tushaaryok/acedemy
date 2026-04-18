@@ -1,8 +1,7 @@
 'use client';
 
 import { 
-  Facebook, 
-  Instagram, 
+  User,
   MapPin, 
   Phone, 
   Mail, 
@@ -38,11 +37,11 @@ export default function Footer() {
               Upleta's premier academic hub dedicated to sculpting future leaders through board-focused precision coaching.
             </p>
             <div className="flex gap-4">
-              <a href="https://www.facebook.com/share/1KqsMzi9CW/" className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all transform hover:-translate-y-1">
-                <Facebook size={18} />
+              <a href="https://www.facebook.com/share/1KqsMzi9CW/" className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all transform hover:-translate-y-1" target="_blank" rel="noopener noreferrer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2.039C6.5 2.039 2 6.539 2 12.04c0 5.004 3.657 9.143 8.438 9.878v-6.987h-2.54V12.04h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562v1.876h2.773l-.443 2.89h-2.33v6.988C18.343 21.182 22 17.044 22 12.04c0-5.5-4.5-10.001-10-10.001z"/></svg>
               </a>
-              <a href="https://www.instagram.com/shreeram_singh901?igsh=MXBoMWR0bGd3cHhxNQ==" className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all transform hover:-translate-y-1">
-                <Instagram size={18} />
+              <a href="https://www.instagram.com/shreeram_singh901?igsh=MXBoMWR0bGd3cHhxNQ==" className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all transform hover:-translate-y-1" target="_blank" rel="noopener noreferrer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
               </a>
             </div>
           </div>
