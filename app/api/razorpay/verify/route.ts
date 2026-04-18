@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { createClient } from '@/lib/supabase/server';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   try {
     const { 
@@ -15,7 +17,7 @@ export async function POST(req: Request) {
     // Verify signature
     const text = razorpay_order_id + "|" + razorpay_payment_id;
     const generated_signature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "")
       .update(text)
       .digest("hex");
 
