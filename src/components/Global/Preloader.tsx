@@ -29,7 +29,7 @@ export default function Preloader() {
     <div className={`preloader-overlay ${!loading ? 'fade-out' : ''}`}>
       <div className="preloader-content">
         <div className="logo-wrapper">
-          <img src={logo} alt="Krishna Academy" className="preloader-logo" />
+          <img src={logo.src} alt="Krishna Academy" className="preloader-logo" />
         </div>
         <div className="preloader-text">
           {"KRISHNA ACADEMY".split('').map((char, index) => (

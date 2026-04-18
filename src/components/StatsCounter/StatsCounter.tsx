@@ -1,78 +1,44 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+
+import { 
+  Users, 
+  Trophy, 
+  GraduationCap, 
+  Atom,
+  Sparkles
+} from 'lucide-react';
 import './StatsCounter.css';
 
-const statsData = [
-  { id: 1, target: 2000, label: 'Happy Students', suffix: '+' },
-  { id: 2, target: 15, label: 'Expert Teachers', suffix: '+' },
-  { id: 3, target: 10, label: 'Years of Excellence', suffix: '+' },
-  { id: 4, target: 95, label: 'Board Result Rate', suffix: '%' }
+const stats = [
+  { id: 1, label: 'Success Ratio', value: '98%', icon: <Trophy />, color: 'text-amber-500', bg: 'bg-amber-50' },
+  { id: 2, label: 'Alumni Network', value: '10K+', icon: <Users />, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+  { id: 3, label: 'Expert Faculty', value: '25+', icon: <GraduationCap />, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  { id: 4, label: 'Board Toppers', value: '150+', icon: <Atom />, color: 'text-rose-600', bg: 'bg-rose-50' },
 ];
 
 export default function StatsCounter() {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section className="stats-section" ref={sectionRef}>
-      <div className="container stats-container">
-        {statsData.map((stat, index) => (
-          <div key={stat.id} className="stat-wrapper">
-            <div className="stat-item">
-              <span className="stat-number">
-                {isVisible ? <CountUp target={stat.target} /> : 0}{stat.suffix}
-              </span>
-              <span className="stat-label">{stat.label}</span>
+    <section className="relative -mt-20 z-20 container mx-auto px-6">
+      <div className="bg-white rounded-[48px] p-8 md:p-16 shadow-2xl shadow-slate-200/60 border border-slate-50 relative overflow-hidden group">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 md:gap-20">
+          {stats.map((stat) => (
+            <div key={stat.id} className="text-center space-y-4 group/item">
+              <div className={`mx-auto w-16 h-16 ${stat.bg} ${stat.color} rounded-3xl flex items-center justify-center transition-all duration-500 group-hover/item:scale-110 group-hover/item:-rotate-3`}>
+                 {stat.icon}
+              </div>
+              <div className="space-y-1">
+                 <p className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">{stat.value}</p>
+                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{stat.label}</p>
+              </div>
             </div>
-            {index < statsData.length - 1 && <div className="stat-divider"></div>}
-          </div>
-        ))}
+          ))}
+        </div>
+        
+        {/* Background Sparkles */}
+        <div className="absolute top-4 right-4 text-amber-500/10 animate-pulse">
+           <Sparkles size={80} />
+        </div>
       </div>
     </section>
   );
-}
-
-function CountUp({ target }: { target: number }) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let start = 0;
-    const duration = 2000;
-    const increment = target / (duration / 16);
-    
-    // Safety against division by zero or negative targets
-    if (target <= 0) return;
-
-    const timer = setInterval(() => {
-      start += increment;
-      if (start >= target) {
-        setCount(target);
-        clearInterval(timer);
-      } else {
-        setCount(Math.ceil(start));
-      }
-    }, 16);
-
-    return () => clearInterval(timer);
-  }, [target]);
-
-  return <span>{count}</span>;
 }

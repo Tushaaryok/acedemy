@@ -1,101 +1,114 @@
+'use client';
+
+import { 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Clock, 
+  Share2, 
+  Globe,
+  ArrowUpRight,
+  Sparkles
+} from 'lucide-react';
 import './Contact.css';
 
 export default function Contact() {
   return (
-    <section id="contact" className="contact-section">
-      <div className="container">
-        <h2 className="section-title text-center" style={{ color: '#6C6058', marginBottom: '40px', fontFamily: '"Plus Jakarta Sans", sans-serif', textAlign: 'center' }}>
-          Contact Krishna Academy Upleta
-        </h2>
+    <section id="contact" className="py-32 bg-white relative overflow-hidden">
+      <div className="container mx-auto px-6 max-w-7xl relative z-10">
+        
+        <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
+          <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-indigo-100">
+             <Globe size={12} fill="currentColor" /> CONNECT WITH US
+          </div>
+          <h2 className="text-5xl font-black text-slate-900 tracking-tighter leading-tight">
+             Find Us At The <span className="text-indigo-600">Heart Of Upleta.</span>
+          </h2>
+          <p className="text-slate-500 font-medium text-lg">
+             Visit our campus for a personalized counseling session and institutional tour.
+          </p>
+        </div>
 
-        <div className="contact-grid">
-          <div className="contact-info">
-            <div className="contact-item">
-              <div className="contact-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                  <circle cx="12" cy="10" r="3"></circle>
-                </svg>
-              </div>
-              <div className="contact-text">
-                <h3>Visit Us</h3>
-                <a 
-                  href="https://share.google/UQtN9ZsU4HPDbJjRI" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
-                  Shaligram Complex, Adarsh Street,<br />Vadchok, Upleta, Gujarat 360490
-                </a>
-              </div>
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-slate-50 p-6 md:p-12 rounded-[64px] border border-slate-100 shadow-sm relative group">
+          
+          <div className="space-y-10 py-6">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <div className="p-8 bg-white rounded-[40px] border border-slate-100 shadow-sm hover:shadow-xl transition-all group/item">
+                   <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover/item:bg-indigo-600 group-hover/item:text-white transition-all">
+                      <MapPin size={24} />
+                   </div>
+                   <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Institution Address</h4>
+                   <p className="text-sm font-bold text-slate-800 leading-relaxed">
+                      Shaligram Complex, Adarsh Street,<br />Vadchok, Upleta, Gujarat 360490
+                   </p>
+                   <a href="https://share.google/UQtN9ZsU4HPDbJjRI" target="_blank" className="mt-6 inline-flex items-center gap-2 text-[10px] font-black uppercase text-indigo-600 tracking-widest hover:gap-4 transition-all">
+                      Get Directions <ArrowUpRight size={14} />
+                   </a>
+                </div>
 
-            <div className="contact-item">
-              <div className="contact-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                </svg>
-              </div>
-              <div className="contact-text">
-                <h3>Contact Number</h3>
-                <p><a href="tel:+918160991166">+91 81609 91166</a></p>
-                <p><a href="tel:+919409668196">+91 94096 68196</a></p>
-              </div>
-            </div>
+                <div className="p-8 bg-white rounded-[40px] border border-slate-100 shadow-sm hover:shadow-xl transition-all group/item">
+                   <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover/item:bg-emerald-600 group-hover/item:text-white transition-all">
+                      <Phone size={24} />
+                   </div>
+                   <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Admission Desk</h4>
+                   <p className="text-sm font-bold text-slate-800">+91 81609 91166</p>
+                   <p className="text-sm font-bold text-slate-800">+91 94096 68196</p>
+                   <a href="tel:+918160991166" className="mt-6 inline-flex items-center gap-2 text-[10px] font-black uppercase text-emerald-600 tracking-widest hover:gap-4 transition-all">
+                      Call Registry <ArrowUpRight size={14} />
+                   </a>
+                </div>
 
-            <div className="contact-item">
-              <div className="contact-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                  <polyline points="22,6 12,13 2,6"></polyline>
-                </svg>
-              </div>
-              <div className="contact-text">
-                <h3>Email Us</h3>
-                <p><a href="mailto:upletakrishnaacademy@gmail.com">upletakrishnaacademy@gmail.com</a></p>
-              </div>
-            </div>
+                <div className="p-8 bg-white rounded-[40px] border border-slate-100 shadow-sm hover:shadow-xl transition-all group/item">
+                   <div className="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-6 group-hover/item:bg-rose-600 group-hover/item:text-white transition-all">
+                      <Mail size={24} />
+                   </div>
+                   <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Official Email</h4>
+                   <p className="text-sm font-bold text-slate-800 truncate">upletakrishnaacademy@gmail.com</p>
+                   <a href="mailto:upletakrishnaacademy@gmail.com" className="mt-6 inline-flex items-center gap-2 text-[10px] font-black uppercase text-rose-600 tracking-widest hover:gap-4 transition-all">
+                      Write To Us <ArrowUpRight size={14} />
+                   </a>
+                </div>
 
-            <div className="contact-item">
-              <div className="contact-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-              </div>
-              <div className="contact-text">
-                <h3>Working Hours</h3>
-                <p>Mon - Sat: 7:00 AM - 8:00 PM</p>
-                <p>Sunday: Closed</p>
-              </div>
-            </div>
+                <div className="p-8 bg-white rounded-[40px] border border-slate-100 shadow-sm hover:shadow-xl transition-all group/item">
+                   <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-6 group-hover/item:bg-amber-600 group-hover/item:text-white transition-all">
+                      <Clock size={24} />
+                   </div>
+                   <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Working Hours</h4>
+                   <p className="text-sm font-bold text-slate-800">Mon - Sat: 7AM - 8PM</p>
+                   <p className="text-sm font-bold text-slate-800">Sunday: Study Break</p>
+                </div>
+             </div>
 
-            <div className="contact-social-flex">
-              <a href="https://www.facebook.com/share/1KqsMzi9CW/" target="_blank" rel="noopener noreferrer" className="contact-social-btn fb" aria-label="Facebook">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.039C6.5 2.039 2 6.539 2 12.04c0 5.004 3.657 9.143 8.438 9.878v-6.987h-2.54V12.04h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562v1.876h2.773l-.443 2.89h-2.33v6.988C18.343 21.182 22 17.044 22 12.04c0-5.5-4.5-10.001-10-10.001z"/></svg>
-              </a>
-              <a href="https://www.instagram.com/shreeram_singh901?igsh=MXBoMWR0bGd3cHhxNQ==" target="_blank" rel="noopener noreferrer" className="contact-social-btn ig" aria-label="Instagram">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-              </a>
-              <a href="https://wa.me/918160991166" className="btn-whatsapp" target="_blank" rel="noopener noreferrer">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.438 9.889-9.886.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-                </svg>
-                WhatsApp Us
-              </a>
-            </div>
+             <div className="flex items-center gap-6 pt-10 border-t border-slate-200">
+                <p className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                   <Share2 size={16} /> Digital Handles:
+                </p>
+                <div className="flex gap-4">
+                   {['Instagram', 'Facebook', 'WhatsApp'].map(plat => (
+                     <button key={plat} className="text-[10px] font-black uppercase text-slate-900 hover:text-indigo-600 transition-colors tracking-widest">
+                        {plat}
+                     </button>
+                   ))}
+                </div>
+             </div>
           </div>
 
-          <div className="contact-map">
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3706.005308410333!2d70.2792087!3d21.7413199!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3957f3822b0d7fbd%3A0xbcc8e2cbeab797e6!2sKrishna%20academy%2C%20upleta!5e0!3m2!1sen!2sin!4v1776083155662!5m2!1sen!2sin" 
-              width="100%" 
-              height="100%" 
-              style={{ border: 0 }} 
-              allowFullScreen={true} 
-              loading="lazy" 
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Krishna Academy Upleta Map"
-            ></iframe>
+          <div className="h-full min-h-[400px] rounded-[48px] overflow-hidden border-8 border-white shadow-2xl relative">
+             <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3706.005308410333!2d70.2792087!3d21.7413199!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3957f3822b0d7fbd%3A0xbcc8e2cbeab797e6!2sKrishna%20academy%2C%20upleta!5e0!3m2!1sen!2sin!4v1776083155662!5m2!1sen!2sin" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen={true} 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Krishna Academy Upleta Map"
+                className="grayscale hover:grayscale-0 transition-all duration-1000"
+             ></iframe>
+             <div className="absolute top-8 right-8 bg-white/80 backdrop-blur-md px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-2">
+                <Sparkles size={12} className="text-indigo-600" /> Center of Excellence
+             </div>
           </div>
         </div>
       </div>

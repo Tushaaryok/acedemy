@@ -1,13 +1,3 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/(auth)/login/page": "app/(auth)/login/page.js",
-  "/api/razorpay/verify/route": "app/api/razorpay/verify/route.js",
-  "/dashboard/admin/fees/page": "app/dashboard/admin/fees/page.js",
-  "/dashboard/admin/students/page": "app/dashboard/admin/students/page.js",
-  "/api/razorpay/create-order/route": "app/api/razorpay/create-order/route.js",
-  "/dashboard/student/page": "app/dashboard/student/page.js",
-  "/dashboard/admin/page": "app/dashboard/admin/page.js",
-  "/dashboard/teacher/page": "app/dashboard/teacher/page.js",
-  "/dashboard/teacher/attendance/page": "app/dashboard/teacher/attendance/page.js",
   "/page": "app/page.js"
 }

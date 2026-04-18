@@ -1,136 +1,229 @@
-import { createClient } from '@/lib/supabase/server';
-import { redirect } from 'next/navigation';
+'use client';
 
-export default async function StudentDashboard() {
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import { 
+  Flame, 
+  Trophy, 
+  Star, 
+  BookOpen, 
+  Clock, 
+  ArrowRight, 
+  CheckCircle2, 
+  Bell, 
+  Zap,
+  Target,
+  ChevronRight
+} from 'lucide-react';
+import Link from 'next/link';
+
+export default function StudentDashboard() {
+  const [profile, setProfile] = useState<any>(null);
+  const [enrollment, setEnrollment] = useState<any>(null);
+  const [notices, setNotices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  
   const supabase = createClient();
-  const { data: { session } } = await supabase.auth.getSession();
 
-  if (!session) {
-    redirect('/login');
-  }
+  useEffect(() => {
+    async function fetchData() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
 
-  const { data: profile } = await supabase
-    .from('users')
-    .select('*')
-    .eq('id', session.user.id)
-    .single();
+      const { data: prf } = await supabase.from('users').select('*').eq('id', session.user.id).single();
+      const { data: enr } = await supabase.from('enrollments').select('*, batches(*)').eq('student_id', session.user.id).single();
+      const { data: ntc } = await supabase.from('notices').select('*').order('created_at', { ascending: false }).limit(3);
 
-  const { data: enrollment } = await supabase
-    .from('enrollments')
-    .select('*, batches(*)')
-    .eq('student_id', session.user.id)
-    .single();
+      setProfile(prf);
+      setEnrollment(enr);
+      setNotices(ntc || []);
+      setLoading(false);
+    }
+    fetchData();
+  }, [supabase]);
+
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 gap-4">
+      <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+      <p className="text-slate-500 font-bold animate-pulse tracking-widest uppercase text-xs">Accessing Student Portal...</p>
+    </div>
+  );
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6 bg-white min-h-screen">
-      <header className="flex justify-between items-center bg-amber-50 p-6 rounded-2xl border border-amber-100">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Welcome, {profile?.name || 'Student'}! 👋</h1>
-          <p className="text-gray-600">Batch: {enrollment?.batches?.name || 'Assigning soon...'}</p>
+    <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-12 min-h-screen bg-white/50">
+      {/* Premium Header */}
+      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-widest bg-amber-50 w-fit px-3 py-1 rounded-full border border-amber-100">
+             <Star size={12} fill="currentColor" /> Scholar Premium Access
+          </div>
+          <h1 className="text-5xl font-black text-slate-900 tracking-tighter">
+            Welcome back, {profile?.name?.split(' ')[0] || 'Scholar'}!
+          </h1>
+          <p className="text-slate-500 font-medium text-lg leading-none">
+            {enrollment?.batches?.name || 'Academic Batch Assigning...'} • {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' })}
+          </p>
         </div>
-        <div className="text-right">
-          <p className="text-sm font-medium text-amber-700">{new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
-          <p className="text-3xl font-bold text-amber-600">Lvl 1 Beginner</p>
+        
+        <div className="flex gap-4">
+          <div className="bg-white px-8 py-5 rounded-[32px] border border-slate-100 shadow-sm flex items-center gap-5 group hover:border-orange-200 transition-all">
+            <div className="w-12 h-12 bg-orange-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+              <Flame size={24} fill="currentColor" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Streak</p>
+              <p className="text-2xl font-black text-slate-900 leading-none">{profile?.streak || 0} Days</p>
+            </div>
+          </div>
+          <div className="bg-white px-8 py-5 rounded-[32px] border border-slate-100 shadow-sm flex items-center gap-5 group hover:border-indigo-200 transition-all">
+            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/20 group-hover:scale-110 transition-transform">
+              <Zap size={24} fill="currentColor" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Learning XP</p>
+              <p className="text-2xl font-black text-slate-900 leading-none">{profile?.credits || 0}</p>
+            </div>
+          </div>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Attendance Summary */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center">
-          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Overall Attendance</h3>
-          <div className="relative h-32 w-32 flex items-center justify-center">
-            <svg className="h-full w-full transform -rotate-90">
-              <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-gray-100" />
-              <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="12" fill="transparent" strokeDasharray={364.4} strokeDashoffset={364.4 * 0.15} className="text-green-500" />
-            </svg>
-            <span className="absolute text-2xl font-bold text-gray-800">85%</span>
+      {/* Main Learning Hub */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        
+        {/* Left Column: Learning Deck */}
+        <div className="lg:col-span-2 space-y-10">
+          
+          {/* Active Lesson Card */}
+          <div className="bg-slate-900 rounded-[48px] p-10 text-white relative overflow-hidden group">
+            <div className="relative z-10 space-y-8">
+              <div className="flex justify-between items-start">
+                <div className="space-y-4">
+                  <span className="bg-white/10 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md">Next in path</span>
+                  <h2 className="text-4xl font-black tracking-tight leading-tight">Advanced Geometry <br /> & Solid Shapes</h2>
+                </div>
+                <div className="w-16 h-16 bg-white/10 rounded-3xl flex items-center justify-center backdrop-blur-sm">
+                   <Target size={32} className="text-amber-500" />
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-10 pt-4 border-t border-white/5">
+                <div>
+                   <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-loose">Completion</p>
+                   <p className="text-2xl font-black">68%</p>
+                </div>
+                <div className="flex-1 space-y-3">
+                   <p className="text-xs font-bold text-slate-400">Mastery Level: Intermediate</p>
+                   <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-full bg-amber-500 w-[68%] rounded-full shadow-[0_0_15px_rgba(245,158,11,0.5)] transition-all duration-1000"></div>
+                   </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/dashboard/student/courses" className="bg-white text-slate-900 px-10 py-5 rounded-[24px] font-black flex items-center justify-center gap-3 hover:bg-amber-500 hover:text-white transition-all transform hover:scale-[1.02] active:scale-95">
+                  RESUME MASTERY <ArrowRight size={20} />
+                </Link>
+                <div className="flex items-center gap-4 px-4 h-15">
+                   <div className="flex -space-x-3">
+                      {[1,2,3].map(i => (
+                        <div key={i} className="h-10 w-10 rounded-full border-4 border-slate-900 bg-slate-800 flex items-center justify-center font-bold text-xs ring-2 ring-transparent group-hover:ring-amber-500/50 transition-all">
+                           👤
+                        </div>
+                      ))}
+                   </div>
+                   <p className="text-xs font-bold text-slate-400">12 batchmates active now</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Abstract Visuals */}
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-600/10 rounded-full blur-[100px] -mr-48 -mt-48"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] -ml-24 -mb-24"></div>
           </div>
-          <p className="mt-4 text-xs text-gray-400">Target: 75% for exam eligibility</p>
+
+          {/* Subjects Progress List */}
+          <div className="bg-white rounded-[48px] p-10 border border-slate-100 shadow-sm">
+             <div className="flex justify-between items-end mb-8">
+                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Academic Progress</h3>
+                <Link href="/dashboard/student/courses" className="text-xs font-black text-amber-600 uppercase tracking-widest hover:underline">Full Curriculum</Link>
+             </div>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {[
+                  { name: 'Pure Physics', prog: 85, icon: '⚡', color: 'bg-indigo-600' },
+                  { name: 'Calculus Math', prog: 74, icon: '📐', color: 'bg-amber-600' },
+                  { name: 'Organic Chem', prog: 42, icon: '🧪', color: 'bg-rose-600' },
+                  { name: 'Applied English', prog: 92, icon: '✍️', color: 'bg-emerald-600' },
+                ].map(sub => (
+                  <div key={sub.name} className="flex items-center gap-5 p-4 rounded-3xl hover:bg-slate-50 transition-colors group">
+                    <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">{sub.icon}</div>
+                    <div className="flex-1 space-y-2">
+                       <div className="flex justify-between text-xs font-bold">
+                          <span className="text-slate-800">{sub.name}</span>
+                          <span className="text-slate-400 tracking-widest">{sub.prog}%</span>
+                       </div>
+                       <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                          <div className={`h-full ${sub.color} rounded-full transition-all duration-1000`} style={{ width: `${sub.prog}%` }}></div>
+                       </div>
+                    </div>
+                  </div>
+                ))}
+             </div>
+          </div>
         </div>
 
-        {/* Fees Status */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Fees Summary</h3>
-          <div className="space-y-4">
-            <div className="flex justify-between items-end">
-              <div>
-                <p className="text-xs text-gray-500">Total Due</p>
-                <p className="text-2xl font-bold text-gray-900">₹4,500</p>
-              </div>
-              <button className="bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-700 transition-colors">
-                Pay Now
-              </button>
+        {/* Right Column: Alerts & Performance */}
+        <div className="space-y-10">
+          
+          {/* Quick Notice Board */}
+          <div className="bg-white rounded-[40px] p-8 border border-slate-100 shadow-sm relative overflow-hidden group">
+            <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center justify-between">
+               Bulletin Board <Bell size={18} className="text-amber-500" />
+            </h3>
+            <div className="space-y-4">
+              {notices.length > 0 ? notices.map((ntc, i) => (
+                <div key={i} className={`p-5 rounded-3xl border transition-all hover:scale-[1.02] cursor-pointer ${
+                  ntc.priority === 'urgent' ? 'bg-rose-50 border-rose-100' : 'bg-slate-50 border-slate-100'
+                }`}>
+                  <div className="flex justify-between items-start mb-1">
+                    <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
+                      ntc.priority === 'urgent' ? 'bg-rose-600 text-white' : 'bg-slate-200 text-slate-600'
+                    }`}>{ntc.priority}</span>
+                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">{new Date(ntc.created_at).toLocaleDateString()}</span>
+                  </div>
+                  <h4 className="font-bold text-slate-900 text-sm">{ntc.title}</h4>
+                  <p className="text-[10px] text-slate-500 font-medium leading-relaxed mt-1 line-clamp-2">{ntc.content}</p>
+                </div>
+              )) : (
+                <div className="py-10 text-center text-slate-300 italic text-xs">No active notices for your batch.</div>
+              )}
             </div>
-            <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-              <div className="bg-green-500 h-full w-2/3"></div>
-            </div>
-            <p className="text-xs text-center text-gray-400">Next installment due: 15th May</p>
+            <button className="w-full mt-6 py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-all border-t border-slate-50">
+               View All Notices <ChevronRight size={14} />
+            </button>
           </div>
-        </div>
 
-        {/* XP & Rank */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center">
-          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Batch Rank</h3>
-          <div className="flex flex-col items-center">
-            <div className="text-5xl font-black text-amber-500 mb-2">#04</div>
-            <div className="text-sm font-medium text-gray-600">Out of 42 Students</div>
-            <div className="mt-4 px-3 py-1 bg-amber-100 text-amber-700 text-xs font-bold rounded-full uppercase">Topper List</div>
-          </div>
-        </div>
-      </div>
+          {/* Test Performance Mock */}
+          <div className="bg-indigo-900 rounded-[40px] p-8 text-white shadow-2xl shadow-indigo-900/20 relative overflow-hidden group">
+             <div className="relative z-10">
+                <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                   <CheckCircle2 size={12} /> Last Test Result
+                </p>
+                <h3 className="text-2xl font-black mb-1">Quantum Physics</h3>
+                <p className="text-indigo-300 text-xs font-medium opacity-80 mb-6 tracking-wide">Weekly Assessment • 15 April</p>
+                
+                <div className="flex items-end gap-3 mb-6">
+                   <p className="text-5xl font-black text-white">48<span className="text-xl text-indigo-400">/50</span></p>
+                   <span className="bg-emerald-500 text-white px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest mb-1 shadow-lg shadow-emerald-500/30 animate-pulse">Rank #1</span>
+                </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Today's Timetable */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-            📅 Today's Classes
-          </h2>
-          <div className="space-y-4">
-            <div className="flex items-center gap-4 p-4 rounded-xl border border-gray-50 bg-gray-50/50">
-              <div className="text-center min-w-[80px]">
-                <p className="text-xs font-bold text-amber-600">07:30 AM</p>
-                <p className="text-[10px] text-gray-400 font-medium">1 Hour</p>
-              </div>
-              <div className="h-10 w-[2px] bg-amber-200"></div>
-              <div>
-                <h4 className="text-sm font-bold text-gray-900">Mathematics</h4>
-                <p className="text-xs text-gray-500">Room 101 • Ram Sir</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 p-4 rounded-xl border border-gray-50 bg-white">
-              <div className="text-center min-w-[80px]">
-                <p className="text-xs font-bold text-gray-400">08:45 AM</p>
-                <p className="text-[10px] text-gray-400 font-medium">1 Hour</p>
-              </div>
-              <div className="h-10 w-[2px] bg-gray-100"></div>
-              <div>
-                <h4 className="text-sm font-bold text-gray-900">English</h4>
-                <p className="text-xs text-gray-500">Room 102 • Yashwant Sir</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Recent Notices */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-            📢 Latest Circulars
-          </h2>
-          <div className="space-y-4">
-            <div className="p-4 rounded-xl bg-amber-50/30 border border-amber-100/50 group cursor-pointer hover:bg-amber-50 transition-colors">
-              <div className="flex justify-between items-start mb-2">
-                <h4 className="text-sm font-bold text-gray-900 group-hover:text-amber-700">Sunday Mock Test - Science</h4>
-                <span className="text-[10px] font-bold text-gray-400 bg-white px-2 py-1 rounded-md">2h ago</span>
-              </div>
-              <p className="text-xs text-gray-500 line-clamp-1">All science students are required to attend the mock test this Sunday at 8 AM.</p>
-            </div>
-            <div className="p-4 rounded-xl bg-white border border-gray-100 group cursor-pointer hover:bg-gray-50 transition-colors">
-              <div className="flex justify-between items-start mb-2">
-                <h4 className="text-sm font-bold text-gray-900">Holiday Notice</h4>
-                <span className="text-[10px] font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded-md">1d ago</span>
-              </div>
-              <p className="text-xs text-gray-500 line-clamp-1">Academy will remain closed on 25th April for Mahavir Jayanti.</p>
-            </div>
+                <Link href="/dashboard/student/tests" className="block w-full text-center py-4 bg-white/10 hover:bg-white/20 transition-all rounded-2xl text-[10px] font-black uppercase tracking-widest border border-white/10">
+                   Analyze Performance
+                </Link>
+             </div>
+             
+             <div className="absolute -right-10 -bottom-10 opacity-10 transform -rotate-12 group-hover:scale-110 transition-transform">
+                <Trophy size={180} />
+             </div>
           </div>
         </div>
       </div>

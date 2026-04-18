@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import './Faculty.css';
 
 const facultyData = [
@@ -37,7 +38,13 @@ export default function Faculty() {
             <div key={teacher.id} className="faculty-card">
               <div className="faculty-avatar" style={teacher.img ? { padding: 0, overflow: 'hidden', position: 'relative' } : {}}>
                 {teacher.img ? (
-                  <img src={teacher.img} alt={teacher.name} style={teacher.imgStyle as any} />
+                  <Image 
+                    src={teacher.img} 
+                    alt={teacher.name} 
+                    width={100} 
+                    height={100} 
+                    style={teacher.imgStyle as any}
+                  />
                 ) : (
                   teacher.initials
                 )}

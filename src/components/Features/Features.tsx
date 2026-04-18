@@ -1,78 +1,98 @@
+'use client';
+
+import { 
+  GraduationCap, 
+  Users, 
+  BookOpen, 
+  LineChart, 
+  ShieldCheck, 
+  Award,
+  Sparkles
+} from 'lucide-react';
 import './Features.css';
 
 const featuresData = [
   {
     id: 1,
     title: 'Expert Teachers',
-    description: 'Experienced faculty with 10+ years of proven excellence in teaching.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-    )
+    description: 'Learn from highly qualified educators with over 15+ years of success stories.',
+    icon: <GraduationCap size={28} />,
+    color: 'indigo'
   },
   {
     id: 2,
-    title: 'Small Batch Size',
-    description: 'Personalized individual attention for every student in the classroom.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-    )
+    title: 'Precision Batches',
+    description: 'Limited seating ensures every student gets individual attention and mentorship.',
+    icon: <Users size={28} />,
+    color: 'amber'
   },
   {
     id: 3,
-    title: 'Regular Tests',
-    description: 'Weekly topic-wise tests with detailed performance analytics and reports.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-    )
+    title: 'Success Analytics',
+    description: 'Weekly tests with AI-driven reports to identify and fix your learning gaps.',
+    icon: <LineChart size={28} />,
+    color: 'rose'
   },
   {
     id: 4,
-    title: 'Study Material',
-    description: 'Curated comprehensive notes, question banks, and practice papers.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-    )
+    title: 'Elite Resources',
+    description: 'Digital study material and question banks curated for board exam dominance.',
+    icon: <BookOpen size={28} />,
+    color: 'emerald'
   },
   {
     id: 5,
-    title: 'Parent Updates',
-    description: 'Regular progress tracking and sharing with parents directly via app.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-    )
+    title: 'Digital Portal',
+    description: '24/7 access to live classes, recorded lectures, and parent tracking apps.',
+    icon: <ShieldCheck size={28} />,
+    color: 'blue'
   },
   {
     id: 6,
-    title: 'Proven Results',
-    description: 'A legacy of excellence with a consistently unmatched 95%+ board success rate.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-    )
+    title: 'Proven Legacy',
+    description: 'Upleta\'s highest success rate with city toppers consistently since 2014.',
+    icon: <Award size={28} />,
+    color: 'slate'
   }
 ];
 
 export default function Features() {
   return (
-    <section id="advantages" className="features section features-custom-bg">
-      <div className="container">
-        <div className="features-header">
-          <h2 className="section-title">Why Choose Krishna Academy Upleta?</h2>
+    <section id="advantages" className="py-32 bg-white relative overflow-hidden">
+      <div className="container mx-auto px-6">
+        <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
+          <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-amber-100">
+             <Sparkles size={12} fill="currentColor" /> The Krishna Edge
+          </div>
+          <h2 className="text-5xl font-black text-slate-900 tracking-tighter leading-tight">
+            Why We Are Upleta's <span className="text-amber-500">Choice.</span>
+          </h2>
+          <p className="text-slate-500 font-medium text-lg leading-relaxed">
+            We don't just teach subjects; we build foundations that last a lifetime through our unique scientific pedagogy.
+          </p>
         </div>
         
-        <div className="features-grid">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuresData.map(feature => (
-            <div key={feature.id} className="feature-card">
-              <div className="feature-icon-wrapper">
+            <div key={feature.id} className="group p-10 rounded-[48px] bg-slate-50 border border-transparent hover:border-slate-200 hover:bg-white hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500">
+              <div className="w-16 h-16 rounded-3xl bg-white shadow-sm flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500">
                 {feature.icon}
               </div>
-              <div className="feature-content">
-                <h3 className="feature-title">{feature.title}</h3>
-                <p className="feature-desc">{feature.description}</p>
+              <h3 className="text-2xl font-black text-slate-900 mb-4 tracking-tight">{feature.title}</h3>
+              <p className="text-slate-500 font-medium leading-relaxed">
+                {feature.description}
+              </p>
+              <div className="mt-8 opacity-0 group-hover:opacity-100 transition-opacity">
+                 <div className="w-12 h-1 bg-amber-500 rounded-full"></div>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Background accents */}
+      <div className="absolute top-1/4 right-0 w-96 h-96 bg-amber-100/30 rounded-full blur-[120px] -mr-48"></div>
+      <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-indigo-100/20 rounded-full blur-[100px] -ml-40"></div>
     </section>
   );
 }

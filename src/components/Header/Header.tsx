@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import './Header.css';
 import logo from '../../assets/logo.jpeg';
+import Link from 'next/link';
+import { Menu, X, ArrowRight, Sparkles } from 'lucide-react';
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,23 +33,31 @@ export default function Header() {
   };
 
   return (
-    <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
+    <header className={`header ${isScrolled ? 'scrolled shadow-lg shadow-black/5' : ''}`}>
       <div className="container header-container">
-        {/* Left: Logo & Title */}
-        <div className="header-brand">
-          <img src={logo} alt="Krishna Academy" className="header-logo" />
-          <span className="header-title">Krishna Academy</span>
-        </div>
+        {/* Left: Logo & Brand */}
+        <Link href="/" className="header-brand group">
+          <div className="relative">
+            <img src={logo.src} alt="Krishna Academy" className="header-logo transition-all hover:scale-105" />
+            <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 rounded-full border-2 border-white flex items-center justify-center animate-bounce">
+              <Sparkles size={8} className="text-white" fill="currentColor" />
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <span className="header-title transition-colors">Krishna Academy</span>
+            <span className="text-[10px] font-bold text-amber-600 tracking-[1px] uppercase -mt-1 opacity-0 group-hover:opacity-100 transition-all">Upleta's Pride</span>
+          </div>
+        </Link>
         
         {/* Center: Desktop Nav */}
         <nav className={`header-nav ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
           <div className="mobile-menu-header">
-            <span className="header-title">Menu</span>
+            <span className="header-title">Navigation</span>
             <button 
               className="close-menu-btn"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              ✕
+              <X size={24} />
             </button>
           </div>
           {navLinks.map((link) => (
@@ -61,12 +71,23 @@ export default function Header() {
             </a>
           ))}
           {/* Mobile Enroll Button */}
-          <button className="btn btn-enroll mobile-only" onClick={() => { document.getElementById('admissions')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false); }}>Enroll Now</button>
+          <Link 
+            href="/login" 
+            className="btn btn-enroll mobile-only text-center flex items-center justify-center gap-2"
+          >
+            Portal Login <ArrowRight size={18} />
+          </Link>
         </nav>
         
         {/* Right: Actions */}
         <div className="header-actions">
-           <button className="btn btn-enroll desktop-only" onClick={() => document.getElementById('admissions')?.scrollIntoView({ behavior: 'smooth' })}>Enroll Now</button>
+           <Link 
+             href="/login" 
+             className="btn btn-enroll desktop-only flex items-center gap-2 group"
+           >
+             Student Portal 
+             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+           </Link>
            
            {/* Hamburger Menu Toggle */}
            <button 
@@ -74,14 +95,14 @@ export default function Header() {
              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
              aria-label="Toggle menu"
            >
-             ☰
+             {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
            </button>
         </div>
       </div>
       
       {/* Mobile Drawer Overlay */}
       {isMobileMenuOpen && (
-        <div className="overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
+        <div className="overlay animate-in fade-in duration-300" onClick={() => setIsMobileMenuOpen(false)}></div>
       )}
     </header>
   );
