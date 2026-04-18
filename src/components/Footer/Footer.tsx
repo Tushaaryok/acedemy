@@ -111,11 +111,17 @@ export default function Footer() {
                      <p className="text-sm font-bold text-white">+91 81609 91166</p>
                   </div>
                </div>
-               <Link href="mailto:upletakrishnaacademy@gmail.com" className="inline-flex items-center gap-3 bg-white/5 px-6 py-3 rounded-2xl hover:bg-white/10 transition-all border border-white/5">
+            <div className="flex flex-col gap-4">
+               <Link href="/login" className="flex items-center gap-3 bg-white/10 px-6 py-4 rounded-2xl hover:bg-indigo-600 hover:text-white transition-all border border-white/5 font-bold text-white group">
+                  <User size={18} className="text-indigo-400 group-hover:text-white" />
+                  <span className="text-sm">STUDENT PORTAL LOGIN</span>
+               </Link>
+               <Link href="mailto:upletakrishnaacademy@gmail.com" className="flex items-center gap-3 bg-white/5 px-6 py-4 rounded-2xl hover:bg-white/10 transition-all border border-white/5">
                   <Mail size={16} />
-                  <span className="text-xs font-black uppercase tracking-widest text-white">Institutional Mail</span>
+                  <span className="text-sm font-black uppercase tracking-widest text-white">Institutional Mail</span>
                   <ArrowUpRight size={14} />
                </Link>
+            </div>
             </div>
           </div>
 

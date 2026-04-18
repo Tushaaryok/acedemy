@@ -229,6 +229,8 @@
     width: 100%;
     font-size: 1.25rem;
     padding: 14px 0;
+    color: #0F172A !important; /* Force high contrast dark slate */
+    border-bottom: 1px solid #f8f8f8;
   }
 
   .desktop-only {

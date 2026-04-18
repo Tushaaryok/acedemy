@@ -73,9 +73,10 @@ export default function Header() {
           {/* Mobile Enroll Button */}
           <Link 
             href="/login" 
-            className="btn btn-enroll mobile-only text-center flex items-center justify-center gap-2"
+            className="btn btn-enroll mobile-only text-center flex items-center justify-center gap-2 mt-8 shadow-xl"
+            onClick={() => setIsMobileMenuOpen(false)}
           >
-            Portal Login <ArrowRight size={18} />
+            Student Portal <ArrowRight size={18} />
           </Link>
         </nav>
         
