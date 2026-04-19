@@ -34,11 +34,11 @@ export default function FeeManagement() {
 
   const totalOutstanding = fees
     .filter(f => f.status === 'pending')
-    .reduce((acc, f) => acc + Number(f.amount), 0);
+    .reduce((acc: number, f: any) => acc + Number(f.amount), 0);
 
   const totalCollected = fees
     .filter(f => f.status === 'paid' || f.status === 'verified')
-    .reduce((acc, f) => acc + Number(f.amount), 0);
+    .reduce((acc: number, f: any) => acc + Number(f.amount), 0);
 
   const filteredFees = fees.filter(f => filter === 'all' ? true : f.status === filter);
 

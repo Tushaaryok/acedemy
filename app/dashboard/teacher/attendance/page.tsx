@@ -47,7 +47,7 @@ export default function MarkAttendance() {
       
       if (stdData) {
         setStudents(stdData);
-        const initial = stdData.reduce((acc, s) => ({ ...acc, [s.id]: 'present' }), {});
+        const initial = stdData.reduce((acc: Record<string, string>, s: any) => ({ ...acc, [s.id]: 'present' }), {});
         setAttendance(initial);
       }
       setLoading(false);
