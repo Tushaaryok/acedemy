@@ -1,242 +1,449 @@
 'use client';
-import { useState } from 'react';
+
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
-import { Phone, Mail, ArrowRight, Lock, Sparkles, ChevronLeft } from 'lucide-react';
-import Image from 'next/image';
+import { Phone, ArrowRight, Sparkles, ChevronLeft, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
+import { getAuthErrorMessage } from '@/lib/types/auth';
 
+// ============================================================
+// OTP Box Component - 6 individual input boxes
+// ============================================================
+function OtpBoxes({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (val: string) => void;
+}) {
+  const inputs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const handleInput = (index: number, char: string) => {
+    // Sirf numbers accept karo
+    if (!/^\d*$/.test(char)) return;
+
+    const arr = value.padEnd(6, ' ').split('');
+    arr[index] = char || ' ';
+    const newVal = arr.join('').trimEnd();
+    onChange(newVal);
+
+    // Agla box pe focus
+    if (char && index < 5) inputs.current[index + 1]?.focus();
+  };
+
+  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
+    if (e.key === 'Backspace') {
+      if (!value[index] && index > 0) {
+        inputs.current[index - 1]?.focus();
+        const arr = value.padEnd(6, ' ').split('');
+        arr[index - 1] = ' ';
+        onChange(arr.join('').trimEnd());
+      } else {
+        const arr = value.padEnd(6, ' ').split('');
+        arr[index] = ' ';
+        onChange(arr.join('').trimEnd());
+      }
+    }
+    // Arrow keys
+    if (e.key === 'ArrowLeft' && index > 0) inputs.current[index - 1]?.focus();
+    if (e.key === 'ArrowRight' && index < 5) inputs.current[index + 1]?.focus();
+  };
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    onChange(pasted);
+    // Last filled box pe focus
+    const lastIndex = Math.min(pasted.length, 5);
+    inputs.current[lastIndex]?.focus();
+  };
+
+  return (
+    <div className="flex gap-3 justify-center" onPaste={handlePaste}>
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <input
+          key={i}
+          ref={(el) => { inputs.current[i] = el; }}
+          type="text"
+          inputMode="numeric"
+          maxLength={1}
+          value={value[i] || ''}
+          onChange={(e) => handleInput(i, e.target.value)}
+          onKeyDown={(e) => handleKeyDown(i, e)}
+          autoFocus={i === 0}
+          className={`
+            w-12 h-14 text-center text-2xl font-black rounded-2xl border-2 outline-none
+            transition-all duration-200
+            ${value[i]
+              ? 'border-amber-500 bg-amber-50 text-slate-900 shadow-md shadow-amber-200'
+              : 'border-slate-200 bg-white text-slate-300'
+            }
+            focus:border-blue-900 focus:bg-blue-50 focus:scale-105
+          `}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ============================================================
+// Main Login Page
+// ============================================================
 export default function LoginPage() {
-  const [identifier, setIdentifier] = useState(''); // Email or Phone
+  const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
-  const [mode, setMode] = useState<'phone' | 'email'>('phone');
-  const [step, setStep] = useState<'input' | 'otp'>('input');
+  const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ text: '', type: 'info' as 'info' | 'error' | 'success' });
-  
+  const [error, setError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
+
+  // Resend cooldown (30 seconds - PRD requirement)
+  const [countdown, setCountdown] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
   const supabase = createClient();
   const router = useRouter();
 
+  // Countdown timer cleanup
+  useEffect(() => {
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, []);
+
+  // 30-second countdown start karo
+  const startCountdown = useCallback(() => {
+    setCountdown(30);
+    timerRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timerRef.current!);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, []);
+
+  // Phone number validate karo
+  const validatePhone = (num: string) => {
+    const cleaned = num.replace(/\D/g, '');
+    if (cleaned.length !== 10) return 'Phone number 10 digits ka hona chahiye';
+    if (!/^[6-9]/.test(cleaned)) return 'Valid Indian mobile number dalo (6-9 se shuru)';
+    return null;
+  };
+
+  // Step 1: OTP bhejo
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setSuccessMsg('');
+
+    // Validation
+    const phoneErr = validatePhone(phone);
+    if (phoneErr) { setError(phoneErr); return; }
+
     setLoading(true);
-    setMessage({ text: '', type: 'info' });
 
-    let error;
-    if (mode === 'email') {
-      const result = await supabase.auth.signInWithOtp({
-        email: identifier,
-        options: { shouldCreateUser: false },
-      });
-      error = result.error;
-    } else {
-      // Supabase Phone Auth
-      const phone = identifier.startsWith('+91') ? identifier : `+91${identifier}`;
-      const result = await supabase.auth.signInWithOtp({
-        phone,
-        options: { 
-          shouldCreateUser: false,
-          channel: 'sms'
-        },
-      });
-      error = result.error;
-    }
+    const formattedPhone = `+91${phone.replace(/\D/g, '')}`;
 
-    if (error) {
-      setMessage({ text: error.message, type: 'error' });
+    const { error: authError } = await supabase.auth.signInWithOtp({
+      phone: formattedPhone,
+      options: {
+        shouldCreateUser: true, // Naye users allow karo
+        channel: 'sms',
+      },
+    });
+
+    if (authError) {
+      setError(getAuthErrorMessage(authError.message));
     } else {
       setStep('otp');
-      setMessage({ text: `OTP sent to your ${mode}.`, type: 'success' });
+      setSuccessMsg(`OTP +91-${phone} pe bheja gaya ✅`);
+      startCountdown();
+    }
+
+    setLoading(false);
+  };
+
+  // Resend OTP
+  const handleResend = async () => {
+    if (countdown > 0) return;
+    setError('');
+    setSuccessMsg('');
+    setLoading(true);
+
+    const { error: authError } = await supabase.auth.signInWithOtp({
+      phone: `+91${phone.replace(/\D/g, '')}`,
+      options: { shouldCreateUser: true, channel: 'sms' },
+    });
+
+    if (authError) {
+      setError(getAuthErrorMessage(authError.message));
+    } else {
+      setOtp('');
+      setSuccessMsg('Naya OTP bheja gaya! ✅');
+      startCountdown();
     }
     setLoading(false);
   };
 
+  // Step 2: OTP verify karo
   const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage({ text: '', type: 'info' });
+    setError('');
 
-    let result;
-    if (mode === 'email') {
-      result = await supabase.auth.verifyOtp({
-        email: identifier,
-        token: otp,
-        type: 'email',
-      });
-    } else {
-      const phone = identifier.startsWith('+91') ? identifier : `+91${identifier}`;
-      result = await supabase.auth.verifyOtp({
-        phone,
-        token: otp,
-        type: 'sms',
-      });
+    if (otp.replace(/\s/g, '').length < 6) {
+      setError('6-digit OTP poora bharo');
+      return;
     }
 
-    if (result.error) {
-      setMessage({ text: result.error.message, type: 'error' });
-      setLoading(false);
-    } else {
-      // Fetch user role
-      const { data: userData } = await supabase
-        .from('users')
-        .select('role')
-        .eq('id', result.data.user?.id)
-        .single();
+    setLoading(true);
 
-      if (!userData) {
-        setMessage({ text: 'User profile not found. Please contact admin.', type: 'error' });
-        setLoading(false);
-      } else {
-        router.push(`/dashboard/${userData.role}`);
-      }
+    const { data, error: verifyError } = await supabase.auth.verifyOtp({
+      phone: `+91${phone.replace(/\D/g, '')}`,
+      token: otp.replace(/\s/g, ''),
+      type: 'sms',
+    });
+
+    if (verifyError) {
+      setError(getAuthErrorMessage(verifyError.message));
+      setLoading(false);
+      return;
+    }
+
+    // User profile check karo
+    const { data: userData, error: profileError } = await supabase
+      .from('users')
+      .select('role, onboarding_completed, full_name')
+      .eq('id', data.user?.id)
+      .single();
+
+    if (profileError || !userData) {
+      // Naya user - onboarding pe bhejo
+      router.push('/onboarding');
+    } else if (!userData.onboarding_completed) {
+      // Onboarding adhoori - complete karo
+      router.push('/onboarding');
+    } else {
+      // Purana user - seedha dashboard
+      router.push(`/dashboard/${userData.role}`);
     }
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50 font-jakarta">
-      {/* Left Decoration - Desktop Only */}
-      <div className="hidden lg:flex lg:w-1/2 bg-blue-900 relative p-20 flex-col justify-between overflow-hidden">
+    <div className="flex min-h-screen bg-slate-50">
+      {/* ====================================================
+          LEFT SIDE - Branding (Desktop only)
+          ==================================================== */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-950 to-blue-800 relative p-20 flex-col justify-between overflow-hidden">
         <div className="relative z-10">
-          <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center font-black text-2xl text-blue-900 mb-8 shadow-2xl">KA</div>
+          {/* Logo */}
+          <div className="w-16 h-16 bg-amber-500 rounded-2xl flex items-center justify-center font-black text-2xl text-white mb-8 shadow-2xl">
+            KA
+          </div>
+
           <h1 className="text-5xl font-black text-white leading-tight mb-6">
-            Upleta's #1 <br /> 
-            <span className="text-amber-500">Digital Gateway</span> <br /> 
-            to Success.
+            Upleta ka<br />
+            <span className="text-amber-400">#1 Digital</span><br />
+            Classroom.
           </h1>
           <p className="text-blue-200 text-lg font-medium max-w-md leading-relaxed">
-            Access your courses, live classes, and masterclass content from anywhere in the world.
+            Ghar baithe padho, teachers se seekho, aur apna future banao.
           </p>
         </div>
 
-        <div className="relative z-10 flex gap-10">
-           <div>
-              <p className="text-3xl font-black text-white">5k+</p>
-              <p className="text-[10px] font-black uppercase tracking-widest text-blue-400">Enrolled Scholars</p>
-           </div>
-           <div>
-              <p className="text-3xl font-black text-white">95%</p>
-              <p className="text-[10px] font-black uppercase tracking-widest text-blue-400">Board Accuracy</p>
-           </div>
+        {/* Stats */}
+        <div className="relative z-10 grid grid-cols-2 gap-8">
+          {[
+            { num: '500+', label: 'Students' },
+            { num: '95%', label: 'Board Results' },
+            { num: '14+', label: 'Saal ka Anubhav' },
+            { num: '3', label: 'Expert Faculty' },
+          ].map((s) => (
+            <div key={s.label}>
+              <p className="text-3xl font-black text-white">{s.num}</p>
+              <p className="text-xs font-black uppercase tracking-widest text-blue-400 mt-1">{s.label}</p>
+            </div>
+          ))}
         </div>
 
-        {/* Abstract Background Elements */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px] -mr-64 -mt-64"></div>
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[100px] -ml-40 -mb-40"></div>
+        {/* Background decorations */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl -mr-48 -mt-48" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl -ml-32 -mb-32" />
       </div>
 
-      {/* Right Side - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 md:p-20">
-        <div className="w-full max-w-md space-y-10 group">
-          
+      {/* ====================================================
+          RIGHT SIDE - Login Form
+          ==================================================== */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 md:p-16">
+        <div className="w-full max-w-sm space-y-8">
+
+          {/* Header */}
           <div className="text-center lg:text-left space-y-3">
-             <div className="inline-flex items-center gap-2 bg-blue-900/5 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-blue-900 border border-blue-900/10 mb-4">
-                <Sparkles size={12} fill="currentColor" /> Student Portal Access
-             </div>
-             <h2 className="text-4xl font-black text-slate-900 tracking-tight">Welcome Back!</h2>
-             <p className="text-slate-500 font-medium leading-relaxed">
-               {step === 'input' 
-                 ? `Enter your ${mode === 'phone' ? 'mobile number' : 'email'} to receive a safe 6-digit access code.` 
-                 : `We've sent a 6-digit OTP to your ${mode}. Enter it below to proceed.`}
-             </p>
+            <div className="inline-flex items-center gap-2 bg-amber-50 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest text-amber-700 border border-amber-200 mb-2">
+              <Sparkles size={12} fill="currentColor" />
+              Student Portal
+            </div>
+
+            {step === 'phone' ? (
+              <>
+                <h2 className="text-3xl font-black text-slate-900">Namaskar! 🙏</h2>
+                <p className="text-slate-500 font-medium">
+                  Apna mobile number dalo, hum OTP bhejenge
+                </p>
+              </>
+            ) : (
+              <>
+                <h2 className="text-3xl font-black text-slate-900">OTP dalein 🔐</h2>
+                <p className="text-slate-500 font-medium">
+                  +91-{phone} pe 6-digit OTP bheja hai
+                </p>
+              </>
+            )}
           </div>
 
-          <form className="space-y-8" onSubmit={step === 'input' ? handleSendOTP : handleVerifyOTP}>
-             {step === 'input' ? (
-               <div className="space-y-6">
-                 {/* Mode Toggle */}
-                 <div className="flex p-1 bg-slate-100 rounded-2xl border border-slate-200 shadow-inner">
-                    <button 
-                      type="button" 
-                      onClick={() => setMode('phone')}
-                      className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${mode === 'phone' ? 'bg-white text-blue-900 shadow-lg' : 'text-slate-400 hover:text-slate-600'}`}
-                    >
-                      <Phone size={16} /> Phone
-                    </button>
-                    <button 
-                      type="button" 
-                      onClick={() => setMode('email')}
-                      className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${mode === 'email' ? 'bg-white text-blue-900 shadow-lg' : 'text-slate-400 hover:text-slate-600'}`}
-                    >
-                      <Mail size={16} /> Email
-                    </button>
-                 </div>
-
-                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                       {mode === 'phone' ? 'Mobile Number' : 'Email Address'}
-                    </label>
-                    <div className="relative group/input">
-                       <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/input:text-blue-900 transition-colors">
-                          {mode === 'phone' ? <span className="text-sm font-bold">+91</span> : <Mail size={18} />}
-                       </div>
-                       <input 
-                         type={mode === 'phone' ? 'tel' : 'email'} 
-                         required
-                         placeholder={mode === 'phone' ? '00000 00000' : 'name@school.com'}
-                         className="w-full bg-white border border-slate-200 rounded-[24px] pl-16 pr-8 py-4 text-sm font-bold outline-none focus:ring-4 focus:ring-blue-900/5 focus:border-blue-900 transition-all shadow-sm"
-                         value={identifier}
-                         onChange={(e) => setIdentifier(e.target.value)}
-                       />
-                    </div>
-                 </div>
-               </div>
-             ) : (
-               <div className="space-y-6 animate-in slide-in-from-right-8 duration-300">
-                  <div className="space-y-2 text-center">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">One-Time Password</label>
-                    <div className="relative flex justify-center pt-2">
-                       <Lock size={16} className="absolute left-1/4 top-1/2 -translate-y-px text-slate-400" />
-                       <input 
-                         type="text" 
-                         maxLength={6}
-                         required
-                         autoFocus
-                         className="w-48 bg-slate-50 border-b-2 border-slate-200 py-4 text-center text-2xl font-black tracking-[0.8em] focus:border-blue-900 outline-none transition-all placeholder:text-slate-200"
-                         placeholder="000000"
-                         value={otp}
-                         onChange={(e) => setOtp(e.target.value)}
-                       />
-                    </div>
+          {/* ================================================
+              STEP 1: Phone Input
+              ================================================ */}
+          {step === 'phone' && (
+            <form onSubmit={handleSendOTP} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">
+                  Mobile Number
+                </label>
+                <div className="flex rounded-2xl border-2 border-slate-200 bg-white overflow-hidden focus-within:border-blue-900 transition-colors shadow-sm">
+                  {/* +91 prefix */}
+                  <div className="flex items-center gap-2 pl-5 pr-3 border-r border-slate-200 bg-slate-50">
+                    <span className="text-2xl">🇮🇳</span>
+                    <span className="text-sm font-black text-slate-600">+91</span>
                   </div>
-                  <button 
-                    type="button" 
-                    onClick={() => setStep('input')}
-                    className="w-full flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-900 transition-all"
-                  >
-                     <ChevronLeft size={14} /> Back to edit {mode}
-                  </button>
-               </div>
-             )}
-
-             <button 
-               type="submit" 
-               disabled={loading || (step === 'input' && !identifier) || (step === 'otp' && otp.length < 6)}
-               className="w-full bg-blue-900 text-white p-6 rounded-[24px] font-black text-sm uppercase tracking-widest shadow-2xl shadow-blue-900/30 hover:bg-blue-800 transform active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-3 group"
-             >
-                {loading ? 'Authenticating...' : (
-                  <>
-                    {step === 'input' ? 'Get Safe Access Code' : 'Authorize & Start Learning'}
-                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                  </>
+                  <input
+                    id="phone-input"
+                    type="tel"
+                    inputMode="numeric"
+                    required
+                    placeholder="00000 00000"
+                    className="flex-1 px-4 py-4 text-lg font-bold outline-none bg-transparent text-slate-900 placeholder:text-slate-300 tracking-wider"
+                    value={phone}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                      setPhone(val);
+                      setError('');
+                    }}
+                    autoFocus
+                  />
+                </div>
+                {phone.length > 0 && phone.length < 10 && (
+                  <p className="text-xs text-slate-400 ml-1">{phone.length}/10 digits</p>
                 )}
-             </button>
+              </div>
 
-             {message.text && (
-               <div className={`p-5 rounded-2xl text-xs font-bold leading-relaxed flex gap-3 ${
-                 message.type === 'error' ? 'bg-rose-50 text-rose-600 border border-rose-100' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'
-               }`}>
-                  <div className="shrink-0">{message.type === 'error' ? '⚠️' : '✅'}</div>
-                  <p>{message.text}</p>
-               </div>
-             )}
-          </form>
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={loading || phone.length !== 10}
+                className="w-full bg-blue-900 text-white py-4 px-8 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-blue-900/20 hover:bg-blue-800 active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 flex items-center justify-center gap-3 group"
+              >
+                {loading ? (
+                  <><RefreshCw size={18} className="animate-spin" /> OTP bhej rahe hain...</>
+                ) : (
+                  <>OTP Bhejo <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" /></>
+                )}
+              </button>
+            </form>
+          )}
 
-          <div className="pt-10 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Secured by Krishna Academy</p>
-             <div className="flex gap-6">
-                <Link href="/privacy" className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-blue-900 transition-all">Privacy Policy</Link>
-                <Link href="/contact" className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-blue-900 transition-all">Portal Help</Link>
-             </div>
+          {/* ================================================
+              STEP 2: OTP Verification
+              ================================================ */}
+          {step === 'otp' && (
+            <form onSubmit={handleVerifyOTP} className="space-y-6">
+              {/* 6-Box OTP Input */}
+              <div className="space-y-3">
+                <label className="block text-xs font-black uppercase tracking-widest text-slate-400 text-center">
+                  6-Digit OTP
+                </label>
+                <OtpBoxes value={otp} onChange={setOtp} />
+              </div>
+
+              {/* Resend Section */}
+              <div className="text-center">
+                {countdown > 0 ? (
+                  <p className="text-sm text-slate-400 font-medium">
+                    Dobara OTP ke liye{' '}
+                    <span className="font-black text-blue-900">{countdown}s</span>{' '}
+                    wait karo
+                  </p>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    disabled={loading}
+                    className="text-sm font-black text-amber-600 hover:text-amber-700 underline underline-offset-2 transition-colors disabled:opacity-50"
+                  >
+                    OTP nahi mila? Dobara bhejo
+                  </button>
+                )}
+              </div>
+
+              {/* Verify Button */}
+              <button
+                type="submit"
+                disabled={loading || otp.replace(/\s/g, '').length < 6}
+                className="w-full bg-blue-900 text-white py-4 px-8 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-blue-900/20 hover:bg-blue-800 active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 flex items-center justify-center gap-3 group"
+              >
+                {loading ? (
+                  <><RefreshCw size={18} className="animate-spin" /> Verify ho raha hai...</>
+                ) : (
+                  <>Portal Mein Jaao <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" /></>
+                )}
+              </button>
+
+              {/* Back button */}
+              <button
+                type="button"
+                onClick={() => {
+                  setStep('phone');
+                  setOtp('');
+                  setError('');
+                  setSuccessMsg('');
+                  if (timerRef.current) clearInterval(timerRef.current);
+                  setCountdown(0);
+                }}
+                className="w-full flex items-center justify-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-blue-900 transition-colors py-2"
+              >
+                <ChevronLeft size={14} /> Number badlo
+              </button>
+            </form>
+          )}
+
+          {/* ================================================
+              Messages (Error / Success)
+              ================================================ */}
+          {error && (
+            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-100 text-rose-700 text-sm font-bold flex gap-3 items-start">
+              <span className="text-lg">⚠️</span>
+              <p>{error}</p>
+            </div>
+          )}
+          {successMsg && (
+            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-bold flex gap-3 items-start">
+              <span className="text-lg">✅</span>
+              <p>{successMsg}</p>
+            </div>
+          )}
+
+          {/* Footer */}
+          <div className="pt-6 border-t border-slate-100 flex justify-between items-center">
+            <p className="text-xs font-bold text-slate-400">© Krishna Academy</p>
+            <div className="flex gap-4">
+              <Link href="/privacy" className="text-xs font-bold text-slate-400 hover:text-blue-900 transition-colors">
+                Privacy
+              </Link>
+              <Link href="/#contact" className="text-xs font-bold text-slate-400 hover:text-blue-900 transition-colors">
+                Help
+              </Link>
+            </div>
           </div>
 
         </div>
