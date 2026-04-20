@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { 
@@ -58,16 +59,6 @@ export default function StudentHomework() {
        window.location.reload();
     }
     setIsSubmitting(false);
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFiles([...files, ...Array.from(e.target.files)]);
-    }
-  };
-
-  const removeFile = (index: number) => {
-    setFiles(files.filter((_, i) => i !== index));
   };
 
   return (

@@ -35,9 +35,9 @@ export default function StudentAttendance() {
       if (data) {
         setAttendance(data);
         
-        const p = data.filter(a => a.status === 'present').length;
-        const ab = data.filter(a => a.status === 'absent').length;
-        const l = data.filter(a => a.status === 'late').length;
+        const p = data.filter((a: any) => a.status === 'present').length;
+        const ab = data.filter((a: any) => a.status === 'absent').length;
+        const l = data.filter((a: any) => a.status === 'late').length;
         const total = data.length;
         
         setStats({
