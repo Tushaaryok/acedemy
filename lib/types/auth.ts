@@ -80,6 +80,7 @@ export const AUTH_ERRORS: Record<string, string> = {
   'User not found': 'Ye number registered nahi hai. Admin se contact karo 📞',
   'Too many requests': 'Bahut zyada baar try kiya. Thodi der baad aao ⏳',
   'Network error': 'Internet connection check karo aur retry karo 🌐',
+  'phone_provider_disabled': 'SMS Provider setup nahi hai. Supabase Dashboard mein Phone Auth enable karo 🔧',
   default: 'Kuch gadbad ho gayi. Dobara try karo 🔄',
 };
 
