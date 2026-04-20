@@ -48,7 +48,11 @@ export default function DashboardSidebar({ role = 'student' }: { role?: 'student
     ],
     teacher: [
       { name: 'Faculty Hub', href: '/dashboard/teacher', icon: LayoutDashboard },
+      { name: 'Live Studio', href: '/dashboard/teacher/live', icon: Video },
+      { name: 'My Courses', href: '/dashboard/teacher/courses', icon: BookOpen },
       { name: 'Material Vault', href: '/dashboard/teacher/material', icon: FileText },
+      { name: 'Homework Hub', href: '/dashboard/teacher/homework', icon: GraduationCap },
+      { name: 'Test Center', href: '/dashboard/teacher/tests', icon: HelpCircle },
       { name: 'Mark Attendance', href: '/dashboard/teacher/attendance', icon: Calendar },
       { name: 'Response Desk', href: '/dashboard/teacher/doubts', icon: MessageSquare },
       { name: 'My Profile', href: '/dashboard/teacher/profile', icon: User },

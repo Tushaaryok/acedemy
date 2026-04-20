@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Baloo_2, Noto_Sans } from "next/font/google";
 // @ts-ignore
 import "./globals.css";
 import Script from "next/script";
@@ -7,7 +7,9 @@ import Header from "@/src/components/Header/Header";
 import Footer from "@/src/components/Footer/Footer";
 import FloatingActions from "@/src/components/Global/FloatingActions";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
+const baloo2 = Baloo_2({ subsets: ["latin"], weight: ['400', '500', '600', '700', '800'], variable: '--font-baloo' });
+const notoSans = Noto_Sans({ subsets: ["latin"], weight: ['400', '500', '700'], variable: '--font-noto' });
 
 import SchemaOrg from "@/src/components/SEO/SchemaOrg";
 
@@ -49,7 +51,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${baloo2.variable} ${notoSans.variable}`}>
       <body className={inter.className}>
         <Header />
         {children}

@@ -8,6 +8,11 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        baloo: ['var(--font-baloo)', 'cursive'],
+        noto: ['var(--font-noto)', 'sans-serif'],
+        inter: ['var(--font-inter)', 'sans-serif'],
+      },
       colors: {
         amber: {
           50: '#fffbeb',
