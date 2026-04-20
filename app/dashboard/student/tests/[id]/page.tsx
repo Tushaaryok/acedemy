@@ -84,28 +84,28 @@ export default function ExamInterface() {
 
   if (isFinished) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-6 text-white text-center">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6 text-white text-center">
         <div className="max-w-md w-full space-y-8 animate-in zoom-in-95 duration-500">
-           <div className="w-24 h-24 bg-emerald-500 rounded-full flex items-center justify-center mx-auto shadow-2xl shadow-emerald-500/20">
+           <div className="w-24 h-24 bg-emerald-500 rounded-full flex items-center justify-center mx-auto shadow-2xl shadow-emerald-500/20 mb-10">
               <CheckCircle2 size={48} />
            </div>
            <div className="space-y-4">
-              <h1 className="text-4xl font-black tracking-tighter">Assessment Complete</h1>
-              <p className="text-slate-400 font-medium">Your responses have been securely uploaded to the academy vault. Results will be declared after primary faculty review.</p>
+              <h1 className="text-4xl font-baloo font-bold tracking-tight">Assessment Complete</h1>
+              <p className="text-slate-400 font-medium">Bohot badhiya! Your responses have been securely uploaded. Results will be declared soon after faculty review.</p>
            </div>
            <div className="grid grid-cols-2 gap-4">
               <div className="bg-white/5 p-6 rounded-3xl border border-white/10">
-                 <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Questions</p>
+                 <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest leading-loose">Questions</p>
                  <p className="text-2xl font-black">{MOCK_QUESTIONS.length}</p>
               </div>
               <div className="bg-white/5 p-6 rounded-3xl border border-white/10">
-                 <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Attempted</p>
+                 <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest leading-loose">Attempted</p>
                  <p className="text-2xl font-black">{Object.keys(answers).length}</p>
               </div>
            </div>
            <button 
              onClick={() => router.push('/dashboard/student/tests')}
-             className="w-full bg-white text-slate-900 py-6 rounded-[24px] font-black text-xs uppercase tracking-widest hover:bg-amber-500 hover:text-white transition-all transform active:scale-95 shadow-2xl shadow-white/5"
+             className="w-full bg-white text-slate-900 py-6 rounded-[24px] font-black text-xs uppercase tracking-widest hover:bg-amber-500 hover:text-white transition-all transform active:scale-95 shadow-2xl shadow-white/5 mt-8"
            >
               Return to Hall
            </button>
@@ -123,8 +123,8 @@ export default function ExamInterface() {
               K
            </div>
            <div>
-              <h2 className="font-black text-slate-900 tracking-tight">Unit Test: Thermodynamics</h2>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Quantum Scholar Portal • Locked Environment</p>
+              <h2 className="font-baloo font-bold text-slate-900 tracking-tight">Unit Test: Thermodynamics</h2>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-loose">Sawal-Jawab Portal • Locked Environment</p>
            </div>
         </div>
 
@@ -148,7 +148,7 @@ export default function ExamInterface() {
             <div className="bg-white rounded-[48px] p-10 md:p-16 border border-slate-100 shadow-sm relative overflow-hidden group min-h-[500px] flex flex-col">
                <div className="space-y-10 flex-1">
                   <div className="flex justify-between items-center text-slate-400">
-                     <span className="text-xs font-black text-indigo-600 bg-indigo-50 px-4 py-1.5 rounded-full uppercase tracking-widest">Question {currentQ + 1} of {MOCK_QUESTIONS.length}</span>
+                     <span className="text-xs font-black text-indigo-600 bg-indigo-50 px-4 py-1.5 rounded-full uppercase tracking-widest">Sawal (Question) {currentQ + 1} of {MOCK_QUESTIONS.length}</span>
                      <div className="flex items-center gap-6">
                         <button 
                           onClick={() => toggleBookmark(currentQ)}
@@ -164,7 +164,7 @@ export default function ExamInterface() {
                   </div>
 
                   <div className="space-y-10">
-                     <h3 className="text-3xl font-black text-slate-900 leading-tight tracking-tight italic">
+                     <h3 className="text-3xl font-baloo font-bold text-slate-900 leading-tight tracking-tight">
                         {MOCK_QUESTIONS[currentQ].question}
                      </h3>
 

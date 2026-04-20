@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react';
 import './Header.css';
 import logo from '../../assets/logo.jpeg';
 import Link from 'next/link';
-import { Menu, X, ArrowRight, Sparkles } from 'lucide-react';
+import { Menu, X, ArrowRight, Sparkles, Search } from 'lucide-react';
+import SearchModal from '../Global/SearchModal';
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeLink, setActiveLink] = useState('#home');
 
   useEffect(() => {
@@ -82,6 +84,14 @@ export default function Header() {
         
         {/* Right: Actions */}
         <div className="header-actions">
+           <button 
+             onClick={() => setIsSearchOpen(true)}
+             className="p-3 text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-2xl transition-all"
+             aria-label="Open search"
+           >
+              <Search size={22} />
+           </button>
+
            <Link 
              href="/login" 
              className="btn btn-enroll desktop-only flex items-center gap-2 group"
@@ -105,6 +115,8 @@ export default function Header() {
       {isMobileMenuOpen && (
         <div className="overlay animate-in fade-in duration-300" onClick={() => setIsMobileMenuOpen(false)}></div>
       )}
+      {/* Global Search Modal */}
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </header>
   );
 }

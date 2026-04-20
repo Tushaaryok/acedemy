@@ -91,7 +91,7 @@ export default function Admission() {
                 <div className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-indigo-600/20">
                    <Sparkles size={12} fill="currentColor" /> ADMISSIONS 2024-25 OPEN
                 </div>
-                <h2 className="text-6xl font-black text-slate-900 tracking-tighter leading-tight">
+                <h2 className="text-6xl font-baloo font-bold text-slate-900 tracking-tight leading-tight">
                    Start Your Journey To <br />
                    <span className="text-indigo-600">The Top Rank.</span>
                 </h2>
@@ -124,9 +124,12 @@ export default function Admission() {
           <div className="flex-1">
              <div className="bg-white rounded-[64px] p-10 md:p-14 shadow-2xl shadow-slate-200/50 border border-white relative overflow-hidden group">
                 <form className="relative z-10 space-y-8" onSubmit={handleSubmit}>
-                   <div className="space-y-2">
-                      <h3 className="text-3xl font-black text-slate-900 tracking-tighter">Student Registration</h3>
-                      <p className="text-slate-500 text-sm font-medium">Please provide accurate contact details for verification.</p>
+                   <div className="space-y-2 mb-10">
+                      <div className="bg-rose-50 text-rose-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border border-rose-100 animate-pulse w-fit">
+                         Batch 2024: Only 12 Seats Left
+                      </div>
+                      <h3 className="text-3xl font-baloo font-bold text-slate-900 tracking-tight">Student Registration</h3>
+                      <p className="text-slate-500 text-sm font-medium">Professional guidance for Board Exams & NEET/JEE preparation.</p>
                    </div>
 
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

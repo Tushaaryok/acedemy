@@ -238,17 +238,17 @@ export default function LoginPage() {
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-950 to-blue-800 relative p-20 flex-col justify-between overflow-hidden">
         <div className="relative z-10">
           {/* Logo */}
-          <div className="w-16 h-16 bg-amber-500 rounded-2xl flex items-center justify-center font-black text-2xl text-white mb-8 shadow-2xl">
+          <div className="w-16 h-16 bg-white/10 backdrop-blur-xl rounded-[24px] flex items-center justify-center font-baloo font-bold text-2xl text-white mb-10 border border-white/20 shadow-2xl">
             KA
           </div>
 
-          <h1 className="text-5xl font-black text-white leading-tight mb-6">
+          <h1 className="text-6xl font-baloo font-bold text-white leading-[1.1] mb-8 tracking-tight">
             Upleta ka<br />
             <span className="text-amber-400">#1 Digital</span><br />
             Classroom.
           </h1>
-          <p className="text-blue-200 text-lg font-medium max-w-md leading-relaxed">
-            Ghar baithe padho, teachers se seekho, aur apna future banao.
+          <p className="text-blue-100 text-lg font-medium max-w-md leading-relaxed opacity-80">
+            Join 6.5L+ students learning in their own language. regional excellence starts here.
           </p>
         </div>
 
@@ -261,8 +261,8 @@ export default function LoginPage() {
             { num: '3', label: 'Expert Faculty' },
           ].map((s) => (
             <div key={s.label}>
-              <p className="text-3xl font-black text-white">{s.num}</p>
-              <p className="text-xs font-black uppercase tracking-widest text-blue-400 mt-1">{s.label}</p>
+              <p className="text-4xl font-baloo font-bold text-white">{s.num}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-300 mt-1">{s.label}</p>
             </div>
           ))}
         </div>
@@ -287,16 +287,16 @@ export default function LoginPage() {
 
             {step === 'phone' ? (
               <>
-                <h2 className="text-3xl font-black text-slate-900">Namaskar! 🙏</h2>
+                <h2 className="text-4xl font-baloo font-bold text-slate-900 tracking-tight">Namaskar! 🙏</h2>
                 <p className="text-slate-500 font-medium">
                   Apna mobile number dalo, hum OTP bhejenge
                 </p>
               </>
             ) : (
               <>
-                <h2 className="text-3xl font-black text-slate-900">OTP dalein 🔐</h2>
-                <p className="text-slate-500 font-medium">
-                  +91-{phone} pe 6-digit OTP bheja hai
+                <h2 className="text-4xl font-baloo font-bold text-slate-900 tracking-tight">OTP dalein 🔐</h2>
+                <p className="text-slate-500 font-medium text-lg">
+                  +91-{phone} pe OTP bheja hai
                 </p>
               </>
             )}

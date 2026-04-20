@@ -88,7 +88,7 @@ export default function StudentFees() {
            <div className="flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-widest bg-emerald-50 w-fit px-3 py-1 rounded-full border border-emerald-100 mb-2">
               <ShieldCheck size={12} /> Secure Billing Portal
            </div>
-           <h1 className="text-5xl font-black text-slate-900 tracking-tighter">Finance Desk</h1>
+           <h1 className="text-5xl font-baloo font-bold text-slate-900 tracking-tight">Finance Desk</h1>
            <p className="text-slate-500 font-medium text-lg">Manage your academic investments and fee installments.</p>
         </div>
         
@@ -112,7 +112,7 @@ export default function StudentFees() {
                   <div className="flex justify-between items-start">
                      <div className="space-y-2">
                         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Current Installment</span>
-                        <h2 className="text-4xl font-black tracking-tight">Standard 12 - Term II</h2>
+                        <h2 className="text-4xl font-baloo font-bold tracking-tight">Standard 12 - Term II</h2>
                      </div>
                      <CreditCard size={48} className="text-indigo-400 opacity-50" />
                   </div>

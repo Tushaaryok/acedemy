@@ -23,7 +23,25 @@ export default function SchemaOrg() {
       "https://www.facebook.com/share/1KqsMzi9CW/",
       "https://www.instagram.com/shreeram_singh901?igsh=MXBoMWR0bGd3cHhxNQ==",
       "https://youtube.com"
-    ]
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Coaching Services",
+      "itemListElement": [
+        {
+          "@type": "Course",
+          "name": "Std 12 Science Board Preparation",
+          "description": "Comprehensive coaching for GSEB/CBSE 12th Science.",
+          "provider": { "@type": "EducationalOrganization", "name": "Krishna Academy" }
+        },
+        {
+          "@type": "Course",
+          "name": "Std 10 Board Excellence",
+          "description": "Foundational coaching for 10th board exams.",
+          "provider": { "@type": "EducationalOrganization", "name": "Krishna Academy" }
+        }
+      ]
+    }
   };
 
   return (

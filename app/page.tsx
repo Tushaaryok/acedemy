@@ -8,6 +8,7 @@ import Gallery from '@/src/components/Gallery/Gallery';
 import Testimonials from '@/src/components/Testimonials/Testimonials';
 import Admission from '@/src/components/Admission/Admission';
 import Contact from '@/src/components/Contact/Contact';
+import AppDownload from '@/src/components/AppDownload/AppDownload';
 import Preloader from '@/src/components/Global/Preloader';
 
 export default function Home() {
@@ -21,6 +22,7 @@ export default function Home() {
         <Courses />
         <Faculty />
         <Results />
+        <AppDownload />
         <Gallery />
         <Testimonials />
         <Admission />

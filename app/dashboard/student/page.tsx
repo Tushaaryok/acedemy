@@ -13,138 +13,124 @@ import {
   Bell, 
   Zap,
   Target,
-  ChevronRight
+  ChevronRight,
+  ShieldCheck
 } from 'lucide-react';
 import Link from 'next/link';
+import NotificationCenter from '@/src/components/Global/NotificationCenter';
+import { DashboardSkeleton } from '@/src/components/Global/Skeleton';
+import StudentAIChat from '@/src/components/Global/StudentAIChat';
 
 export default function StudentDashboard() {
   const [profile, setProfile] = useState<any>(null);
   const [enrollment, setEnrollment] = useState<any>(null);
   const [notices, setNotices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
   
   const supabase = createClient();
 
   useEffect(() => {
-    async function fetchData() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-
-      const { data: prf } = await supabase.from('users').select('*').eq('id', session.user.id).single();
-      const { data: enr } = await supabase.from('enrollments').select('*, batches(*)').eq('student_id', session.user.id).single();
-      const { data: ntc } = await supabase.from('notices').select('*').order('created_at', { ascending: false }).limit(3);
-
-      setProfile(prf);
-      setEnrollment(enr);
-      setNotices(ntc || []);
-      setLoading(false);
+    async function getDashboardData() {
+      setLoading(true);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: prof } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+          const { data: enr } = await supabase.from('enrollments').select('*, courses(*)').eq('student_id', user.id).single();
+          const { data: ntc } = await supabase.from('notices').select('*').order('created_at', { ascending: false }).limit(3);
+          
+          setProfile(prof);
+          setEnrollment(enr);
+          setNotices(ntc || []);
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
     }
-    fetchData();
+    getDashboardData();
   }, [supabase]);
 
-  if (loading) return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 gap-4">
-      <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
-      <p className="text-slate-500 font-bold animate-pulse tracking-widest uppercase text-xs">Accessing Student Portal...</p>
-    </div>
-  );
+  if (loading) return <DashboardSkeleton />;
 
   return (
-    <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-12 min-h-screen bg-white/50">
-      {/* Premium Header */}
-      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-widest bg-amber-50 w-fit px-3 py-1 rounded-full border border-amber-100">
-             <Star size={12} fill="currentColor" /> Scholar Premium Access
-          </div>
-          <h1 className="text-5xl font-black text-slate-900 tracking-tighter">
-            Welcome back, {profile?.full_name?.split(' ')[0] || 'Scholar'}!
-          </h1>
-          <p className="text-slate-500 font-medium text-lg leading-none">
-            {enrollment?.batches?.name || 'Academic Batch Assigning...'} • {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' })}
-          </p>
-        </div>
-        
-        <div className="flex gap-4">
-          <div className="bg-white px-8 py-5 rounded-[32px] border border-slate-100 shadow-sm flex items-center gap-5 group hover:border-orange-200 transition-all">
-            <div className="w-12 h-12 bg-orange-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
-              <Flame size={24} fill="currentColor" />
+    <div className="p-6 md:p-12 max-w-7xl mx-auto space-y-12">
+      {/* Dynamic Welcome Hero */}
+      <div className="relative bg-slate-900 rounded-[56px] p-10 md:p-20 overflow-hidden shadow-2xl">
+        <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-12">
+          <div className="space-y-6 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 bg-indigo-500/20 text-indigo-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-indigo-400/20">
+               <Zap size={12} fill="currentColor" /> Welcome Back, Scholar
             </div>
-            <div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Streak</p>
-              <p className="text-2xl font-black text-slate-900 leading-none">{profile?.streak || 0} Days</p>
+            <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter font-baloo">
+               Hello, {profile?.full_name?.split(' ')[0] || 'Genius'}!
+            </h1>
+            <p className="text-slate-400 font-medium text-lg max-w-lg leading-relaxed italic">
+               "{enrollment?.courses?.title || 'Batch 2024'}" is active. Your current streak is 12 days. Keep it up!
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+               <Link href="/dashboard/student/live" className="bg-indigo-600 text-white px-10 py-5 rounded-[24px] font-black text-[10px] uppercase tracking-widest shadow-xl shadow-indigo-600/30 hover:bg-indigo-500 transition-all flex items-center gap-3 active:scale-95">
+                  ENTER LIVE CLASS <ArrowRight size={18} />
+               </Link>
+               <button onClick={() => setIsNotifOpen(true)} className="bg-white/5 text-white border border-white/5 px-8 py-5 rounded-[24px] font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all">
+                  VIEW UPDATES
+               </button>
             </div>
           </div>
-          <div className="bg-white px-8 py-5 rounded-[32px] border border-slate-100 shadow-sm flex items-center gap-5 group hover:border-indigo-200 transition-all">
-            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/20 group-hover:scale-110 transition-transform">
-              <Zap size={24} fill="currentColor" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Learning XP</p>
-              <p className="text-2xl font-black text-slate-900 leading-none">{profile?.credits || 0}</p>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Learning Hub */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        
-        {/* Left Column: Learning Deck */}
-        <div className="lg:col-span-2 space-y-10">
           
-          {/* Active Lesson Card */}
-          <div className="bg-slate-900 rounded-[48px] p-10 text-white relative overflow-hidden group">
-            <div className="relative z-10 space-y-8">
-              <div className="flex justify-between items-start">
-                <div className="space-y-4">
-                  <span className="bg-white/10 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md">Next in path</span>
-                  <h2 className="text-4xl font-black tracking-tight leading-tight">Advanced Geometry <br /> & Solid Shapes</h2>
+          {/* Streak & Stats Card */}
+          <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[48px] p-10 space-y-10 min-w-[300px]">
+             <div className="flex justify-between items-start gap-12">
+                <div className="space-y-1">
+                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Global Rank</p>
+                   <p className="text-4xl font-black text-white">#42</p>
                 </div>
-                <div className="w-16 h-16 bg-white/10 rounded-3xl flex items-center justify-center backdrop-blur-sm">
-                   <Target size={32} className="text-amber-500" />
+                <div className="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center text-slate-900 shadow-xl shadow-amber-500/20">
+                   <Trophy size={28} />
                 </div>
-              </div>
-              
-              <div className="flex items-center gap-10 pt-4 border-t border-white/5">
-                <div>
-                   <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-loose">Completion</p>
-                   <p className="text-2xl font-black">68%</p>
-                </div>
-                <div className="flex-1 space-y-3">
-                   <p className="text-xs font-bold text-slate-400">Mastery Level: Intermediate</p>
-                   <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full bg-amber-500 w-[68%] rounded-full shadow-[0_0_15px_rgba(245,158,11,0.5)] transition-all duration-1000"></div>
+             </div>
+             <div className="space-y-4">
+                <div className="flex justify-between items-end">
+                   <div>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Weekly Goal</p>
+                      <p className="text-sm font-bold text-slate-200">85% Syllabus</p>
+                   </div>
+                   <div className="text-right">
+                      <p className="text-xs font-black text-emerald-400">12/15 Hrs</p>
                    </div>
                 </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/dashboard/student/courses" className="bg-white text-slate-900 px-10 py-5 rounded-[24px] font-black flex items-center justify-center gap-3 hover:bg-amber-500 hover:text-white transition-all transform hover:scale-[1.02] active:scale-95">
-                  RESUME MASTERY <ArrowRight size={20} />
-                </Link>
-                <div className="flex items-center gap-4 px-4 h-15">
-                   <div className="flex -space-x-3">
-                      {[1,2,3].map(i => (
-                        <div key={i} className="h-10 w-10 rounded-full border-4 border-slate-900 bg-slate-800 flex items-center justify-center font-bold text-xs ring-2 ring-transparent group-hover:ring-amber-500/50 transition-all">
-                           👤
-                        </div>
-                      ))}
-                   </div>
-                   <p className="text-xs font-bold text-slate-400">12 batchmates active now</p>
+                <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                   <div className="h-full bg-emerald-500 w-4/5 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
                 </div>
-              </div>
-            </div>
-
-            {/* Abstract Visuals */}
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-600/10 rounded-full blur-[100px] -mr-48 -mt-48"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] -ml-24 -mb-24"></div>
+             </div>
+             <div className="flex items-center gap-3">
+                <div className="flex -space-x-3">
+                   {[1,2,3].map(i => (
+                     <div key={i} className="w-8 h-8 rounded-full border-2 border-slate-900 bg-slate-700 flex items-center justify-center text-[8px] font-bold">U{i}</div>
+                   ))}
+                </div>
+                <p className="text-xs font-bold text-slate-400">12 batchmates active now</p>
+             </div>
           </div>
+        </div>
+        {/* Abstract Visuals */}
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-600/10 rounded-full blur-[100px] -mr-48 -mt-48"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] -ml-24 -mb-24"></div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        {/* Left Column: Progress & Curriculum */}
+        <div className="lg:col-span-8 space-y-12">
+          
+          {/* AI Academic Mentor */}
+          <StudentAIChat />
 
           {/* Subjects Progress List */}
           <div className="bg-white rounded-[48px] p-10 border border-slate-100 shadow-sm">
              <div className="flex justify-between items-end mb-8">
-                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Academic Progress</h3>
+                <h3 className="text-2xl font-black text-slate-900 tracking-tight font-baloo">Academic Progress</h3>
                 <Link href="/dashboard/student/courses" className="text-xs font-black text-amber-600 uppercase tracking-widest hover:underline">Full Curriculum</Link>
              </div>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -172,11 +158,11 @@ export default function StudentDashboard() {
         </div>
 
         {/* Right Column: Alerts & Performance */}
-        <div className="space-y-10">
+        <div className="lg:col-span-4 space-y-10">
           
           {/* Quick Notice Board */}
           <div className="bg-white rounded-[40px] p-8 border border-slate-100 shadow-sm relative overflow-hidden group">
-            <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center justify-between">
+            <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center justify-between font-baloo">
                Bulletin Board <Bell size={18} className="text-amber-500" />
             </h3>
             <div className="space-y-4">
@@ -208,7 +194,7 @@ export default function StudentDashboard() {
                 <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-2 flex items-center gap-2">
                    <CheckCircle2 size={12} /> Last Test Result
                 </p>
-                <h3 className="text-2xl font-black mb-1">Quantum Physics</h3>
+                <h3 className="text-2xl font-black mb-1 font-baloo">Quantum Physics</h3>
                 <p className="text-indigo-300 text-xs font-medium opacity-80 mb-6 tracking-wide">Weekly Assessment • 15 April</p>
                 
                 <div className="flex items-end gap-3 mb-6">
@@ -220,13 +206,28 @@ export default function StudentDashboard() {
                    Analyze Performance
                 </Link>
              </div>
-             
-             <div className="absolute -right-10 -bottom-10 opacity-10 transform -rotate-12 group-hover:scale-110 transition-transform">
+             <div className="absolute -right-10 -bottom-10 opacity-10 transform -rotate-12 group-hover:scale-110 transition-transform text-white">
                 <Trophy size={180} />
              </div>
           </div>
+
+          {/* Security Guard Mock */}
+          <div className="bg-slate-50 p-8 rounded-[40px] border border-slate-200/50 space-y-4">
+             <div className="flex items-center gap-3 text-slate-400 font-black text-[10px] uppercase tracking-widest">
+                <ShieldCheck size={16} /> Security Guard
+             </div>
+             <div className="space-y-1">
+                <p className="text-xs font-bold text-slate-900">Current Device: <span className="text-indigo-600 font-black">Windows Desktop</span></p>
+                <p className="text-[10px] text-slate-500 font-medium">Last session: Active now from Upleta, IN</p>
+             </div>
+             <p className="text-[8px] font-black text-slate-400 uppercase tracking-tighter leading-tight italic">
+                Device locking enabled. Contact Admin to reset primary device.
+             </p>
+          </div>
         </div>
       </div>
+
+      <NotificationCenter isOpen={isNotifOpen} onClose={() => setIsNotifOpen(false)} />
     </div>
   );
 }

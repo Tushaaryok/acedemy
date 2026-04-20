@@ -96,7 +96,7 @@ export default function MarkAttendance() {
           <Link href="/dashboard/teacher" className="flex items-center gap-2 text-slate-400 hover:text-amber-600 font-bold text-xs uppercase tracking-widest transition-all group">
             <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" /> Back to Portal
           </Link>
-          <h1 className="text-5xl font-black text-slate-900 tracking-tighter">Roll Call</h1>
+          <h1 className="text-5xl font-baloo font-bold text-slate-900 tracking-tight">Roll Call</h1>
           <p className="text-slate-500 font-medium">Capture presence and analyze student engagement levels.</p>
         </div>
         

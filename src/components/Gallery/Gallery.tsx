@@ -31,7 +31,7 @@ export default function Gallery() {
              <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-indigo-100">
                 <Sparkles size={12} fill="currentColor" /> ACADEMY CHRONICLES
              </div>
-             <h2 className="text-5xl font-black text-slate-900 tracking-tighter leading-tight">
+             <h2 className="text-5xl font-baloo font-bold text-slate-900 tracking-tight leading-tight">
                 Life Within <span className="text-indigo-600">Our Walls.</span>
              </h2>
              <p className="text-slate-500 font-medium text-lg leading-relaxed">

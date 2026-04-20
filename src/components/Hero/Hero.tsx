@@ -17,17 +17,18 @@ export default function Hero() {
       <div className="container hero-wrapper">
         {/* Left: Content Side */}
         <div className="hero-content">
-          <div className="hero-badge-pw flex items-center gap-2">
-            <Trophy size={16} fill="currentColor" />
-            Upleta’s #1 Coaching Institute
+            <div className="hero-badge-pw flex items-center gap-2 font-black uppercase text-[10px] tracking-widest">
+            <Trophy size={14} fill="currentColor" />
+            Upleta ka #1 Digital Classroom
           </div>
           
-          <h1 className="hero-heading">
-            Shape Your Future With <span className="text-amber-500">Excellence</span> & Expertise
+           <h1 className="hero-heading font-baloo">
+            Upleta's <span className="text-amber-500 font-bold">Best Coaching</span> <br/> 
+            Ab Apni Bhasha Mein.
           </h1>
           
-          <p className="hero-description">
-            Join Krishna Academy for a premium learning experience. We combine experienced teaching with cutting-edge technology for Std 5 to 12 students.
+           <p className="hero-description text-xl font-medium">
+            Krishna Academy provides premium board-focused learning. Join 1000+ students from Upleta & surrounding villages in their journey to board excellence.
           </p>
 
           {/* Social Proof / Stats */}

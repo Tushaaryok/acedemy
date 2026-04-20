@@ -6,6 +6,7 @@ import Script from "next/script";
 import Header from "@/src/components/Header/Header";
 import Footer from "@/src/components/Footer/Footer";
 import FloatingActions from "@/src/components/Global/FloatingActions";
+import FloatingDoubtButton from "@/src/components/Global/FloatingDoubtButton";
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const baloo2 = Baloo_2({ subsets: ["latin"], weight: ['400', '500', '600', '700', '800'], variable: '--font-baloo' });
@@ -58,6 +59,7 @@ export default function RootLayout({
         <SchemaOrg />
         <Footer />
         <FloatingActions />
+        <FloatingDoubtButton />
         <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="beforeInteractive" />
       </body>
     </html>

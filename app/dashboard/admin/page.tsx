@@ -33,7 +33,7 @@ export default async function AdminDashboard() {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">System Overview</h1>
+          <h1 className="text-4xl font-baloo font-bold text-slate-900 tracking-tight">System Overview</h1>
           <p className="text-slate-500 font-medium">Academy Operations & Performance Console</p>
         </div>
         <div className="flex items-center gap-3">
@@ -70,7 +70,7 @@ export default async function AdminDashboard() {
            <div className="relative z-10 h-full flex flex-col justify-between">
               <div className="flex justify-between items-start">
                  <div>
-                    <h2 className="text-2xl font-black mb-1">Fee Collection Trend</h2>
+                    <h2 className="text-2xl font-baloo font-bold mb-1">Fee Collection Trend</h2>
                     <p className="text-slate-400 text-sm">Revenue growth over the last 6 months</p>
                  </div>
                  <div className="flex gap-2">

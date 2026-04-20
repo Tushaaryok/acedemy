@@ -42,8 +42,8 @@ const featuresData = [
   },
   {
     id: 5,
-    title: 'Digital Portal',
-    description: '24/7 access to live classes, recorded lectures, and parent tracking apps.',
+    title: 'Hinglish Digital Portal',
+    description: '24/7 access to live classes, recorded lectures, and doubt solving in your own language.',
     icon: <ShieldCheck size={28} />,
     color: 'blue'
   },
@@ -64,7 +64,7 @@ export default function Features() {
           <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-amber-100">
              <Sparkles size={12} fill="currentColor" /> The Krishna Edge
           </div>
-          <h2 className="text-5xl font-black text-slate-900 tracking-tighter leading-tight">
+          <h2 className="text-5xl font-baloo font-bold text-slate-900 tracking-tight leading-tight">
             Why We Are Upleta's <span className="text-amber-500">Choice.</span>
           </h2>
           <p className="text-slate-500 font-medium text-lg leading-relaxed">
@@ -78,7 +78,7 @@ export default function Features() {
               <div className="w-16 h-16 rounded-3xl bg-white shadow-sm flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500">
                 {feature.icon}
               </div>
-              <h3 className="text-2xl font-black text-slate-900 mb-4 tracking-tight">{feature.title}</h3>
+              <h3 className="text-2xl font-baloo font-bold text-slate-900 mb-4 tracking-tight">{feature.title}</h3>
               <p className="text-slate-500 font-medium leading-relaxed">
                 {feature.description}
               </p>

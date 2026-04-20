@@ -9,7 +9,8 @@ import {
   Bell,
   ArrowUpRight,
   BookOpen,
-  CheckCircle2
+  CheckCircle2,
+  Radio
 } from 'lucide-react';
 import Link from 'next/link';
 

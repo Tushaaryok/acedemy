@@ -36,7 +36,7 @@ export default function StudentTests() {
            <div className="flex items-center gap-2 text-indigo-600 font-black text-[10px] uppercase tracking-widest bg-indigo-50 w-fit px-3 py-1 rounded-full border border-indigo-100 mb-2">
               <ClipboardCheck size={12} /> Assessment Center
            </div>
-           <h1 className="text-5xl font-black text-slate-900 tracking-tighter">Exam Hall</h1>
+           <h1 className="text-5xl font-baloo font-bold text-slate-900 tracking-tight">Exam Hall</h1>
            <p className="text-slate-500 font-medium text-lg">Measure your progress and dominate the leaderboards.</p>
         </div>
         
@@ -77,7 +77,7 @@ export default function StudentTests() {
                                 </span>
                                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{test.subject}</span>
                              </div>
-                             <h3 className="text-2xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors">{test.title}</h3>
+                             <h3 className="text-2xl font-baloo font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{test.title}</h3>
                              <div className="flex flex-wrap gap-x-6 gap-y-2">
                                 <span className="flex items-center gap-2 text-xs font-bold text-slate-500"><ClipboardCheck size={14} /> {test.questions} Questions</span>
                                 <span className="flex items-center gap-2 text-xs font-bold text-slate-500"><Clock size={14} /> {test.duration}</span>
@@ -127,7 +127,7 @@ export default function StudentTests() {
                                  </div>
                               </td>
                               <td className="px-10 py-8 text-right">
-                                 <button className="text-xs font-black uppercase tracking-widest text-indigo-600 hover:text-indigo-900">Analysis</button>
+                                 <Link href="/dashboard/student/tests/analysis" className="text-xs font-black uppercase tracking-widest text-indigo-600 hover:text-indigo-900">Analysis</Link>
                               </td>
                            </tr>
                          ))}

@@ -29,7 +29,7 @@ export default function StudentNotes() {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Digital Library</h1>
+          <h1 className="text-5xl font-baloo font-bold text-slate-900 tracking-tight">Digital Library</h1>
           <p className="text-slate-500 font-medium">Access curated study material and teacher-approved notes.</p>
         </div>
         <div className="relative w-full md:w-80 group">
@@ -79,7 +79,7 @@ export default function StudentNotes() {
         {/* Notes Grid */}
         <div className="flex-1 space-y-6">
            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-black text-slate-900">Recommended for You</h2>
+              <h2 className="text-2xl font-baloo font-bold text-slate-900">Recommended for You</h2>
               <button className="text-blue-900 font-black text-[10px] uppercase tracking-widest flex items-center gap-2 hover:underline">
                  Filter by Subject <Filter size={14} />
               </button>
@@ -99,7 +99,7 @@ export default function StudentNotes() {
                        )}
                     </div>
 
-                    <h3 className="text-lg font-bold text-slate-900 mb-2 leading-tight group-hover:text-blue-900 transition-colors">{note.title}</h3>
+                    <h3 className="text-xl font-baloo font-bold text-slate-900 mb-2 leading-tight group-hover:text-blue-900 transition-colors uppercase tracking-tight">{note.title}</h3>
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">By {note.teacher} • <span className="text-blue-600 underline underline-offset-4">{note.subject}</span></p>
 
                     <div className="flex items-center justify-between pt-4 border-t border-slate-50">
