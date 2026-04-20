@@ -168,6 +168,7 @@ ALTER TABLE enquiries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE live_sessions ENABLE ROW LEVEL SECURITY;
 
 -- Policies
+CREATE POLICY "Public can view batches" ON batches FOR SELECT USING (true);
 CREATE POLICY "Public profiles are viewable by everyone" ON users FOR SELECT USING (true);
 CREATE POLICY "Users can edit own profile" ON users FOR UPDATE USING (auth.uid() = id);
 CREATE POLICY "Notices are viewable by all" ON notices FOR SELECT USING (true);
