@@ -1,9 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Plus, 
   FileText, 
-  Users, 
+  Users as UsersIcon, 
   CheckCircle2, 
   Clock, 
   Search, 
@@ -11,17 +11,73 @@ import {
   FileUp, 
   MoreVertical,
   ChevronRight,
-  AlertCircle
+  AlertCircle,
+  Loader2,
+  X
 } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 
 export default function TeacherHomework() {
+  const [homeworks, setHomeworks] = useState<any[]>([]);
+  const [batches, setBatches] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({ title: '', batch_id: '', deadline: '', description: '' });
 
-  const HOMEWORKS = [
-    { id: '1', title: 'Calculus Exercise 3.2', batch: 'Std 12 Science A', deadline: 'Today, 11:59 PM', submissions: 32, total: 45, status: 'active' },
-    { id: '2', title: 'English Grammar Quiz - Tenses', batch: 'Std 10 Commerce B', deadline: 'Tomorrow, 08:00 AM', submissions: 12, total: 40, status: 'draft' },
-    { id: '3', title: 'Physics Numerical: Unit 4', batch: 'Std 11 Science', deadline: 'Exp. 2d ago', submissions: 38, total: 38, status: 'completed' },
-  ];
+  const supabase = createClient();
+
+  useEffect(() => {
+    async function fetchData() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const { data: hwData } = await supabase
+        .from('homework')
+        .select('*, batches(name)')
+        .order('created_at', { ascending: false });
+
+      const { data: batchData } = await supabase
+        .from('batches')
+        .select('*');
+
+      if (hwData) setHomeworks(hwData);
+      if (batchData) setBatches(batchData);
+      setLoading(false);
+    }
+    fetchData();
+  }, [supabase]);
+
+  const handleCreate = async () => {
+    if (!formData.title || !formData.batch_id) {
+      alert('Title and Batch are required.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    const { error } = await supabase.from('homework').insert([{
+      ...formData,
+      teacher_id: session?.user?.id,
+      urgency: 'medium'
+    }]);
+
+    if (!error) {
+       alert('Assignment successfully broadcasted!');
+       window.location.reload();
+    } else {
+       alert('Error: ' + error.message);
+    }
+    setIsSubmitting(false);
+  };
+
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+      <Loader2 className="animate-spin text-blue-900" size={40} />
+      <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Syncing Academic Data...</p>
+    </div>
+  );
 
   return (
     <div className="space-y-10 max-w-7xl mx-auto">
@@ -67,21 +123,6 @@ export default function TeacherHomework() {
                  Generate Performance Report
               </button>
            </div>
-
-           <div className="bg-rose-900 rounded-[32px] p-8 text-white">
-              <h3 className="text-lg font-black mb-2 flex items-center gap-2">
-                 <AlertCircle size={20} /> Urgent Review
-              </h3>
-              <p className="text-rose-100 text-xs font-medium mb-6">3 batches have reached their deadline. Start grading to maintain streak.</p>
-              <div className="space-y-3">
-                 {[1, 2].map(i => (
-                    <div key={i} className="bg-white/10 p-4 rounded-2xl flex items-center justify-between group cursor-pointer hover:bg-white/20 transition-all">
-                       <span className="text-xs font-bold uppercase tracking-widest">Std 12 Chemistry</span>
-                       <ChevronRight size={16} className="text-rose-300" />
-                    </div>
-                 ))}
-              </div>
-           </div>
         </div>
 
         {/* Middle/Right: Task List */}
@@ -98,11 +139,9 @@ export default function TeacherHomework() {
            </div>
 
            <div className="space-y-4">
-              {HOMEWORKS.map(hw => (
+              {homeworks.map(hw => (
                  <div key={hw.id} className="bg-white rounded-[40px] p-10 border border-slate-100 shadow-sm flex flex-col md:flex-row gap-8 items-start hover:shadow-xl hover:shadow-blue-900/5 transition-all group">
-                    <div className={`w-20 h-20 rounded-3xl flex items-center justify-center text-3xl shrink-0 transition-transform group-hover:scale-110 ${
-                       hw.status === 'active' ? 'bg-blue-50 text-blue-900' : hw.status === 'completed' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400'
-                    }`}>
+                    <div className="w-20 h-20 rounded-3xl bg-blue-50 text-blue-900 flex items-center justify-center text-3xl shrink-0 transition-transform group-hover:scale-110">
                        <FileText size={32} />
                     </div>
                     
@@ -110,41 +149,21 @@ export default function TeacherHomework() {
                        <div className="flex justify-between items-start">
                           <div>
                              <h4 className="text-xl font-bold text-slate-900">{hw.title}</h4>
-                             <p className="text-xs font-black text-blue-500 uppercase tracking-widest">{hw.batch}</p>
+                             <p className="text-xs font-black text-blue-500 uppercase tracking-widest">{hw.batches?.name || 'Academic Batch'}</p>
                           </div>
-                          <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                             hw.status === 'active' ? 'bg-blue-900 text-white' : hw.status === 'completed' ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'
-                          }`}>
-                             {hw.status}
-                          </span>
                        </div>
                        
                        <div className="flex items-center gap-6 pt-4">
                           <div className="flex items-center gap-2 text-slate-400">
                              <Clock size={16} />
-                             <span className="text-xs font-bold">{hw.deadline}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-slate-400">
-                             <Users size={16} />
-                             <span className="text-xs font-bold">{hw.submissions}/{hw.total} Submissions</span>
-                          </div>
-                       </div>
-
-                       {/* Submission Bar */}
-                       <div className="pt-4 space-y-2">
-                          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
-                             <span>Progress</span>
-                             <span>{Math.round((hw.submissions / hw.total) * 100)}%</span>
-                          </div>
-                          <div className="w-full h-1.5 bg-slate-50 rounded-full overflow-hidden">
-                             <div className={`h-full transition-all duration-1000 ${hw.status === 'completed' ? 'bg-emerald-500' : 'bg-blue-900'}`} style={{ width: `${(hw.submissions / hw.total) * 100}%` }}></div>
+                             <span className="text-xs font-bold">{new Date(hw.deadline).toLocaleDateString()}</span>
                           </div>
                        </div>
                     </div>
 
                     <div className="flex md:flex-col gap-3 shrink-0">
                        <button className="bg-slate-900 text-white px-8 py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-800 transition-all shadow-lg shadow-slate-200">
-                          {hw.status === 'completed' ? 'Recap' : 'Grade'}
+                          Grade
                        </button>
                        <button className="p-3 bg-slate-50 rounded-2xl text-slate-400 hover:bg-slate-100 transition-all flex items-center justify-center">
                           <MoreVertical size={20} />
@@ -152,14 +171,24 @@ export default function TeacherHomework() {
                     </div>
                  </div>
               ))}
+              {homeworks.length === 0 && (
+                <div className="bg-white rounded-[40px] p-20 border border-dashed border-slate-200 text-center space-y-4">
+                   <AlertCircle className="mx-auto text-slate-200" size={48} />
+                   <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">No assignments dispatched yet.</p>
+                </div>
+              )}
            </div>
         </div>
       </div>
 
-      {/* Task Creation Modal Placeholder */}
+      {/* Task Creation Modal */}
       {showCreateModal && (
          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[100] flex items-center justify-center p-6">
-            <div className="bg-white rounded-[40px] p-12 max-w-2xl w-full space-y-8 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-[40px] p-12 max-w-2xl w-full space-y-8 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto relative">
+               <button onClick={() => setShowCreateModal(false)} className="absolute top-8 right-8 text-slate-400 hover:text-slate-900 transition-colors">
+                 <X size={24} />
+               </button>
+               
                <div>
                   <h2 className="text-3xl font-black text-slate-900 tracking-tight">Assign New Task</h2>
                   <p className="text-slate-500 font-medium">Define homework parameters and notify your batch students.</p>
@@ -168,39 +197,49 @@ export default function TeacherHomework() {
                <div className="space-y-6">
                   <div className="space-y-2">
                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Homework Title</label>
-                     <input className="w-full bg-slate-50 rounded-2xl px-6 py-4 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-900 transition-all" placeholder="e.g. Chapter 4 - Geometry Exercise 1" />
+                     <input 
+                      className="w-full bg-slate-50 rounded-2xl px-6 py-4 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-900 transition-all" 
+                      placeholder="e.g. Chapter 4 - Geometry Exercise 1" 
+                      onChange={(e) => setFormData({...formData, title: e.target.value})}
+                     />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                      <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Select Batch</label>
-                        <select className="w-full bg-slate-50 rounded-2xl px-6 py-4 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-900 transition-all appearance-none cursor-pointer">
-                           <option>Std 12 Science A</option>
-                           <option>Std 10 Commerce B</option>
+                        <select 
+                          className="w-full bg-slate-50 rounded-2xl px-6 py-4 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-900 transition-all appearance-none cursor-pointer"
+                          onChange={(e) => setFormData({...formData, batch_id: e.target.value})}
+                        >
+                           <option value="">Choose...</option>
+                           {batches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
                         </select>
                      </div>
                      <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Deadline</label>
-                        <input type="datetime-local" className="w-full bg-slate-50 rounded-2xl px-6 py-4 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-900 transition-all cursor-pointer" />
+                        <input 
+                          type="datetime-local" 
+                          className="w-full bg-slate-50 rounded-2xl px-6 py-4 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-900 transition-all cursor-pointer" 
+                          onChange={(e) => setFormData({...formData, deadline: e.target.value})}
+                        />
                      </div>
                   </div>
                   <div className="space-y-2">
                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Rich Description</label>
-                     <textarea className="w-full bg-slate-50 rounded-2xl px-6 py-4 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-900 transition-all h-32 resize-none" placeholder="Provide instructions, page numbers, etc..."></textarea>
-                  </div>
-                  <div className="p-8 border-2 border-dashed border-slate-100 rounded-[32px] flex flex-col items-center justify-center text-center group cursor-pointer hover:border-blue-300 transition-all">
-                      <FileUp className="text-slate-300 mb-4 group-hover:text-blue-500" size={32} />
-                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Upload Reference PDF (Optional)</p>
+                     <textarea 
+                      className="w-full bg-slate-50 rounded-2xl px-6 py-4 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-900 transition-all h-32 resize-none" 
+                      placeholder="Provide instructions, page numbers, etc..."
+                      onChange={(e) => setFormData({...formData, description: e.target.value})}
+                     ></textarea>
                   </div>
                </div>
 
                <div className="flex flex-col sm:flex-row gap-4 pt-6">
-                  <button className="flex-1 bg-blue-900 text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-blue-900/20 hover:bg-blue-800 transition-all transform active:scale-95">
-                     Blast Assignment
-                  </button>
                   <button 
-                  onClick={() => setShowCreateModal(false)}
-                  className="flex-1 text-slate-400 font-bold py-5 hover:text-slate-600 transition-all">
-                     Maybe Later
+                    onClick={handleCreate}
+                    disabled={isSubmitting}
+                    className="flex-1 bg-blue-900 text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-blue-900/20 hover:bg-blue-800 transition-all transform active:scale-95 disabled:opacity-50"
+                  >
+                     {isSubmitting ? 'Dispatching Signal...' : 'Blast Assignment'}
                   </button>
                </div>
             </div>
