@@ -16,12 +16,18 @@ export default function Courses() {
       try {
         const { data, error } = await supabase.from('batches').select('*').order('name');
         if (error) {
-          console.error('Supabase Core Error:', error.message);
+          if (error.message.includes('secret API key')) {
+            console.error('CRITICAL AUTH ERROR: A Secret Key was used in the browser. Please update Vercel env to use the ANON KEY.');
+          } else if (error.status === 401) {
+            console.error('SUPABASE AUTH FAILURE: Unauthorized (401). Check if NEXT_PUBLIC_SUPABASE_ANON_KEY is valid.');
+          } else {
+            console.error('Supabase Core Error:', error.message);
+          }
           return;
         }
         if (data) setBatches(data);
       } catch (err) {
-        console.error('Network/Auth Connectivity Failure:', err);
+        console.error('Network/Auth Connectivity Failure. Check Supabase URL and Key in Vercel settings.');
       } finally {
         setLoading(false);
       }

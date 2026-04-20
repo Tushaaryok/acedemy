@@ -66,10 +66,16 @@ export default function Admission() {
         showToast('Enquiry successfully registered at our admission desk.', 'success');
         setFormData({ studentName: '', parentName: '', phone: '', classVal: '', board: '', message: '' });
       } else {
-        showToast('Transmission failed: ' + error.message, 'error');
+        if (error.message.includes('secret API key')) {
+          showToast('Configuration Error: Vercel env must use ANON KEY, not SECRET KEY.', 'error');
+        } else if (error.status === 401) {
+          showToast('Authentication Failed: Please check Academy database credentials.', 'error');
+        } else {
+          showToast('Transmission failed: ' + error.message, 'error');
+        }
       }
     } catch (error) {
-      showToast('Connection disruption. Please dial Academy line directly.', 'error');
+      showToast('Connection disruption. Check internet or contact support.', 'error');
     } finally {
       setIsSubmitting(false);
     }
