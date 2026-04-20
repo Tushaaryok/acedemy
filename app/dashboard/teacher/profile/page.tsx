@@ -76,7 +76,7 @@ export default function TeacherProfile() {
               
               <div className="space-y-4">
                  <div>
-                    <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">{profile?.name}</h2>
+                    <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">{profile?.full_name}</h2>
                     <p className="text-sm font-black text-slate-400 uppercase tracking-widest leading-none italic">Department Chair: Science</p>
                  </div>
                  <div className="flex justify-center gap-1 text-amber-500">

@@ -41,14 +41,14 @@ export default async function TeacherDashboard() {
              <LayoutDashboard size={12} /> Faculty Control Center
           </div>
           <h1 className="text-5xl font-black text-slate-900 tracking-tighter">Academic Hub</h1>
-          <p className="text-slate-500 font-medium">Welcome back, <span className="text-slate-900 font-bold">{profile?.name || 'Sir'}</span>! Planning for success today?</p>
+          <p className="text-slate-500 font-medium">Welcome back, <span className="text-slate-900 font-bold">{profile?.full_name || 'Sir'}</span>! Planning for success today?</p>
         </div>
         <div className="flex items-center gap-3">
            <button className="p-4 bg-white border border-slate-100 rounded-2xl text-slate-400 hover:text-indigo-600 transition-all shadow-sm">
              <Bell size={20} />
            </button>
            <div className="h-14 w-14 rounded-2xl bg-indigo-600 flex items-center justify-center text-white font-black text-xl shadow-xl shadow-indigo-600/20">
-              {profile?.name?.charAt(0) || 'T'}
+              {profile?.full_name?.charAt(0) || 'T'}
            </div>
         </div>
       </header>

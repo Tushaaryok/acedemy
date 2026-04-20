@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import { 
   CheckCircle2, 
   Send, 
@@ -15,8 +16,6 @@ import {
 } from 'lucide-react';
 import './Admission.css';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
-
 export default function Admission() {
   const [formData, setFormData] = useState({
     studentName: '',
@@ -28,6 +27,8 @@ export default function Admission() {
   });
   const [toast, setToast] = useState({ show: false, message: '', type: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const supabase = createClient();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -51,19 +52,21 @@ export default function Admission() {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${API_URL}/api/enquiry`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
+      const { error } = await supabase.from('enquiries').insert([{
+        student_name: formData.studentName,
+        parent_name: formData.parentName,
+        phone: formData.phone,
+        class: formData.classVal,
+        board: formData.board,
+        message: formData.message,
+        source: 'Landing Page'
+      }]);
       
-      const data = await response.json();
-      
-      if (response.ok && data.success) {
-        showToast(data.message || 'Enquiry successfully registered at our admission desk.', 'success');
+      if (!error) {
+        showToast('Enquiry successfully registered at our admission desk.', 'success');
         setFormData({ studentName: '', parentName: '', phone: '', classVal: '', board: '', message: '' });
       } else {
-        showToast(data.message || 'Transmission failed. Institutional protocol requires retry.', 'error');
+        showToast('Transmission failed: ' + error.message, 'error');
       }
     } catch (error) {
       showToast('Connection disruption. Please dial Academy line directly.', 'error');

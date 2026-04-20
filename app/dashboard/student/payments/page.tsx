@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import { 
   CreditCard, 
   CheckCircle2, 
@@ -60,30 +61,49 @@ export default function StudentPayments() {
     setIsProcessing(plan.id);
     
     try {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        alert('Authentication Error: Please login first.');
+        return;
+      }
+
+      // Fetch profile for prefill
+      const { data: profile } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', session.user.id)
+        .single();
+
       // 1. Create order on server
-      const res = await fetch('/api/razorpay/order', {
+      const res = await fetch('http://localhost:5000/api/payments/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: plan.price, planId: plan.id }),
+        body: JSON.stringify({ 
+          amount: plan.price, 
+          receipt: `receipt_${Date.now()}` 
+        }),
       });
-      const order = await res.json();
+      const data = await res.json();
 
-      if (!order.id) throw new Error('Failed to create order');
+      if (!data.success) throw new Error(data.error || 'Failed to create order');
+
+      const { order } = data;
 
       // 2. Open Razorpay Checkout
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_mock_123',
         amount: order.amount,
-        currency: 'INR',
+        currency: order.currency,
         name: 'Krishna Academy',
-        description: `Full Access: ${plan.name}`,
+        description: `Institutional Upgrade: ${plan.name}`,
         image: '/imgs/logo.jpeg',
         order_id: order.id,
         handler: async function (response: any) {
-          console.log('Payment Successful:', response);
+          console.log('Signature verification check...');
           
           // Verify on server
-          const verifyRes = await fetch('/api/razorpay/verify', {
+          const verifyRes = await fetch('http://localhost:5000/api/payments/verify-payment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -93,28 +113,42 @@ export default function StudentPayments() {
             }),
           });
 
-          if (verifyRes.ok) {
-            alert('Academic records synced! Welcome to Academy Master Pro.');
+          const verifyData = await verifyRes.json();
+
+          if (verifyData.success) {
+            // Update database
+            await supabase.from('fees').insert([{
+              student_id: session.user.id,
+              amount: plan.price,
+              fee_type: 'subscription_' + plan.id,
+              status: 'paid',
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              paid_at: new Date().toISOString()
+            }]);
+
+            alert('Academic records synced! Welcome to the Master Pro session.');
             window.location.reload();
           } else {
-            alert('Payment received but sync failed. Please contact support with Payment ID: ' + response.razorpay_payment_id);
+            alert('Verification Error: ' + verifyData.message);
           }
         },
         prefill: {
-          name: 'Student Name',
-          email: 'student@example.com',
-          contact: '9999999999',
+          name: profile?.full_name || 'Academic Scholar',
+          email: profile?.email || '',
+          contact: profile?.phone || '',
         },
         theme: {
-          color: '#1E3A8A', // Scientific Blue
+          color: '#0F172A', // Slate 900
         },
       };
 
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
-    } catch (error) {
+    } catch (error: any) {
        console.error(error);
-       alert('Portal Error: Unable to reach payment gateway. Try again later.');
+       alert('Portal Flux Error: ' + error.message);
     } finally {
        setIsProcessing(null);
     }

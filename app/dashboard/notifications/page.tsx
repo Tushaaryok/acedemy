@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import { 
   Bell, 
   Trash2, 
@@ -11,59 +12,52 @@ import {
   CreditCard,
   MessageSquare,
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  ShieldAlert,
+  Megaphone,
+  Loader2
 } from 'lucide-react';
 
 export default function NotificationCenter() {
   const [activeTab, setActiveTab] = useState('All');
+  const [notices, setNotices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   
-  const NOTIFICATIONS = [
-    { 
-      id: '1', 
-      title: 'Fee Payment Success', 
-      desc: 'Institutional audit confirmed your payment for April session.', 
-      time: '2h ago', 
-      type: 'success', 
-      icon: <CreditCard size={18} />,
-      category: 'Finance'
-    },
-    { 
-      id: '2', 
-      title: 'New Study Material Released', 
-      desc: 'Ram Sir uploaded "Calculus: Mastery Sheet" for Std 12.', 
-      time: '5h ago', 
-      type: 'info', 
-      icon: <MessageSquare size={18} />,
-      category: 'Academic' 
-    },
-    { 
-      id: '3', 
-      title: 'Academy Holiday Notice', 
-      desc: 'The campus will remain closed on 1st May for Labour Day.', 
-      time: '1d ago', 
-      type: 'warning', 
-      icon: <Calendar size={18} />,
-      category: 'Events'
-    },
-    { 
-      id: '4', 
-      title: 'Profile Authentication Alert', 
-      desc: 'Your Digital ID was accessed from a new device.', 
-      time: '2d ago', 
-      type: 'urgent', 
-      icon: <AlertCircle size={18} />,
-      category: 'Security'
-    },
-  ];
+  const supabase = createClient();
+
+  useEffect(() => {
+    async function fetchNotices() {
+      const { data } = await supabase.from('notices').select('*').order('created_at', { ascending: false });
+      if (data) setNotices(data);
+      setLoading(false);
+    }
+    fetchNotices();
+  }, [supabase]);
 
   const getStatusColor = (type: string) => {
     switch(type) {
-      case 'success': return 'text-emerald-500 bg-emerald-50';
-      case 'warning': return 'text-amber-500 bg-amber-50';
       case 'urgent': return 'text-rose-500 bg-rose-50';
+      case 'announcement': return 'text-amber-500 bg-amber-50';
+      case 'success': return 'text-emerald-500 bg-emerald-50';
       default: return 'text-indigo-500 bg-indigo-50';
     }
   };
+
+  const getIcon = (type: string) => {
+    switch(type) {
+      case 'urgent': return <ShieldAlert size={18} />;
+      case 'announcement': return <Megaphone size={18} />;
+      case 'success': return <CreditCard size={18} />;
+      default: return <MessageSquare size={18} />;
+    }
+  };
+
+  if (loading) return (
+     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 gap-4">
+       <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+       <p className="text-slate-500 font-bold animate-pulse tracking-widest uppercase text-xs">Scanning Airwaves...</p>
+     </div>
+  );
 
   return (
     <div className="p-6 md:p-10 max-w-5xl mx-auto space-y-12 min-h-screen bg-slate-50/20">
@@ -105,32 +99,29 @@ export default function NotificationCenter() {
 
       {/* Notifications List */}
       <div className="space-y-4">
-        {NOTIFICATIONS.filter(n => activeTab === 'All' || n.category === activeTab).map(note => (
+        {notices.filter(n => activeTab === 'All' || n.priority === activeTab.toLowerCase()).map(note => (
           <div key={note.id} className="bg-white rounded-[40px] p-6 border border-slate-100 shadow-sm hover:shadow-2xl hover:scale-[1.01] transition-all group flex flex-col sm:flex-row items-center justify-between gap-6 relative overflow-hidden">
-             <div className="flex items-center gap-6 relative z-10">
-                <div className={`w-16 h-16 rounded-3xl flex items-center justify-center transition-all duration-500 ${getStatusColor(note.type)}`}>
-                   {note.icon}
+             <div className="flex items-center gap-6 relative z-10 w-full">
+                <div className={`w-16 h-16 rounded-3xl flex items-center justify-center shrink-0 transition-all duration-500 ${getStatusColor(note.priority)}`}>
+                   {getIcon(note.priority)}
                 </div>
-                <div className="space-y-1">
-                   <h3 className="text-lg font-black text-slate-900 leading-tight group-hover:text-indigo-600 transition-colors">{note.title}</h3>
-                   <p className="text-slate-500 text-sm font-medium pr-10">{note.desc}</p>
+                <div className="space-y-1 flex-1">
+                   <h3 className="text-lg font-black text-slate-900 leading-tight group-hover:text-indigo-600 transition-colors uppercase tracking-tight">{note.title}</h3>
+                   <p className="text-slate-500 text-sm font-medium pr-10">{note.content}</p>
                    <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400 mt-2">
-                      <span className="flex items-center gap-1"><Sparkles size={12} className="text-amber-500" /> {note.category}</span>
+                      <span className="flex items-center gap-1"><Sparkles size={12} className="text-amber-500" /> {note.priority}</span>
                       <span className="w-1 h-1 bg-slate-200 rounded-full" />
-                      <span>{note.time}</span>
+                      <span>{new Date(note.created_at).toLocaleDateString()}</span>
                    </div>
                 </div>
              </div>
              <button className="p-4 rounded-2xl bg-slate-50 text-slate-300 hover:bg-slate-900 hover:text-white transition-all">
                 <ChevronRight size={20} />
              </button>
-             
-             {/* Read Indicator */}
-             <div className="absolute right-0 top-0 h-full w-1.5 bg-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         ))}
 
-        {NOTIFICATIONS.filter(n => activeTab === 'All' || n.category === activeTab).length === 0 && (
+        {notices.length === 0 && (
           <div className="py-32 text-center opacity-20">
              <Bell size={64} className="mx-auto mb-4" />
              <p className="font-black italic uppercase tracking-widest text-sm">Quiet Skies. No pending signals detected.</p>

@@ -71,7 +71,7 @@ export default function StudentProfile() {
                        <div className="absolute inset-0 bg-indigo-900/20 opacity-0 group-hover/avatar:opacity-100 transition-all duration-500" />
                     </div>
                     <div>
-                       <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none mb-1">{profile?.name}</h2>
+                       <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none mb-1">{profile?.full_name}</h2>
                        <p className="text-sm font-black text-indigo-600 uppercase tracking-widest italic">Registered Scholar since 2024</p>
                     </div>
                  </div>
@@ -143,7 +143,7 @@ export default function StudentProfile() {
                  </div>
 
                  <div className="space-y-1">
-                    <p className="text-2xl font-black tracking-tight uppercase leading-none">{profile?.name || 'Scholar Name'}</p>
+                    <p className="text-2xl font-black tracking-tight uppercase leading-none">{profile?.full_name || 'Scholar Name'}</p>
                     <p className="text-[10px] font-black text-amber-500 uppercase tracking-[0.2em] leading-none">Std 12 Science (Pro)</p>
                  </div>
 

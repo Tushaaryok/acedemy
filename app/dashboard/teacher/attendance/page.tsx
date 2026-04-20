@@ -173,10 +173,10 @@ export default function MarkAttendance() {
                   <td className="px-10 py-8">
                     <div className="flex items-center gap-5">
                       <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-slate-50 to-white border border-slate-100 flex items-center justify-center font-black text-slate-700 text-xl shadow-sm group-hover:bg-amber-500 group-hover:text-white group-hover:border-amber-400 transition-all">
-                        {student.name.charAt(0)}
+                        {student.full_name.charAt(0)}
                       </div>
                       <div>
-                        <span className="block font-bold text-slate-800 text-lg">{student.name}</span>
+                        <span className="block font-bold text-slate-800 text-lg">{student.full_name}</span>
                         <div className="flex items-center gap-2 mt-1">
                           <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Batch Allocated</span>
                           <span className="w-1 h-1 bg-slate-200 rounded-full"></span>

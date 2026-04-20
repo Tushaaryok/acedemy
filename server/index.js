@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const { generalLimiter } = require('./middleware/rateLimiter');
 const { errorHandler } = require('./middleware/errorHandler');
 const enquiryRoutes = require('./routes/enquiry');
+const paymentRoutes = require('./routes/payments');
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.get('/api/courses', (req, res) => {
 
 // Enquiry route
 app.use('/api', enquiryRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // 4. Error Handler Middleware
 app.use(errorHandler);

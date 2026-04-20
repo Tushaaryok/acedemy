@@ -16,7 +16,10 @@ import {
   Mail,
   GraduationCap,
   Sparkles,
-  TrendingUp
+  TrendingUp,
+  Eye,
+  X,
+  Loader2
 } from 'lucide-react';
 
 export default function AdminEnquiries() {
@@ -24,6 +27,9 @@ export default function AdminEnquiries() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedEnquiry, setSelectedEnquiry] = useState<any>(null);
+  const [note, setNote] = useState('');
+  const [isSavingNote, setIsSavingNote] = useState(false);
   
   const supabase = createClient();
 
@@ -39,6 +45,21 @@ export default function AdminEnquiries() {
     }
     fetchEnquiries();
   }, [supabase]);
+
+  const saveNote = async () => {
+    if (!selectedEnquiry) return;
+    setIsSavingNote(true);
+    const { error } = await supabase
+      .from('enquiries')
+      .update({ notes: note })
+      .eq('id', selectedEnquiry.id);
+    
+    if (!error) {
+       setSelectedEnquiry({...selectedEnquiry, notes: note});
+       setEnquiries(enquiries.map(e => e.id === selectedEnquiry.id ? { ...e, notes: note } : e));
+    }
+    setIsSavingNote(false);
+  };
 
   const updateStatus = async (id: string, newStatus: string) => {
     const { error } = await supabase
@@ -194,8 +215,15 @@ export default function AdminEnquiries() {
                           >
                              <CheckCircle2 size={18} />
                           </button>
-                          <button className="p-2 text-slate-400 hover:text-slate-900 rounded-lg transition-all">
-                             <MoreHorizontal size={18} />
+                          <button 
+                            onClick={() => {
+                              setSelectedEnquiry(e);
+                              setNote(e.notes || '');
+                            }}
+                            className="p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-all"
+                            title="View Full Intel"
+                          >
+                             <Eye size={18} />
                           </button>
                        </div>
                     </td>
@@ -206,6 +234,93 @@ export default function AdminEnquiries() {
           </table>
         </div>
       </div>
+
+      {/* Detailed Enquiry Modal */}
+      {selectedEnquiry && (
+         <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-xl flex items-center justify-center p-6 z-[100] animate-in fade-in duration-300">
+            <div className="bg-white rounded-[56px] p-12 max-w-2xl w-full space-y-10 shadow-2xl relative overflow-hidden animate-in zoom-in-95 duration-500">
+               <button 
+                 onClick={() => setSelectedEnquiry(null)}
+                 className="absolute top-10 right-10 p-2 text-slate-300 hover:text-slate-900 transition-colors"
+               >
+                 <X size={24} />
+               </button>
+
+               <header className="space-y-4">
+                  <div className="flex items-center gap-3">
+                     <div className="h-14 w-14 rounded-3xl bg-indigo-600 text-white flex items-center justify-center font-black text-2xl shadow-xl shadow-indigo-600/20">
+                        {selectedEnquiry.student_name.charAt(0)}
+                     </div>
+                     <div>
+                        <h2 className="text-3xl font-black text-slate-900 tracking-tighter leading-none">{selectedEnquiry.student_name}</h2>
+                        <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px] mt-2 italic">Applied for {selectedEnquiry.class}</p>
+                     </div>
+                  </div>
+                  <div className="flex gap-4 pt-4">
+                     <span className="bg-emerald-50 text-emerald-600 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-emerald-100 flex items-center gap-2">
+                        <CheckCircle2 size={12} /> {selectedEnquiry.status}
+                     </span>
+                     <span className="bg-slate-50 text-slate-400 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-100 flex items-center gap-2">
+                        <Calendar size={12} /> {new Date(selectedEnquiry.created_at).toLocaleString()}
+                     </span>
+                  </div>
+               </header>
+
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-8 border-y border-slate-50">
+                  <div className="space-y-4">
+                     <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Communication Access</p>
+                     <div className="space-y-3">
+                        <div className="flex items-center gap-3 text-slate-600 font-bold text-sm">
+                           <Phone size={14} className="text-indigo-400" /> {selectedEnquiry.phone}
+                        </div>
+                        <div className="flex items-center gap-3 text-slate-600 font-bold text-sm">
+                           <User size={14} className="text-indigo-400" /> Guardian: {selectedEnquiry.parent_name}
+                        </div>
+                        <div className="flex items-center gap-3 text-slate-600 font-bold text-sm">
+                           <Inbox size={14} className="text-indigo-400" /> Source: {selectedEnquiry.source || 'Website'}
+                        </div>
+                     </div>
+                  </div>
+                  <div className="space-y-4">
+                     <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Personal Message</p>
+                     <div className="bg-indigo-50/50 p-6 rounded-3xl text-sm font-medium text-slate-600 italic leading-relaxed border border-indigo-50">
+                        "{selectedEnquiry.message || 'No additional message provided from applicant party.'}"
+                     </div>
+                  </div>
+               </div>
+
+               <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                     <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Internal Administrative Notes</label>
+                     <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest italic">Confidential</span>
+                  </div>
+                  <textarea 
+                    rows={4}
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    placeholder="Document conversation history, callbacks, or special requirements..."
+                    className="w-full bg-slate-50 border border-slate-100 rounded-[32px] p-8 text-sm font-medium outline-none focus:ring-4 focus:ring-indigo-600/5 transition-all resize-none"
+                  />
+               </div>
+
+               <div className="flex gap-4">
+                  <button 
+                    onClick={saveNote}
+                    disabled={isSavingNote}
+                    className="flex-1 bg-slate-900 text-white py-5 rounded-[24px] font-black text-xs uppercase tracking-[3px] shadow-2xl shadow-slate-900/30 hover:bg-indigo-600 transition-all flex items-center justify-center gap-4 active:scale-95 disabled:opacity-50"
+                  >
+                     {isSavingNote ? <Loader2 size={20} className="animate-spin" /> : 'SYNCHRONIZE NOTES'}
+                  </button>
+                  <a 
+                    href={`tel:${selectedEnquiry.phone}`}
+                    className="p-5 bg-emerald-50 text-emerald-600 rounded-[24px] border border-emerald-100 hover:bg-emerald-600 hover:text-white transition-all shadow-lg shadow-emerald-500/10"
+                  >
+                     <Phone size={24} />
+                  </a>
+               </div>
+            </div>
+         </div>
+       )}
     </div>
   );
 }

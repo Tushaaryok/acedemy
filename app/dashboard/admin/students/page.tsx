@@ -20,7 +20,7 @@ export default function AdminStudents() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [newStudent, setNewStudent] = useState({ name: '', email: '', phone: '', batch_id: '' });
+  const [newStudent, setNewStudent] = useState({ full_name: '', email: '', phone: '', batch_id: '' });
   
   const supabase = createClient();
 
@@ -36,27 +36,45 @@ export default function AdminStudents() {
   }, [supabase]);
 
   const handleAddStudent = async () => {
-    if (!newStudent.name || !newStudent.email) {
+    if (!newStudent.full_name || !newStudent.email) {
       alert('Name and Email are required for registration.');
       return;
     }
 
-    const { error } = await supabase.from('users').insert([{ 
-      ...newStudent, 
-      role: 'student' 
-    }]);
+    // 1. Create the user record
+    const { data: user, error: userError } = await supabase.from('users').insert([{ 
+      full_name: newStudent.full_name,
+      email: newStudent.email,
+      phone: newStudent.phone,
+      role: 'student',
+      onboarding_completed: true 
+    }]).select().single();
 
-    if (!error) {
-      alert('Student onboarded successfully!');
-      setShowModal(false);
-      window.location.reload();
-    } else {
-      alert('Registration Error: ' + error.message);
+    if (userError) {
+      alert('Registration Error: ' + userError.message);
+      return;
     }
+
+    // 2. If a batch is selected, create the enrollment record
+    if (newStudent.batch_id && user) {
+      const { error: enrollError } = await supabase.from('enrollments').insert([{
+        student_id: user.id,
+        batch_id: newStudent.batch_id,
+        status: 'active'
+      }]);
+
+      if (enrollError) {
+        alert('User created but Batch Enrollment failed: ' + enrollError.message);
+      }
+    }
+
+    alert('Scholar successfully integrated into the academy roster!');
+    setShowModal(false);
+    window.location.reload();
   };
 
   const filteredStudents = students.filter(s => 
-    s.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    s.full_name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     s.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -145,10 +163,10 @@ export default function AdminStudents() {
                   <td className="px-10 py-7">
                     <div className="flex items-center gap-5">
                       <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-slate-100 to-white border border-slate-200 flex items-center justify-center font-black text-slate-700 text-xl shadow-sm group-hover:scale-110 transition-transform">
-                        {student.name.charAt(0)}
+                        {student.full_name.charAt(0)}
                       </div>
                       <div>
-                        <span className="block font-black text-slate-800 text-lg leading-tight">{student.name}</span>
+                        <span className="block font-black text-slate-800 text-lg leading-tight">{student.full_name}</span>
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">ID: {student.id.slice(0, 8)}</span>
                       </div>
                     </div>
@@ -216,7 +234,7 @@ export default function AdminStudents() {
                 <input 
                   className="w-full px-6 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-slate-900/5 focus:border-slate-900 transition-all outline-none text-sm font-bold bg-slate-50/50"
                   placeholder="e.g. Tushar Kothariya"
-                  onChange={(e) => setNewStudent({...newStudent, name: e.target.value})}
+                  onChange={(e) => setNewStudent({...newStudent, full_name: e.target.value})}
                 />
               </div>
               <div className="space-y-1 md:col-span-2">

@@ -58,7 +58,7 @@ export default function StudentDashboard() {
              <Star size={12} fill="currentColor" /> Scholar Premium Access
           </div>
           <h1 className="text-5xl font-black text-slate-900 tracking-tighter">
-            Welcome back, {profile?.name?.split(' ')[0] || 'Scholar'}!
+            Welcome back, {profile?.full_name?.split(' ')[0] || 'Scholar'}!
           </h1>
           <p className="text-slate-500 font-medium text-lg leading-none">
             {enrollment?.batches?.name || 'Academic Batch Assigning...'} • {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' })}

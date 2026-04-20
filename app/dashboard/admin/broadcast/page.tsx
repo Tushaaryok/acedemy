@@ -1,6 +1,4 @@
-'use client';
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Megaphone, 
   Send, 
@@ -10,19 +8,56 @@ import {
   Sparkles,
   ChevronRight,
   ShieldAlert,
-  History
+  History,
+  Loader2
 } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 
 export default function AdminBroadcast() {
   const [target, setTarget] = useState('all');
+  const [priority, setPriority] = useState('Normal');
   const [channels, setChannels] = useState({ push: true, whatsapp: true, email: false });
   const [message, setMessage] = useState('');
-  
-  const PAST_ALERTS = [
-    { title: 'Holiday Notice', date: '15 Apr', target: 'All Students', reaching: '482' },
-    { title: 'Fee Deadline Reminder', date: '12 Apr', target: 'Pending Fees', reaching: '42' },
-    { title: 'Board Exam Schedule', date: '10 Apr', target: 'Std 10 & 12', reaching: '124' },
-  ];
+  const [title, setTitle] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [pastAlerts, setPastAlerts] = useState<any[]>([]);
+
+  const supabase = createClient();
+
+  useEffect(() => {
+    async function fetchAlerts() {
+      const { data } = await supabase.from('notices').select('*').order('created_at', { ascending: false });
+      if (data) setPastAlerts(data);
+    }
+    fetchAlerts();
+  }, [supabase]);
+
+  const handleSendBroadcast = async () => {
+    if (!title || !message) {
+      alert('Broadcast Title and Content are required.');
+      return;
+    }
+
+    setIsSending(true);
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    const { error } = await supabase.from('notices').insert([{
+      title,
+      content: message,
+      priority: priority.toLowerCase(),
+      created_by: session?.user?.id
+    }]);
+
+    if (!error) {
+       alert('Broadcast Signal Initiated Successfully!');
+       setTitle('');
+       setMessage('');
+       window.location.reload();
+    } else {
+       alert('Broadcast Failure: ' + error.message);
+    }
+    setIsSending(false);
+  };
 
   return (
     <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-12 min-h-screen bg-slate-50/20">
@@ -75,24 +110,38 @@ export default function AdminBroadcast() {
                        <div className="flex-1 space-y-2">
                           <label className="text-[10px] font-black uppercase text-slate-400 ml-1 tracking-widest">Urgency Level</label>
                           <div className="flex gap-2">
-                             {['Normal', 'Important', 'Urgent'].map(l => (
-                               <button key={l} className={`flex-1 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${
-                                 l === 'Normal' ? 'bg-blue-600 text-white' : 'border-slate-100 text-slate-400'
+                             {['Normal', 'Urgent', 'Announcement'].map(l => (
+                               <button 
+                                 key={l} 
+                                 onClick={() => setPriority(l)}
+                                 className={`flex-1 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                                 l === priority ? 'bg-blue-600 text-white border-blue-600' : 'border-slate-100 text-slate-400'
                                }`}>{l}</button>
                              ))}
                           </div>
                        </div>
                     </div>
 
-                    <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase text-slate-400 ml-1 tracking-widest">Message Content</label>
-                       <textarea 
-                         rows={5}
-                         placeholder="Type your official announcement here..."
-                         className="w-full bg-slate-50 border border-slate-100 rounded-[32px] p-8 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-600/5 resize-none transition-all"
-                         value={message}
-                         onChange={(e) => setMessage(e.target.value)}
-                       />
+                    <div className="space-y-4">
+                       <div className="space-y-2">
+                          <label className="text-[10px] font-black uppercase text-slate-400 ml-1 tracking-widest">Broadcast Heading</label>
+                          <input 
+                            placeholder="e.g. Academy Holiday Notice"
+                            className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-8 py-5 text-sm font-bold outline-none focus:ring-4 focus:ring-blue-600/5 transition-all"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                          />
+                       </div>
+                       <div className="space-y-2">
+                          <label className="text-[10px] font-black uppercase text-slate-400 ml-1 tracking-widest">Signal Message Body</label>
+                          <textarea 
+                            rows={5}
+                            placeholder="Type your official announcement here..."
+                            className="w-full bg-slate-50 border border-slate-100 rounded-[32px] p-8 text-sm font-medium outline-none focus:ring-4 focus:ring-blue-600/5 resize-none transition-all"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                          />
+                       </div>
                     </div>
                  </div>
 
@@ -114,8 +163,12 @@ export default function AdminBroadcast() {
                          </div>
                        ))}
                     </div>
-                    <button className="w-full sm:w-auto bg-slate-900 text-white px-12 py-5 rounded-[24px] font-black text-[12px] uppercase tracking-[3px] shadow-2xl shadow-slate-900/40 hover:bg-blue-600 transition-all active:scale-95 flex items-center justify-center gap-3">
-                       INITIATE ALERT <Send size={18} />
+                    <button 
+                      onClick={handleSendBroadcast}
+                      disabled={isSending}
+                      className="w-full sm:w-auto bg-slate-900 text-white px-12 py-5 rounded-[24px] font-black text-[12px] uppercase tracking-[3px] shadow-2xl shadow-slate-900/40 hover:bg-blue-600 transition-all active:scale-95 flex items-center justify-center gap-3 disabled:opacity-70"
+                    >
+                       {isSending ? <Loader2 size={18} className="animate-spin" /> : 'INITIATE ALERT'} <Send size={18} />
                     </button>
                  </div>
               </div>
@@ -159,15 +212,20 @@ export default function AdminBroadcast() {
                  <History size={16} /> Global History
               </h3>
               <div className="space-y-5">
-                 {PAST_ALERTS.map(alert => (
-                    <div key={alert.title} className="flex items-center justify-between group/item cursor-pointer">
+                 {pastAlerts.map(alert => (
+                    <div key={alert.id} className="flex items-center justify-between group/item cursor-pointer">
                        <div>
                           <p className="text-xs font-bold text-slate-900 group-hover/item:text-blue-600 transition-colors uppercase tracking-tight">{alert.title}</p>
-                          <p className="text-[10px] text-slate-400 font-medium">{alert.target} • {alert.date}</p>
+                          <p className="text-[10px] text-slate-400 font-medium">{alert.priority} • {new Date(alert.created_at).toLocaleDateString()}</p>
                        </div>
                        <ChevronRight size={14} className="text-slate-200 group-hover/item:text-slate-900 transition-all" />
                     </div>
                  ))}
+                 {pastAlerts.length === 0 && (
+                   <div className="py-10 text-center opacity-20">
+                     <p className="text-[10px] font-black uppercase">No signal history</p>
+                   </div>
+                 )}
               </div>
               <button className="w-full mt-8 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-all border-t border-slate-50">Full Audit Log</button>
            </div>

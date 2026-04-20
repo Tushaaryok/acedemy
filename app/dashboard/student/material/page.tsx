@@ -15,13 +15,38 @@ import {
 
 export default function StudentMaterial() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [resources, setResources] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const RESOURCES = [
-    { id: '1', title: 'Calculus: Ultimate Formula Sheet', type: 'PDF', date: 'Yesterday', subject: 'Maths', teacher: 'RS', size: '1.2 MB' },
-    { id: '2', title: 'Periodic Table Mastery Chart', type: 'IMAGE', date: '3 Days ago', subject: 'Chemistry', teacher: 'JB', size: '4.8 MB' },
-    { id: '3', title: 'English Grammar Workbook - Units 1-5', type: 'DOC', date: '12 Apr', subject: 'English', teacher: 'YS', size: '840 KB' },
-    { id: '4', title: 'Physics Numerical Bank (Board 2024)', type: 'PDF', date: '10 Apr', subject: 'Physics', teacher: 'RS', size: '2.5 MB' },
-  ];
+  const supabase = createClient();
+
+  useEffect(() => {
+    async function fetchMaterials() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const { data } = await supabase
+        .from('materials')
+        .select('*, subjects(name), teacher:users!materials_teacher_id_fkey(full_name)')
+        .order('created_at', { ascending: false });
+
+      if (data) setResources(data);
+      setLoading(false);
+    }
+    fetchMaterials();
+  }, [supabase]);
+
+  const filteredResources = resources.filter(res => 
+    res.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    res.subjects?.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 gap-4">
+      <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+      <p className="text-slate-500 font-bold animate-pulse tracking-widest uppercase text-xs">Accessing Knowledge Vault...</p>
+    </div>
+  );
 
   return (
     <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-12 min-h-screen bg-white/50">
@@ -56,7 +81,7 @@ export default function StudentMaterial() {
            </div>
 
            <div className="space-y-4">
-              {RESOURCES.map(res => (
+              {filteredResources.map(res => (
                 <div key={res.id} className="bg-white rounded-[40px] p-6 border border-slate-100 shadow-sm hover:shadow-2xl hover:scale-[1.01] transition-all group flex flex-col sm:flex-row items-center justify-between gap-6">
                    <div className="flex items-center gap-6">
                       <div className="w-16 h-16 bg-slate-50 rounded-3xl flex items-center justify-center text-slate-500 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500">
@@ -65,17 +90,27 @@ export default function StudentMaterial() {
                       <div>
                          <h3 className="text-lg font-black text-slate-900 leading-tight mb-1 group-hover:text-indigo-600 transition-colors">{res.title}</h3>
                          <div className="flex items-center gap-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                            <span className="text-indigo-600 px-2 py-0.5 bg-indigo-50 rounded italic">{res.subject}</span>
-                            <span>{res.size}</span>
-                            <span>Uploaded by {res.teacher} Sir</span>
+                            <span className="text-indigo-600 px-2 py-0.5 bg-indigo-50 rounded italic">{res.subjects?.name}</span>
+                            <span>{res.file_size}</span>
+                            <span>Uploaded by {res.teacher?.full_name || 'Faculty'}</span>
                          </div>
                       </div>
                    </div>
-                   <button className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-xl shadow-slate-900/10 flex items-center gap-2">
+                   <a 
+                    href={res.file_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-xl shadow-slate-900/10 flex items-center gap-2"
+                   >
                       <Download size={14} /> DOWNLOAD
-                   </button>
+                   </a>
                 </div>
               ))}
+              {filteredResources.length === 0 && (
+                <div className="py-20 text-center opacity-30">
+                   <p className="font-black italic uppercase tracking-widest text-sm">Library is empty for your batch.</p>
+                </div>
+              )}
            </div>
         </div>
 
