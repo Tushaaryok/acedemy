@@ -13,9 +13,18 @@ export default function Courses() {
 
   useEffect(() => {
     async function fetchBatches() {
-      const { data } = await supabase.from('batches').select('*').order('name');
-      if (data) setBatches(data);
-      setLoading(false);
+      try {
+        const { data, error } = await supabase.from('batches').select('*').order('name');
+        if (error) {
+          console.error('Supabase Core Error:', error.message);
+          return;
+        }
+        if (data) setBatches(data);
+      } catch (err) {
+        console.error('Network/Auth Connectivity Failure:', err);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchBatches();
   }, [supabase]);
@@ -106,10 +115,18 @@ export default function Courses() {
               </div>
             </div>
           ))}
-          {filteredCourses.length === 0 && !loading && (
-             <div className="col-span-full py-20 text-center text-slate-400 font-bold uppercase tracking-widest text-xs opacity-50">
-                Syncing Academic Catalogs...
+          {batches.length === 0 && !loading && (
+             <div className="col-span-full py-20 text-center">
+                <div className="inline-block p-10 bg-amber-50 rounded-[48px] border border-amber-100/50">
+                   <p className="text-amber-800 font-black uppercase tracking-[0.2em] text-xs">No active batches detected in vault.</p>
+                   <p className="text-amber-600/60 text-[10px] font-bold mt-2 italic">Please synchronize the database via seed intelligence.</p>
+                </div>
              </div>
+          )}
+          {batches.length > 0 && filteredCourses.length === 0 && !loading && (
+            <div className="col-span-full py-20 text-center text-slate-400 font-bold uppercase tracking-widest text-[10px] opacity-50">
+               No classes found in the "{activeTab}" category.
+            </div>
           )}
         </div>
       </div>
