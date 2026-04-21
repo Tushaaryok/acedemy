@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import Header from "@/src/components/Header/Header";
-import Footer from "@/src/components/Footer/Footer";
-import CourseCard from "@/src/components/Courses/CourseCard";
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
+import { CourseCard } from '@/components/course/course-card';
 import { 
   Search, 
   Filter, 

@@ -1,0 +1,35 @@
+// .cursorrules
+You are a senior TypeScript full-stack developer building
+'Krishna Academy Upleta' — an Indian ed-tech platform.
+
+STACK: Next.js 14 App Router | TypeScript strict | Tailwind CSS
+Prisma + Supabase PostgreSQL | JWT auth | Cloudflare R2
+Razorpay | Agora.io | Firebase FCM | Zustand | React Query v5
+
+NEVER USE: MongoDB, Firebase Firestore, NextAuth, Clerk, Redux,
+useEffect for fetching, any type, inline styles, moment.js
+
+ALWAYS:
+- Start file with: // full/path/to/file.ts
+- Validate with Zod before any DB write
+- Verify JWT in middleware (never in route handlers)
+- Return { success, data/error } from all API routes
+- Use React Query (not useEffect) for server state
+- Mobile-first Tailwind (375px first)
+- Named exports for components (default only for pages)
+- Prisma.$transaction for multi-table writes
+- Soft deletes (deletedAt) — never hard delete users
+- Gate FREE plan: 3 live/month, free videos only, 2 tests/week
+- 403 UPGRADE_REQUIRED → frontend opens PaywallModal
+
+BRAND COLORS: Blue #1E3A8A | Orange #EA580C | Green #15803D
+
+FOLDER STRUCTURE:
+app/(public|student|teacher|admin)/ — route groups
+app/api/v1/[feature]/route.ts — all API routes
+components/[feature]/ — co-located components
+lib/ — pure utilities
+services/ — business logic
+store/ — Zustand stores
+types/ — TypeScript types
+prisma/schema.prisma — single DB schema

@@ -1,0 +1,463 @@
+// Prisma schema for Krishna Academy Upleta
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  admin
+  teacher
+  student
+}
+
+enum Plan {
+  free
+  monthly
+  annual
+}
+
+enum Urgency {
+  low
+  medium
+  high
+}
+
+enum AttendanceStatus {
+  present
+  absent
+  late
+}
+
+enum FeeStatus {
+  pending
+  paid
+  verified
+}
+
+enum EnquiryStatus {
+  new
+  contacted
+  enrolled
+  rejected
+}
+
+enum LiveSessionStatus {
+  scheduled
+  live
+  finished
+}
+
+enum HomeworkStatus {
+  submitted
+  graded
+}
+
+enum DoubtStatus {
+  pending
+  resolved
+}
+
+model User {
+  id                   String    @id @default(cuid())
+  phone                String    @unique
+  email                String?   @unique
+  full_name            String?
+  role                 Role      @default(student)
+  plan                 Plan      @default(free)
+  standard             String?
+  school_name          String?
+  onboarding_completed Boolean   @default(false)
+  onboarding_step      Int       @default(1)
+  refresh_token_hash   String?
+  refresh_token_expires DateTime?
+  credits              Int       @default(0)
+  streak               Int       @default(0)
+  avatar_url           String?
+  created_at           DateTime  @default(now())
+  updated_at           DateTime  @updatedAt
+  last_seen_at         DateTime  @default(now())
+  deletedAt            DateTime?
+
+  // Relations
+  enrollments         Enrollment[]
+  subjectsManaged      Subject[]            @relation("TeacherSubjects")
+  attendanceMarked     Attendance[]         @relation("MarkedBy")
+  attendanceRecords    Attendance[]         @relation("StudentAttendance")
+  fees                Fee[]
+  noticesCreated       Notice[]
+  materialsUploaded    Material[]           @relation("TeacherMaterials")
+  liveSessionsHosted   LiveSession[]        @relation("TeacherLiveSessions")
+  doubtsRaised         Doubt[]              @relation("StudentDoubts")
+  doubtsAssigned       Doubt[]              @relation("TeacherDoubts")
+  messagesSent         DoubtMessage[]
+  homeworkAssigned     Homework[]           @relation("TeacherHomework")
+  homeworkSubmissions  HomeworkSubmission[]
+  liveAttendance      LiveAttendance[]
+  testAttempts        TestAttempt[]
+  videoProgress       VideoProgress[]
+  subscriptions       Subscription[]
+}
+
+model Batch {
+  id             String    @id @default(cuid())
+  name           String    // e.g., 'Std 10 Science'
+  year           String    // e.g., '2024-25'
+  demo_video_id  String?
+  tags           String[]
+  created_at     DateTime  @default(now())
+  deletedAt      DateTime?
+
+  // Relations
+  enrollments    Enrollment[]
+  subjects       Subject[]
+  notices        Notice[]
+  materials      Material[]
+  liveSessions   LiveSession[]
+  homeworks      Homework[]
+}
+
+model Enrollment {
+  id         String   @id @default(cuid())
+  student_id String
+  batch_id   String
+  status     String   @default("active") // active, inactive, completed
+  created_at DateTime @default(now())
+  deletedAt  DateTime?
+
+  student    User     @relation(fields: [student_id], references: [id])
+  batch      Batch    @relation(fields: [batch_id], references: [id])
+
+  @@unique([student_id, batch_id])
+  @@index([student_id])
+  @@index([batch_id])
+}
+
+model Subject {
+  id         String   @id @default(cuid())
+  name       String
+  batch_id   String
+  teacher_id String?
+  created_at DateTime @default(now())
+  deletedAt  DateTime?
+
+  batch      Batch    @relation(fields: [batch_id], references: [id])
+  teacher    User?    @relation("TeacherSubjects", fields: [teacher_id], references: [id])
+
+  attendance Attendance[]
+  materials  Material[]
+  liveSessions LiveSession[]
+  doubts     Doubt[]
+  homeworks  Homework[]
+  chapters   Chapter[]
+
+  @@index([batch_id])
+  @@index([teacher_id])
+}
+
+model Attendance {
+  id         String           @id @default(cuid())
+  student_id String
+  subject_id String
+  marked_by  String
+  status     AttendanceStatus
+  date       DateTime         @default(now()) @db.Date
+  lecture_no Int              @default(1)
+  created_at DateTime         @default(now())
+  deletedAt  DateTime?
+
+  student    User             @relation("StudentAttendance", fields: [student_id], references: [id])
+  subject    Subject          @relation(fields: [subject_id], references: [id])
+  marker     User             @relation("MarkedBy", fields: [marked_by], references: [id])
+
+  @@index([student_id])
+  @@index([subject_id])
+  @@index([marked_by])
+}
+
+model Fee {
+  id                  String    @id @default(cuid())
+  student_id          String
+  amount              Decimal   @db.Decimal(10, 2)
+  fee_type            String    @default("monthly_tuition")
+  status              FeeStatus @default(pending)
+  razorpay_order_id   String?
+  razorpay_payment_id String?
+  razorpay_signature  String?
+  paid_at             DateTime?
+  created_at          DateTime  @default(now())
+  deletedAt           DateTime?
+
+  student             User      @relation(fields: [student_id], references: [id])
+
+  @@index([student_id])
+  @@index([razorpay_order_id])
+}
+
+model Notice {
+  id         String   @id @default(cuid())
+  title      String
+  content    String
+  priority   String   @default("normal") // normal, urgent, announcement
+  created_by String
+  batch_id   String?
+  created_at DateTime @default(now())
+  deletedAt  DateTime?
+
+  author     User     @relation(fields: [created_by], references: [id])
+  batch      Batch?   @relation(fields: [batch_id], references: [id])
+
+  @@index([created_by])
+  @@index([batch_id])
+}
+
+model Material {
+  id           String   @id @default(cuid())
+  title        String
+  content_type String   // PDF, IMAGE, DOC
+  category     String   // Revision, Question Bank, Practical
+  batch_id     String
+  subject_id   String
+  teacher_id   String?
+  file_url     String
+  file_size    String?
+  priority     String   @default("normal")
+  created_at   DateTime @default(now())
+  deletedAt    DateTime?
+
+  batch        Batch    @relation(fields: [batch_id], references: [id])
+  subject      Subject  @relation(fields: [subject_id], references: [id])
+  teacher      User?    @relation("TeacherMaterials", fields: [teacher_id], references: [id])
+
+  @@index([batch_id])
+  @@index([subject_id])
+  @@index([teacher_id])
+}
+
+model Enquiry {
+  id           String        @id @default(cuid())
+  student_name String
+  parent_name  String
+  phone        String
+  class        String
+  board        String
+  message      String?
+  status       EnquiryStatus @default(new)
+  source       String        @default("website")
+  notes        String?
+  created_at   DateTime      @default(now())
+  deletedAt    DateTime?
+}
+
+model Setting {
+  id               String   @id // e.g., 'global_config'
+  academy_name     String   @default("Krishna Academy")
+  academic_year    String   @default("2024-25")
+  admission_status String   @default("Open")
+  contact_phone    String?
+  whatsapp_enabled Boolean  @default(true)
+  maintenance_mode Boolean  @default(false)
+  updated_at       DateTime @updatedAt
+  deletedAt        DateTime?
+}
+
+model LiveSession {
+  id         String            @id @default(cuid())
+  batch_id   String
+  subject_id String
+  teacher_id String?
+  title      String
+  agenda     String?
+  channel_name String?     // ka_cuid() format
+  start_time DateTime
+  end_time   DateTime
+  meeting_url String?
+  status     LiveSessionStatus @default(scheduled)
+  created_at DateTime          @default(now())
+  deletedAt  DateTime?
+
+  batch      Batch             @relation(fields: [batch_id], references: [id])
+  subject    Subject           @relation(fields: [subject_id], references: [id])
+  teacher    User?             @relation("TeacherLiveSessions", fields: [teacher_id], references: [id])
+  attendance LiveAttendance[]
+
+  @@index([batch_id])
+  @@index([subject_id])
+  @@index([teacher_id])
+}
+
+model Doubt {
+  id         String      @id @default(cuid())
+  student_id String
+  subject_id String
+  teacher_id String?
+  title      String
+  status     DoubtStatus @default(pending)
+  created_at DateTime    @default(now())
+  deletedAt  DateTime?
+
+  student    User        @relation("StudentDoubts", fields: [student_id], references: [id])
+  subject    Subject     @relation(fields: [subject_id], references: [id])
+  teacher    User?       @relation("TeacherDoubts", fields: [teacher_id], references: [id])
+
+  messages   DoubtMessage[]
+
+  @@index([student_id])
+  @@index([subject_id])
+  @@index([teacher_id])
+}
+
+model DoubtMessage {
+  id              String   @id @default(cuid())
+  doubt_id        String
+  sender_id       String
+  message         String
+  attachment_url  String?
+  attachment_type String?
+  created_at      DateTime @default(now())
+  deletedAt       DateTime?
+
+  doubt           Doubt    @relation(fields: [doubt_id], references: [id])
+  sender          User     @relation(fields: [sender_id], references: [id])
+
+  @@index([doubt_id])
+  @@index([sender_id])
+}
+
+model Homework {
+  id          String   @id @default(cuid())
+  batch_id    String
+  subject_id  String
+  teacher_id  String?
+  title       String
+  description String?
+  deadline    DateTime?
+  urgency     Urgency  @default(medium)
+  created_at  DateTime @default(now())
+  deletedAt   DateTime?
+
+  batch       Batch    @relation(fields: [batch_id], references: [id])
+  subject     Subject  @relation(fields: [subject_id], references: [id])
+  teacher     User?    @relation("TeacherHomework", fields: [teacher_id], references: [id])
+
+  submissions HomeworkSubmission[]
+
+  @@index([batch_id])
+  @@index([subject_id])
+  @@index([teacher_id])
+}
+
+model HomeworkSubmission {
+  id            String   @id @default(cuid())
+  homework_id   String
+  student_id    String
+  file_urls     String[]
+  status        HomeworkStatus @default(submitted)
+  grade         String?
+  feedback      String?
+  is_late       Boolean  @default(false)
+  attempt_no    Int      @default(1)
+  submitted_at  DateTime @default(now())
+  deletedAt     DateTime?
+
+  homework      Homework @relation(fields: [homework_id], references: [id])
+  student       User     @relation(fields: [student_id], references: [id])
+
+  @@index([homework_id])
+  @@index([student_id])
+}
+
+model LiveAttendance {
+  id              String   @id @default(cuid())
+  student_id      String
+  live_session_id String
+  joined_at       DateTime @default(now())
+  left_at         DateTime?
+  duration        Int?     // in minutes
+  
+  student         User     @relation(fields: [student_id], references: [id])
+  live_session    LiveSession @relation(fields: [live_session_id], references: [id])
+
+  @@index([student_id])
+  @@index([live_session_id])
+}
+
+model TestAttempt {
+  id         String   @id @default(cuid())
+  student_id String
+  test_id    String
+  score      Int?
+  completed_at DateTime @default(now())
+
+  student    User     @relation(fields: [student_id], references: [id])
+
+  @@index([student_id])
+}
+
+model Chapter {
+  id         String    @id @default(cuid())
+  subject_id String
+  title      String
+  order      Int       @default(1)
+  created_at DateTime  @default(now())
+  deletedAt  DateTime?
+
+  subject    Subject   @relation(fields: [subject_id], references: [id])
+  lectures   Lecture[]
+
+  @@index([subject_id])
+}
+
+model Lecture {
+  id           String    @id @default(cuid())
+  chapter_id   String
+  title        String
+  description  String?
+  duration     String?   // e.g., '15:30'
+  is_free      Boolean   @default(false)
+  r2_path      String?   // e.g., 'videos/class10/math/ch1/v1/master.m3u8'
+  order        Int       @default(1)
+  created_at   DateTime  @default(now())
+  deletedAt    DateTime?
+
+  chapter      Chapter   @relation(fields: [chapter_id], references: [id])
+  progress     VideoProgress[]
+
+  @@index([chapter_id])
+}
+
+model VideoProgress {
+  id              String   @id @default(cuid())
+  student_id      String
+  lecture_id      String
+  last_position   Float    @default(0) // in seconds
+  is_completed    Boolean  @default(false)
+  updated_at      DateTime @updatedAt
+
+  student         User     @relation(fields: [student_id], references: [id])
+  lecture         Lecture  @relation(fields: [lecture_id], references: [id])
+
+  @@unique([student_id, lecture_id])
+  @@index([student_id])
+  @@index([lecture_id])
+}
+
+model Subscription {
+  id                  String   @id @default(cuid())
+  user_id             String
+  plan_type           Plan     @default(free)
+  amount              Decimal  @db.Decimal(10, 2)
+  status              String   @default("active") // active, expired, cancelled
+  started_at          DateTime @default(now())
+  expires_at          DateTime
+  razorpay_order_id   String?  @unique
+  razorpay_payment_id String?  @unique
+  created_at          DateTime @default(now())
+
+  user                User     @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
+}

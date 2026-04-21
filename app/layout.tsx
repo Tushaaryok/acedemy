@@ -3,16 +3,16 @@ import { Inter, Baloo_2, Noto_Sans } from "next/font/google";
 // @ts-ignore
 import "./globals.css";
 import Script from "next/script";
-import Header from "@/src/components/Header/Header";
-import Footer from "@/src/components/Footer/Footer";
-import FloatingActions from "@/src/components/Global/FloatingActions";
-import FloatingDoubtButton from "@/src/components/Global/FloatingDoubtButton";
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
+import FloatingActions from "@/components/ui/floating-actions";
+import FloatingDoubtButton from "@/components/ui/floating-doubt-button";
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const baloo2 = Baloo_2({ subsets: ["latin"], weight: ['400', '500', '600', '700', '800'], variable: '--font-baloo' });
 const notoSans = Noto_Sans({ subsets: ["latin"], weight: ['400', '500', '700'], variable: '--font-noto' });
 
-import SchemaOrg from "@/src/components/SEO/SchemaOrg";
+import SchemaOrg from "@/components/layout/SchemaOrg";
 
 export const metadata: Metadata = {
   title: "Krishna Academy Upleta | Best Coaching & Tuition Classes in Upleta",
@@ -46,6 +46,8 @@ export const metadata: Metadata = {
   keywords: ["krishna academy upleta", "best coaching classes in upleta", "tuition classes upleta", "commerce coaching upleta", "science coaching upleta", "std 10 board upleta", "std 12 science upleta"],
 };
 
+import QueryProvider from "@/components/ui/QueryProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -54,13 +56,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${baloo2.variable} ${notoSans.variable}`}>
       <body className={inter.className}>
-        <Header />
-        {children}
-        <SchemaOrg />
-        <Footer />
-        <FloatingActions />
-        <FloatingDoubtButton />
-        <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="beforeInteractive" />
+        <QueryProvider>
+          <Header />
+          {children}
+          <SchemaOrg />
+          <Footer />
+          <FloatingActions />
+          <FloatingDoubtButton />
+          <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="beforeInteractive" />
+        </QueryProvider>
       </body>
     </html>
   );

@@ -1,7 +1,7 @@
 'use client';
 
-import Header from '@/src/components/Header/Header';
-import Footer from '@/src/components/Footer/Footer';
+import Header from '@/components/layout/header';
+import Footer from '@/components/layout/footer';
 import { FileText, Gavel, AlertCircle, CheckCircle2, ChevronRight } from 'lucide-react';
 
 export default function TermsOfService() {

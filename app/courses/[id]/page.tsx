@@ -1,7 +1,7 @@
 'use client';
 import { useParams } from 'next/navigation';
-import Header from "@/src/components/Header/Header";
-import Footer from "@/src/components/Footer/Footer";
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
 import { 
   Star, 
   Users, 
