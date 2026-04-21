@@ -2,28 +2,46 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'secret');
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback_secret_32char_min');
 
+/**
+ * High-fidelity authentication middleware.
+ * Orchestrates token verification and role-based header injection.
+ */
 export async function middleware(request: NextRequest) {
-  const token = request.cookies.get('auth-token')?.value;
+  const token = request.cookies.get('auth_token')?.value || 
+                request.headers.get('authorization')?.split(' ')[1];
 
-  // Define protected routes
-  if (request.nextUrl.pathname.startsWith('/api/dashboard')) {
+  // Shield all API v1 and Dashboard routes except public auth paths
+  const isProtectedPath = request.nextUrl.pathname.startsWith('/api/v1/') || 
+                          request.nextUrl.pathname.startsWith('/dashboard');
+  
+  const isPublicAuth = request.nextUrl.pathname.includes('/auth/otp') || 
+                       request.nextUrl.pathname.includes('/auth/login');
+
+  if (isProtectedPath && !isPublicAuth) {
     if (!token) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized: No token provided' },
-        { status: 401 }
-      );
+      if (request.nextUrl.pathname.startsWith('/api/')) {
+        return NextResponse.json({ success: false, error: { code: 'UNAUTHORIZED' } }, { status: 401 });
+      }
+      return NextResponse.redirect(new URL('/auth/login', request.url));
     }
 
     try {
-      await jwtVerify(token, JWT_SECRET);
-      return NextResponse.next();
+      const { payload } = await jwtVerify(token, JWT_SECRET);
+      
+      // Inject user metadata into request headers for downstream consumption
+      const response = NextResponse.next();
+      response.headers.set('x-user-id', payload.userId as string);
+      response.headers.set('x-user-role', payload.role as string);
+      response.headers.set('x-user-plan', payload.plan as string);
+      
+      return response;
     } catch (err) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized: Invalid token' },
-        { status: 401 }
-      );
+      if (request.nextUrl.pathname.startsWith('/api/')) {
+        return NextResponse.json({ success: false, error: { code: 'INVALID_TOKEN' } }, { status: 401 });
+      }
+      return NextResponse.redirect(new URL('/auth/login', request.url));
     }
   }
 
@@ -31,5 +49,8 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/api/dashboard/:path*', '/dashboard/:path*'],
+  matcher: [
+    '/api/v1/:path*',
+    '/dashboard/:path*',
+  ],
 };
