@@ -3,14 +3,19 @@ import { useState, useEffect } from 'react';
 import './Header.css';
 import logo from '../../public/assets/logo.jpeg';
 import Link from 'next/link';
-import { Menu, X, ArrowRight, Sparkles, Search } from 'lucide-react';
+import { Menu, X, ArrowRight, Sparkles, Search, LogOut } from 'lucide-react';
 import SearchModal from '../ui/SearchModal';
+import { useAuthStore } from '@/store/auth-store';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeLink, setActiveLink] = useState('#home');
+  
+  const { isAuthenticated, user, logout } = useAuthStore();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,12 +79,20 @@ export default function Header() {
           ))}
           {/* Mobile Enroll Button */}
           <Link 
-            href="/login" 
+            href={isAuthenticated ? "/dashboard" : "/login"} 
             className="btn btn-enroll mobile-only text-center flex items-center justify-center gap-2 mt-8 shadow-xl"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            Student Portal <ArrowRight size={18} />
+            {isAuthenticated ? 'Dashboard' : 'Student Portal'} <ArrowRight size={18} />
           </Link>
+          {isAuthenticated && (
+            <button 
+              onClick={() => { logout(); router.push('/'); setIsMobileMenuOpen(false); }}
+              className="mt-6 flex items-center justify-center gap-2 text-rose-500 font-black uppercase text-[10px] tracking-widest mobile-only"
+            >
+              <LogOut size={16} /> Logout Account
+            </button>
+          )}
         </nav>
         
         {/* Right: Actions */}
@@ -92,13 +105,25 @@ export default function Header() {
               <Search size={22} />
            </button>
 
-           <Link 
-             href="/login" 
-             className="btn btn-enroll desktop-only flex items-center gap-2 group"
-           >
-             Student Portal 
-             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-           </Link>
+           <div className="flex items-center gap-4 desktop-only">
+             <Link 
+               href={isAuthenticated ? (user?.role === 'admin' ? '/admin' : user?.role === 'teacher' ? '/teacher' : '/dashboard') : "/login"} 
+               className="btn btn-enroll flex items-center gap-2 group"
+             >
+               {isAuthenticated ? 'Dashboard' : 'Student Portal'}
+               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+             </Link>
+             
+             {isAuthenticated && (
+               <button 
+                 onClick={() => { logout(); router.push('/'); }}
+                 className="w-12 h-12 flex items-center justify-center bg-slate-50 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-2xl transition-all"
+                 title="Logout"
+               >
+                 <LogOut size={20} />
+               </button>
+             )}
+           </div>
            
            {/* Hamburger Menu Toggle */}
            <button 

@@ -19,29 +19,32 @@ export async function middleware(request: NextRequest) {
   const isPublicAuth = request.nextUrl.pathname.includes('/auth/otp') || 
                        request.nextUrl.pathname.includes('/auth/login');
 
-  if (isProtectedPath && !isPublicAuth) {
+    if (isProtectedPath && !isPublicAuth) {
     if (!token) {
       if (request.nextUrl.pathname.startsWith('/api/')) {
         return NextResponse.json({ success: false, error: { code: 'UNAUTHORIZED' } }, { status: 401 });
       }
-      return NextResponse.redirect(new URL('/auth/login', request.url));
+      return NextResponse.redirect(new URL('/login', request.url));
     }
 
     try {
       const { payload } = await jwtVerify(token, JWT_SECRET);
       
-      // Inject user metadata into request headers for downstream consumption
-      const response = NextResponse.next();
-      response.headers.set('x-user-id', payload.userId as string);
-      response.headers.set('x-user-role', payload.role as string);
-      response.headers.set('x-user-plan', payload.plan as string);
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set('x-user-id', payload.userId as string);
+      requestHeaders.set('x-user-role', payload.role as string);
+      requestHeaders.set('x-user-plan', payload.plan as string);
       
-      return response;
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
     } catch (err) {
       if (request.nextUrl.pathname.startsWith('/api/')) {
         return NextResponse.json({ success: false, error: { code: 'INVALID_TOKEN' } }, { status: 401 });
       }
-      return NextResponse.redirect(new URL('/auth/login', request.url));
+      return NextResponse.redirect(new URL('/login', request.url));
     }
   }
 

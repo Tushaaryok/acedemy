@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { Phone, ArrowRight, Sparkles, ChevronLeft, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
-import { getAuthErrorMessage } from '@/lib/types/auth';
+import api from '@/lib/api';
+import { useAuthStore } from '@/store/auth-store';
 
 // ============================================================
 // OTP Box Component - 6 individual input boxes
@@ -20,7 +20,6 @@ function OtpBoxes({
   const inputs = useRef<(HTMLInputElement | null)[]>([]);
 
   const handleInput = (index: number, char: string) => {
-    // Sirf numbers accept karo
     if (!/^\d*$/.test(char)) return;
 
     const arr = value.padEnd(6, ' ').split('');
@@ -28,7 +27,6 @@ function OtpBoxes({
     const newVal = arr.join('').trimEnd();
     onChange(newVal);
 
-    // Agla box pe focus
     if (char && index < 5) inputs.current[index + 1]?.focus();
   };
 
@@ -45,7 +43,6 @@ function OtpBoxes({
         onChange(arr.join('').trimEnd());
       }
     }
-    // Arrow keys
     if (e.key === 'ArrowLeft' && index > 0) inputs.current[index - 1]?.focus();
     if (e.key === 'ArrowRight' && index < 5) inputs.current[index + 1]?.focus();
   };
@@ -54,7 +51,6 @@ function OtpBoxes({
     e.preventDefault();
     const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
     onChange(pasted);
-    // Last filled box pe focus
     const lastIndex = Math.min(pasted.length, 5);
     inputs.current[lastIndex]?.focus();
   };
@@ -98,19 +94,16 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  // Resend cooldown (30 seconds - PRD requirement)
   const [countdown, setCountdown] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const supabase = createClient();
   const router = useRouter();
+  const setAuth = useAuthStore(state => state.setAuth);
 
-  // Countdown timer cleanup
   useEffect(() => {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, []);
 
-  // 30-second countdown start karo
   const startCountdown = useCallback(() => {
     setCountdown(30);
     timerRef.current = setInterval(() => {
@@ -124,7 +117,6 @@ export default function LoginPage() {
     }, 1000);
   }, []);
 
-  // Phone number validate karo
   const validatePhone = (num: string) => {
     const cleaned = num.replace(/\D/g, '');
     if (cleaned.length !== 10) return 'Phone number 10 digits ka hona chahiye';
@@ -132,101 +124,73 @@ export default function LoginPage() {
     return null;
   };
 
-  // Step 1: OTP bhejo
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccessMsg('');
 
-    // Validation
     const phoneErr = validatePhone(phone);
     if (phoneErr) { setError(phoneErr); return; }
 
     setLoading(true);
-
-    const formattedPhone = `+91${phone.replace(/\D/g, '')}`;
-
-    const { error: authError } = await supabase.auth.signInWithOtp({
-      phone: formattedPhone,
-      options: {
-        shouldCreateUser: true, // Naye users allow karo
-        channel: 'sms',
-      },
-    });
-
-    if (authError) {
-      setError(getAuthErrorMessage(authError.message));
-    } else {
-      setStep('otp');
-      setSuccessMsg(`OTP +91-${phone} pe bheja gaya ✅`);
-      startCountdown();
+    try {
+      const formattedPhone = `+91${phone.replace(/\D/g, '')}`;
+      const res = await api.post('/auth/otp/send', { phone: formattedPhone });
+      
+      if (res.data.success) {
+        setStep('otp');
+        setSuccessMsg(`OTP +91-${phone} pe bheja gaya ✅`);
+        startCountdown();
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.error?.message || 'OTP bhejne mein dikkat hui. Fir try karein.');
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
-  // Resend OTP
   const handleResend = async () => {
     if (countdown > 0) return;
     setError('');
     setSuccessMsg('');
-    setLoading(true);
-
-    const { error: authError } = await supabase.auth.signInWithOtp({
-      phone: `+91${phone.replace(/\D/g, '')}`,
-      options: { shouldCreateUser: true, channel: 'sms' },
-    });
-
-    if (authError) {
-      setError(getAuthErrorMessage(authError.message));
-    } else {
-      setOtp('');
-      setSuccessMsg('Naya OTP bheja gaya! ✅');
-      startCountdown();
-    }
-    setLoading(false);
+    await handleSendOTP({ preventDefault: () => {} } as any);
   };
 
-  // Step 2: OTP verify karo
   const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (otp.replace(/\s/g, '').length < 6) {
+    const cleanOtp = otp.replace(/\s/g, '');
+    if (cleanOtp.length < 6) {
       setError('6-digit OTP poora bharo');
       return;
     }
 
     setLoading(true);
+    try {
+      const formattedPhone = `+91${phone.replace(/\D/g, '')}`;
+      const res = await api.post('/auth/otp/verify', { phone: formattedPhone, otp: cleanOtp });
 
-    const { data, error: verifyError } = await supabase.auth.verifyOtp({
-      phone: `+91${phone.replace(/\D/g, '')}`,
-      token: otp.replace(/\s/g, ''),
-      type: 'sms',
-    });
+      if (res.data.success) {
+        const { accessToken, user } = res.data.data;
+        
+        // Save to Zustand store
+        setAuth(user, accessToken);
 
-    if (verifyError) {
-      setError(getAuthErrorMessage(verifyError.message));
+        // Routing based on onboarding state
+        if (!user.onboarding_completed) {
+          router.push('/onboarding');
+        } else {
+          // Role-based routing
+          if (user.role === 'admin') router.push('/admin');
+          else if (user.role === 'teacher') router.push('/teacher');
+          else router.push('/dashboard');
+        }
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.error?.message || 'OTP galat hai. Dobara check karein.');
+    } finally {
       setLoading(false);
-      return;
-    }
-
-    // User profile check karo
-    const { data: userData, error: profileError } = await supabase
-      .from('users')
-      .select('role, onboarding_completed, full_name')
-      .eq('id', data.user?.id)
-      .single();
-
-    if (profileError || !userData) {
-      // Naya user - onboarding pe bhejo
-      router.push('/onboarding');
-    } else if (!userData.onboarding_completed) {
-      // Onboarding adhoori - complete karo
-      router.push('/onboarding');
-    } else {
-      // Purana user - seedha dashboard
-      router.push(`/dashboard/${userData.role}`);
     }
   };
 

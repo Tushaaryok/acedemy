@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/store/auth-store';
+import api from '@/lib/api';
 import { 
   Flame, 
   Trophy, 
@@ -22,36 +24,38 @@ import { CourseGridSkeleton as DashboardSkeleton } from '@/components/ui/skeleto
 import StudentAIChat from '@/components/ui/StudentAIChat';
 
 export default function StudentDashboard() {
+  const router = useRouter();
+  const { isAuthenticated } = useAuthStore();
   const [profile, setProfile] = useState<any>(null);
   const [enrollment, setEnrollment] = useState<any>(null);
   const [notices, setNotices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
-  
-  const supabase = createClient();
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
+    }
+
     async function getDashboardData() {
       setLoading(true);
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          const { data: userData } = await supabase.from('users').select('*').eq('id', user.id).single();
-          const { data: enr } = await supabase.from('enrollments').select('*, batches(*)').eq('student_id', user.id).single();
-          const { data: ntc } = await supabase.from('notices').select('*').order('created_at', { ascending: false }).limit(3);
-          
-          setProfile(userData);
-          setEnrollment(enr);
-          setNotices(ntc || []);
+        const res = await api.get('/dashboard/student');
+        if (res.data.success) {
+          const { profile: p, enrollment: e, notices: n } = res.data.data;
+          setProfile(p);
+          setEnrollment(e);
+          setNotices(n || []);
         }
       } catch (e) {
-        console.error(e);
+        console.error('Failed to fetch dashboard data', e);
       } finally {
         setLoading(false);
       }
     }
     getDashboardData();
-  }, [supabase]);
+  }, [isAuthenticated, router]);
 
   if (loading) return <DashboardSkeleton />;
 
