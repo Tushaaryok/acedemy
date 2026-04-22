@@ -2,43 +2,51 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
+  schemas  = ["public", "auth"]
 }
 
 enum Role {
+  @@schema("public")
   admin
   teacher
   student
 }
 
 enum Plan {
+  @@schema("public")
   free
   monthly
   annual
 }
 
 enum Urgency {
+  @@schema("public")
   low
   medium
   high
 }
 
 enum AttendanceStatus {
+  @@schema("public")
   present
   absent
   late
 }
 
 enum FeeStatus {
+  @@schema("public")
   pending
   paid
   verified
 }
 
 enum EnquiryStatus {
+  @@schema("public")
   new
   contacted
   enrolled
@@ -46,22 +54,26 @@ enum EnquiryStatus {
 }
 
 enum LiveSessionStatus {
+  @@schema("public")
   scheduled
   live
   finished
 }
 
 enum HomeworkStatus {
+  @@schema("public")
   submitted
   graded
 }
 
 enum DoubtStatus {
+  @@schema("public")
   pending
   resolved
 }
 
 model User {
+  @@schema("public")
   id                   String    @id @default(cuid())
   phone                String    @unique
   email                String?   @unique
@@ -105,6 +117,7 @@ model User {
 }
 
 model Batch {
+  @@schema("public")
   id             String    @id @default(cuid())
   name           String    // e.g., 'Std 10 Science'
   year           String    // e.g., '2024-25'
@@ -123,6 +136,7 @@ model Batch {
 }
 
 model Enrollment {
+  @@schema("public")
   id         String   @id @default(cuid())
   student_id String
   batch_id   String
@@ -139,6 +153,7 @@ model Enrollment {
 }
 
 model Subject {
+  @@schema("public")
   id         String   @id @default(cuid())
   name       String
   batch_id   String
@@ -161,6 +176,7 @@ model Subject {
 }
 
 model Attendance {
+  @@schema("public")
   id         String           @id @default(cuid())
   student_id String
   subject_id String
@@ -181,6 +197,7 @@ model Attendance {
 }
 
 model Fee {
+  @@schema("public")
   id                  String    @id @default(cuid())
   student_id          String
   amount              Decimal   @db.Decimal(10, 2)
@@ -200,6 +217,7 @@ model Fee {
 }
 
 model Notice {
+  @@schema("public")
   id         String   @id @default(cuid())
   title      String
   content    String
@@ -217,6 +235,7 @@ model Notice {
 }
 
 model Material {
+  @@schema("public")
   id           String   @id @default(cuid())
   title        String
   content_type String   // PDF, IMAGE, DOC
@@ -240,6 +259,7 @@ model Material {
 }
 
 model Enquiry {
+  @@schema("public")
   id           String        @id @default(cuid())
   student_name String
   parent_name  String
@@ -255,6 +275,7 @@ model Enquiry {
 }
 
 model Setting {
+  @@schema("public")
   id               String   @id // e.g., 'global_config'
   academy_name     String   @default("Krishna Academy")
   academic_year    String   @default("2024-25")
@@ -267,6 +288,7 @@ model Setting {
 }
 
 model LiveSession {
+  @@schema("public")
   id         String            @id @default(cuid())
   batch_id   String
   subject_id String
@@ -292,6 +314,7 @@ model LiveSession {
 }
 
 model Doubt {
+  @@schema("public")
   id         String      @id @default(cuid())
   student_id String
   subject_id String
@@ -313,6 +336,7 @@ model Doubt {
 }
 
 model DoubtMessage {
+  @@schema("public")
   id              String   @id @default(cuid())
   doubt_id        String
   sender_id       String
@@ -330,6 +354,7 @@ model DoubtMessage {
 }
 
 model Homework {
+  @@schema("public")
   id          String   @id @default(cuid())
   batch_id    String
   subject_id  String
@@ -353,6 +378,7 @@ model Homework {
 }
 
 model HomeworkSubmission {
+  @@schema("public")
   id            String   @id @default(cuid())
   homework_id   String
   student_id    String
@@ -373,6 +399,7 @@ model HomeworkSubmission {
 }
 
 model LiveAttendance {
+  @@schema("public")
   id              String   @id @default(cuid())
   student_id      String
   live_session_id String
@@ -388,6 +415,7 @@ model LiveAttendance {
 }
 
 model TestAttempt {
+  @@schema("public")
   id         String   @id @default(cuid())
   student_id String
   test_id    String
@@ -400,6 +428,7 @@ model TestAttempt {
 }
 
 model Chapter {
+  @@schema("public")
   id         String    @id @default(cuid())
   subject_id String
   title      String
@@ -414,6 +443,7 @@ model Chapter {
 }
 
 model Lecture {
+  @@schema("public")
   id           String    @id @default(cuid())
   chapter_id   String
   title        String
@@ -432,6 +462,7 @@ model Lecture {
 }
 
 model VideoProgress {
+  @@schema("public")
   id              String   @id @default(cuid())
   student_id      String
   lecture_id      String
@@ -448,6 +479,7 @@ model VideoProgress {
 }
 
 model Subscription {
+  @@schema("public")
   id                  String   @id @default(cuid())
   user_id             String
   plan_type           Plan     @default(free)

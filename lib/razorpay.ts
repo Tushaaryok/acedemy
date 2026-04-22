@@ -2,16 +2,16 @@
 import Razorpay from 'razorpay';
 import { createHmac } from 'crypto';
 
-const KEY_ID = process.env.RAZORPAY_KEY_ID!;
-const KEY_SECRET = process.env.RAZORPAY_KEY_SECRET!;
+const KEY_ID = process.env.RAZORPAY_KEY_ID || '';
+const KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
 
 /**
  * Singleton instance of the Razorpay client for financial operations.
  */
-export const razorpay = new Razorpay({
+export const razorpay = KEY_ID ? new Razorpay({
   key_id: KEY_ID,
   key_secret: KEY_SECRET,
-});
+}) : null as any;
 
 /**
  * Securely verifies the Razorpay signature to prevent payment spoofing.
