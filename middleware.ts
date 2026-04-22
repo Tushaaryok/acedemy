@@ -16,10 +16,13 @@ export async function middleware(request: NextRequest) {
   const isProtectedPath = request.nextUrl.pathname.startsWith('/api/v1/') || 
                           request.nextUrl.pathname.startsWith('/dashboard');
   
+  const isPublicApi = request.nextUrl.pathname.startsWith('/api/v1/batches') || 
+                      request.nextUrl.pathname.startsWith('/api/v1/enquiry');
+                      
   const isPublicAuth = request.nextUrl.pathname.includes('/auth/otp') || 
                        request.nextUrl.pathname.includes('/auth/login');
 
-    if (isProtectedPath && !isPublicAuth) {
+    if (isProtectedPath && !isPublicAuth && !isPublicApi) {
     if (!token) {
       if (request.nextUrl.pathname.startsWith('/api/')) {
         return NextResponse.json({ success: false, error: { code: 'UNAUTHORIZED' } }, { status: 401 });

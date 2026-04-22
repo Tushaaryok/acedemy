@@ -39,13 +39,41 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
       select: {
         id: true,
         name: true,
+        year: true,
+        tags: true,
+        demo_video_id: true,
       },
       orderBy: { name: 'asc' }
     });
 
     return NextResponse.json({ success: true, data: batches }, { status: 200 });
   } catch (error) {
-    console.error('Batches API Error:', error);
+    console.error('Batches API Error:', (error as Error).message);
+    return NextResponse.json({ success: false, error: { code: 'SERVER_ERROR' } }, { status: 500 });
+  }
+}
+
+/**
+ * Creates a new academic batch (Administrators only).
+ */
+export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>> {
+  try {
+    const { getUserFromRequest } = await import('@/lib/auth');
+    const user = await getUserFromRequest(req);
+    
+    if (user.role !== 'admin') {
+      return NextResponse.json({ success: false, error: { code: 'FORBIDDEN' } }, { status: 403 });
+    }
+
+    const { name, year, tags } = await req.json();
+    
+    const batch = await prisma.batch.create({
+      data: { name, year, tags }
+    });
+
+    return NextResponse.json({ success: true, data: batch }, { status: 201 });
+  } catch (error) {
+    console.error('[batches/create]', error);
     return NextResponse.json({ success: false, error: { code: 'SERVER_ERROR' } }, { status: 500 });
   }
 }
