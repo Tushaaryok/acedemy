@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { 
   Users, 
@@ -13,12 +13,21 @@ import {
   Bell
 } from 'lucide-react';
 import Link from 'next/link';
+import prisma from '@/lib/prisma';
+
+export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
-  const supabase = createClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  const headerList = headers();
+  const userId = headerList.get('x-user-id');
+  const role = headerList.get('x-user-role');
 
-  if (!session) redirect('/login');
+  if (!userId || role !== 'admin') {
+    redirect('/login');
+  }
+
+  // Fetch real count from DB if needed, but keeping the 'premium mocked' feel for now
+  // unless requested otherwise.
 
   // Stats Data (Mocked for premium UI demo, to be connected via RPC)
   const stats = [

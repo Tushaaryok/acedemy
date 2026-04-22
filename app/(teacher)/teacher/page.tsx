@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { 
   Calendar, 
@@ -13,18 +13,22 @@ import {
   Radio
 } from 'lucide-react';
 import Link from 'next/link';
+import prisma from '@/lib/prisma';
+
+export const dynamic = 'force-dynamic';
 
 export default async function TeacherDashboard() {
-  const supabase = createClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  const headerList = headers();
+  const userId = headerList.get('x-user-id');
+  const role = headerList.get('x-user-role');
 
-  if (!session) redirect('/login');
+  if (!userId || role !== 'teacher') {
+    redirect('/login');
+  }
 
-  const { data: profile } = await supabase
-    .from('users')
-    .select('*')
-    .eq('id', session.user.id)
-    .single();
+  const profile = await prisma.user.findUnique({
+    where: { id: userId }
+  });
 
   const stats = [
     { label: 'Total Students', value: '284', icon: <Users size={20} />, color: 'bg-indigo-600', trend: '+12 this week' },
