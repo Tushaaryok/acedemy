@@ -16,7 +16,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
     const goal = searchParams.get('goal');
 
     // Build-time bypass
-    if (process.env.DATABASE_URL?.includes('localhost') || process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
+    if (process.env.NEXT_PHASE === 'phase-production-build' || (!process.env.DATABASE_URL && process.env.NODE_ENV === 'production')) {
        return NextResponse.json({ success: true, data: [] });
     }
 
