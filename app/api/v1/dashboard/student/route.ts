@@ -53,7 +53,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
         where: {
           OR: [
             { batch_id: null }, // Global notices
-            { batch_id: { in: await prisma.enrollment.findMany({ where: { student_id: user.id }, select: { batch_id: true } }).then(e => e.map(b => b.batch_id)) } }
+            { batch_id: { in: await prisma.enrollment.findMany({ where: { student_id: user.id }, select: { batch_id: true } }).then((e: any[]) => e.map((b: any) => b.batch_id)) } }
           ]
         },
         orderBy: { created_at: 'desc' },
