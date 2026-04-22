@@ -69,6 +69,8 @@ model User {
   role                 Role      @default(student)
   plan                 Plan      @default(free)
   standard             String?
+  stream               String?   // Science, Commerce, Arts
+  goal                 String?   // boards, jee, neet, cuet
   school_name          String?
   onboarding_completed Boolean   @default(false)
   onboarding_step      Int       @default(1)

@@ -9,9 +9,9 @@ import type { ApiResponse } from '@/types';
 const OnboardingSchema = z.object({
   fullName: z.string().min(3).max(50),
   standard: z.string().min(1),
-  batchId: z.string().cuid(),
-  schoolName: z.string().optional(),
-  city: z.string().default('Upleta'),
+  stream: z.string().optional(),
+  goal: z.string().min(1),
+  batchId: z.string().min(1), // Batch IDs might not be cuid in some cases, so just min(1)
 });
 
 /**
@@ -40,8 +40,16 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
       data: {
         full_name: parsed.data.fullName,
         standard: parsed.data.standard,
-        batch_id: parsed.data.batchId,
+        stream: parsed.data.stream,
+        goal: parsed.data.goal,
         onboarding_completed: true,
+        // Create an enrollment for the selected batch
+        enrollments: {
+          create: {
+            batch_id: parsed.data.batchId,
+            status: 'active'
+          }
+        }
       }
     });
 
