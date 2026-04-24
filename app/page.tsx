@@ -27,41 +27,79 @@ export default function Home() {
       <Header />
       
       {/* Hero Section */}
-      <section id="home" className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+      <section id="home" className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-white">
         <div className="container mx-auto px-6">
-          <div className="flex flex-col items-center text-center max-w-5xl mx-auto space-y-10">
-            <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-600 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] border border-indigo-100 shadow-sm animate-fade-in-up">
-              <Sparkles size={14} className="fill-indigo-600/20" /> Welcome to Excellence
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-12 max-w-7xl mx-auto">
+            {/* Left: Content */}
+            <div className="flex flex-col items-start text-left lg:w-1/2 space-y-8">
+              <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-600 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] border border-indigo-100 shadow-sm">
+                <Sparkles size={14} className="fill-indigo-600/20" /> Welcome to Excellence
+              </div>
+              
+              <h1 className="text-5xl md:text-8xl font-black text-slate-900 tracking-tighter leading-[1.1] font-baloo">
+                Shape Your <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-500">Educational Mastery.</span>
+              </h1>
+              
+              <p className="text-slate-500 font-medium text-lg md:text-xl leading-relaxed max-w-xl">
+                Upleta's #1 coaching institute for Science & Commerce. Expert faculty, high-fidelity results, and a premium digital environment.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto">
+                <Link 
+                  href="/login"
+                  className="w-full sm:w-64 bg-slate-900 text-white px-10 py-6 rounded-[28px] font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-slate-900/40 hover:bg-indigo-600 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 group"
+                >
+                  Student Portal <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link 
+                  href="/courses"
+                  className="w-full sm:w-64 bg-white border-2 border-slate-100 text-slate-900 px-10 py-6 rounded-[28px] font-black text-xs uppercase tracking-[0.2em] hover:border-slate-900 transition-all flex items-center justify-center gap-3"
+                >
+                  Browse Batches
+                </Link>
+              </div>
             </div>
-            
-            <h1 className="text-5xl md:text-8xl font-black text-slate-900 tracking-tighter leading-[1.1] font-baloo">
-              Shape Your Future With <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-500">Educational Mastery.</span>
-            </h1>
-            
-            <p className="text-slate-500 font-medium text-lg md:text-2xl leading-relaxed max-w-3xl">
-              Upleta's #1 coaching institute for Science & Commerce. Expert faculty, high-fidelity results, and a premium digital environment.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto">
-              <Link 
-                href="/login"
-                className="w-full sm:w-64 bg-slate-900 text-white px-10 py-6 rounded-[28px] font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-slate-900/40 hover:bg-indigo-600 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 group"
-              >
-                Enter Student Portal <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link 
-                href="/courses"
-                className="w-full sm:w-64 bg-white border-2 border-slate-100 text-slate-900 px-10 py-6 rounded-[28px] font-black text-xs uppercase tracking-[0.2em] hover:border-slate-900 transition-all flex items-center justify-center gap-3"
-              >
-                Browse Batches
-              </Link>
+
+            {/* Right: Faculty Visual Stack */}
+            <div className="lg:w-1/2 relative h-[400px] md:h-[500px] w-full flex items-center justify-center lg:justify-end pr-10">
+              <div className="relative w-full max-w-md h-full">
+                 {/* Ram Sir */}
+                 <div className="absolute top-0 right-0 w-[240px] h-[320px] bg-slate-100 rounded-[40px] overflow-hidden shadow-2xl border-4 border-white rotate-6 hover:rotate-0 transition-all duration-500 z-30 group">
+                    <img src="/imgs/ram_new.jpeg" alt="Ram Sir" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
+                    <div className="absolute bottom-6 left-6 text-white z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <p className="font-black text-xl">Ram Sir</p>
+                      <p className="text-[10px] uppercase tracking-widest font-bold">Mathematics</p>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                 </div>
+                 
+                 {/* Yashvant Sir */}
+                 <div className="absolute top-10 right-20 w-[220px] h-[300px] bg-slate-100 rounded-[40px] overflow-hidden shadow-xl border-4 border-white -rotate-6 hover:rotate-0 transition-all duration-500 z-20 group">
+                    <img src="/imgs/yashwant_new.jpeg" alt="Yashvant Sir" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
+                    <div className="absolute bottom-6 left-6 text-white z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <p className="font-black text-xl">Yashvant Sir</p>
+                      <p className="text-[10px] uppercase tracking-widest font-bold">English</p>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                 </div>
+
+                 {/* Jayesh Sir */}
+                 <div className="absolute top-20 right-40 w-[200px] h-[280px] bg-slate-100 rounded-[40px] overflow-hidden shadow-lg border-4 border-white -rotate-12 hover:rotate-0 transition-all duration-500 z-10 group">
+                    <img src="/imgs/jayesh_new.jpeg" alt="Jayesh Sir" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
+                    <div className="absolute bottom-6 left-6 text-white z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <p className="font-black text-xl">Jayesh Sir</p>
+                      <p className="text-[10px] uppercase tracking-widest font-bold">Social Science</p>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                 </div>
+              </div>
             </div>
           </div>
         </div>
         
         {/* Background Accents */}
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-50/50 rounded-full blur-[140px] -mr-96 -mt-96 -z-10 animate-pulse"></div>
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-50/50 rounded-full blur-[140px] -mr-96 -mt-96 -z-10"></div>
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-50/50 rounded-full blur-[120px] -ml-72 -mb-72 -z-10"></div>
       </section>
 

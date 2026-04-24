@@ -44,68 +44,35 @@ export const CourseCard: FC<CourseCardProps> = ({
       "bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden group hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500 flex flex-col",
       className
     )}>
-      {/* Thumbnail Area */}
+      {/* Only Image with Hover Overlay */}
       <div 
-        className="h-48 bg-slate-50 relative flex items-center justify-center cursor-pointer group-hover:bg-amber-50 transition-colors"
+        className="relative aspect-video bg-slate-50 overflow-hidden cursor-pointer group-hover:scale-105 transition-all duration-700"
         onClick={() => onPlayDemo(course.demo_video_id || 'bfSoopCm0i8')}
       >
         <img 
           src={`https://img.youtube.com/vi/${course.demo_video_id || 'bfSoopCm0i8'}/hqdefault.jpg`} 
           alt={course.name} 
-          className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" 
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
         />
-        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-          <div className="bg-white/20 backdrop-blur-md p-4 rounded-full text-white transform scale-90 group-hover:scale-100 transition-transform shadow-xl">
+        
+        {/* Hover Overlay */}
+        <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/60 transition-all duration-500 flex flex-col items-center justify-center p-6">
+          <div className="bg-white p-5 rounded-full text-slate-900 transform scale-0 group-hover:scale-100 transition-transform duration-500 shadow-2xl mb-4">
             <Play size={24} fill="currentColor" />
           </div>
+          <h3 className="text-white font-baloo font-bold text-xl text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            {course.name}
+          </h3>
+          <p className="text-indigo-300 text-[10px] font-black uppercase tracking-[0.2em] mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            Watch Demo
+          </p>
         </div>
-        <div className="absolute top-4 left-4">
-          <span className="px-4 py-1.5 bg-amber-500 text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-amber-500/20">
-            DEMO AVAILABLE
+
+        {/* Badge */}
+        <div className="absolute top-4 left-4 z-10">
+          <span className="px-4 py-1.5 bg-white/20 backdrop-blur-md text-white border border-white/30 rounded-full text-[9px] font-black uppercase tracking-widest">
+            {course.year}
           </span>
-        </div>
-      </div>
-
-      {/* Content Area */}
-      <div className="p-8 flex-1 flex flex-col space-y-4">
-        <div className="flex items-center justify-between">
-          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">GSEB / CBSE</span>
-          <div className="flex gap-2">
-            {(course.tags || ['General']).slice(0, 2).map((tag: string) => (
-              <span key={tag} className="px-2 py-0.5 bg-slate-50 text-slate-500 rounded-md text-[9px] font-bold uppercase">{tag}</span>
-            ))}
-          </div>
-        </div>
-
-        <h3 className="text-xl font-baloo font-bold text-slate-900 leading-tight group-hover:text-amber-600 transition-colors">
-          {course.name}
-        </h3>
-        
-        <div className="space-y-2 pt-2">
-          <div className="flex items-center gap-2 text-slate-500">
-            <Calendar size={14} className="text-amber-500" />
-            <span className="text-xs font-bold leading-none">Session {course.year}</span>
-          </div>
-          <div className="flex items-center gap-2 text-slate-500">
-            <Clock size={14} className="text-amber-500" />
-            <span className="text-xs font-bold leading-none">Flexible Batches</span>
-          </div>
-        </div>
-
-        <div className="pt-6 mt-auto border-t border-slate-50 flex gap-3">
-          <button 
-            className="flex-1 bg-slate-900 text-white py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-800 transition-all active:scale-95"
-            onClick={() => document.getElementById('admissions')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            Enroll Now
-          </button>
-          <button 
-            className="p-3.5 bg-white border border-slate-200 text-slate-900 rounded-2xl hover:border-amber-500 hover:text-amber-500 transition-all active:scale-95"
-            onClick={() => onPlayDemo(course.demo_video_id || 'bfSoopCm0i8')}
-            aria-label={`Watch demo for ${course.name}`}
-          >
-            <Play size={16} />
-          </button>
         </div>
       </div>
     </div>
