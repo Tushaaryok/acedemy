@@ -14,7 +14,7 @@ import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { CourseGridSkeleton } from '@/components/ui/skeleton';
-import { Batch } from '@prisma/client';
+import { batches } from '@prisma/client';
 
 interface CourseUI {
   id: string;
@@ -30,7 +30,7 @@ interface CourseUI {
 export default function CourseCatalog() {
   const [filter, setFilter] = useState<string>('All');
 
-  const { data, isLoading, isError } = useQuery<{ items: Batch[] }>({
+  const { data, isLoading, isError } = useQuery<{ items: batches[] }>({
     queryKey: ['batches'],
     queryFn: async () => {
       const res = await api.get('/batches');
@@ -38,14 +38,14 @@ export default function CourseCatalog() {
     },
   });
 
-  const courses: CourseUI[] = data?.items.map((batch: Batch): CourseUI => ({
+  const courses: CourseUI[] = data?.items.map((batch: batches): CourseUI => ({
     id: batch.id,
     title: batch.name,
     teacher: 'Expert Faculty',
     rating: 4.8,
     students: 500,
     price: batch.name.toLowerCase().includes('secondary') ? 'FREE' : 'PAID',
-    category: batch.tags?.[0] || 'General',
+    category: batch.stream || 'General',
     thumb: batch.name.toLowerCase().includes('science') ? '🧪' : 
            batch.name.toLowerCase().includes('commerce') ? '📈' : '📐'
   })) || [];

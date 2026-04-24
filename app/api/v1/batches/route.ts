@@ -59,9 +59,9 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
 export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>> {
   try {
     const { getUserFromRequest } = await import('@/lib/auth');
-    const user = await getUserFromRequest(req);
+    const public_users = await getUserFromRequest(req);
     
-    if (user.role !== 'admin') {
+    if (public_users.role !== 'admin') {
       return NextResponse.json({ success: false, error: { code: 'FORBIDDEN' } }, { status: 403 });
     }
 

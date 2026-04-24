@@ -1,4 +1,4 @@
-import { Batch } from '@prisma/client';
+import { batches as Batch } from '@prisma/client';
 import prisma from '@/lib/prisma';
 
 /**

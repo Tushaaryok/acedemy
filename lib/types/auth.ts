@@ -1,5 +1,5 @@
 // ============================================================
-// Krishna Academy - Auth & User TypeScript Types
+// Krishna Academy - Auth & public_users TypeScript Types
 // ============================================================
 
 export type UserRole = 'student' | 'teacher' | 'admin';
@@ -10,8 +10,8 @@ export type UserStandard =
   | '12_sci' | '12_com'
   | 'jee' | 'neet' | 'cuet';
 
-// Database se milne wala user object
-export interface User {
+// Database se milne wala public_users object
+export interface public_users {
   id: string;
   phone: string | null;
   email: string | null;
@@ -77,7 +77,7 @@ export const AUTH_ERRORS: Record<string, string> = {
   'Invalid phone number': 'Galat number hai, dobara check karo ✗',
   'OTP expired': 'OTP expire ho gaya, naya OTP mangao 🔄',
   'Invalid OTP': 'Galat OTP dala hai, phir try karo ✗',
-  'User not found': 'Ye number registered nahi hai. Admin se contact karo 📞',
+  'public_users not found': 'Ye number registered nahi hai. Admin se contact karo 📞',
   'Too many requests': 'Bahut zyada baar try kiya. Thodi der baad aao ⏳',
   'Network error': 'Internet connection check karo aur retry karo 🌐',
   'phone_provider_disabled': 'SMS Provider setup nahi hai. Supabase Dashboard mein Phone Auth enable karo 🔧',

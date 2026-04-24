@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search as SearchIcon, X, BookOpen, User, FileText, ArrowRight, TrendingUp } from 'lucide-react';
+import { Search as SearchIcon, X, BookOpen, public_users, FileText, ArrowRight, TrendingUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface SearchModalProps {
@@ -23,7 +23,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   const suggestions = [
     { type: 'course', title: 'Advanced Calculus Std 12', icon: <BookOpen className="text-blue-500" /> },
-    { type: 'teacher', title: 'Prof. Shreeram Singh (Physics)', icon: <User className="text-amber-500" /> },
+    { type: 'teacher', title: 'Prof. Shreeram Singh (Physics)', icon: <public_users className="text-amber-500" /> },
     { type: 'note', title: 'Organic Chemistry Roadmap PDF', icon: <FileText className="text-rose-500" /> },
     { type: 'course', title: 'Business Economics Foundation', icon: <BookOpen className="text-emerald-500" /> },
   ];

@@ -46,11 +46,11 @@ const AuthPage: FC = () => {
     try {
       const res = await api.post('/auth/otp/verify', { phone, otp });
       if (res.data.success) {
-        const { user, accessToken } = res.data.data;
-        setAuth(user, accessToken);
+        const { public_users, accessToken } = res.data.data;
+        setAuth(public_users, accessToken);
         
         // Redirect based on onboarding status
-        if (!user.onboarding_completed) {
+        if (!public_users.onboarding_completed) {
           router.push('/onboarding');
         } else {
           router.push('/dashboard');

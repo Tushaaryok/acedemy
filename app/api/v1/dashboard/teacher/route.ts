@@ -18,23 +18,23 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
     }
 
     // 2. Authenticate & Role Check
-    const user = await getUserFromRequest(req);
-    if (user.role !== 'teacher' && user.role !== 'admin') {
+    const public_users = await getUserFromRequest(req);
+    if (public_users.role !== 'teacher' && public_users.role !== 'admin') {
       return NextResponse.json({ success: false, error: { code: 'FORBIDDEN' } }, { status: 403 });
     }
 
     // 3. Faculty Dashboard Data
     const [batches, pendingHomework, todaysLive] = await Promise.all([
       prisma.batch.findMany({
-        where: { subjects: { some: { teacher_id: user.id } } },
+        where: { subjects: { some: { teacher_id: public_users.id } } },
         select: { id: true, name: true, _count: { select: { enrollments: true } } }
       }),
       prisma.homeworkSubmission.count({
-        where: { homework: { teacher_id: user.id }, status: 'submitted' }
+        where: { homework: { teacher_id: public_users.id }, status: 'submitted' }
       }),
       prisma.liveSession.findMany({
         where: { 
-          teacher_id: user.id,
+          teacher_id: public_users.id,
           scheduled_at: {
             gte: new Date(new Date().setHours(0,0,0,0)),
             lte: new Date(new Date().setHours(23,59,59,999))

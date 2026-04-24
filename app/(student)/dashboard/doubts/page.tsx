@@ -8,7 +8,7 @@ import {
   Search, 
   Image as ImageIcon, 
   FileText, 
-  User, 
+  public_users, 
   ChevronRight,
   Sparkles,
   HelpCircle,
@@ -38,7 +38,7 @@ export default function StudentDoubts() {
       if (!session) return;
 
       const [doubtsRes, subjectsRes] = await Promise.all([
-        supabase.from('doubts').select('*, users!teacher_id(full_name), subjects(name)').eq('student_id', session.user.id).order('created_at', { ascending: false }),
+        supabase.from('doubts').select('*, users!teacher_id(full_name), subjects(name)').eq('student_id', session.public_users.id).order('created_at', { ascending: false }),
         supabase.from('subjects').select('*')
       ]);
 
@@ -71,7 +71,7 @@ export default function StudentDoubts() {
     const { data: { session } } = await supabase.auth.getSession();
     const { error } = await supabase.from('doubt_messages').insert([{
       doubt_id: activeDoubt,
-      sender_id: session?.user?.id,
+      sender_id: session?.public_users?.id,
       message: newMessage
     }]);
 
@@ -89,7 +89,7 @@ export default function StudentDoubts() {
     const { data: { session } } = await supabase.auth.getSession();
     const { data, error } = await supabase.from('doubts').insert([{
       ...newDoubt,
-      student_id: session?.user?.id,
+      student_id: session?.public_users?.id,
       status: 'pending'
     }]).select().single();
 
@@ -186,7 +186,7 @@ export default function StudentDoubts() {
                     return (
                       <div key={msg.id} className={`flex gap-6 max-w-2xl ${isOwner ? '' : 'ml-auto flex-row-reverse'}`}>
                         <div className={`w-10 h-10 rounded-xl shrink-0 flex items-center justify-center text-white font-black ${isOwner ? 'bg-slate-900' : 'bg-indigo-600'}`}>
-                           {isOwner ? <User size={20} /> : activeDoubtData.users?.full_name?.charAt(0) || 'F'}
+                           {isOwner ? <public_users size={20} /> : activeDoubtData.users?.full_name?.charAt(0) || 'F'}
                         </div>
                         <div className={`space-y-3 flex flex-col ${isOwner ? '' : 'items-end'}`}>
                            <div className={`p-8 rounded-[40px] shadow-sm leading-relaxed font-medium text-sm ${

@@ -5,7 +5,7 @@ import {
   MessageSquare, 
   Send, 
   Search, 
-  User, 
+  public_users, 
   ChevronRight,
   Sparkles,
   HelpCircle,

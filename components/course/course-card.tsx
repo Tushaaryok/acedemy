@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 import { Play, Calendar, Clock, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { Batch } from '@prisma/client';
+import type { batches as Batch } from '@prisma/client';
 
 interface CourseCardProps {
   course?: any;

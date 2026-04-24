@@ -10,7 +10,7 @@ import api from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { CourseCard } from './course-card';
 import { CourseGridSkeleton } from '@/components/ui/skeleton';
-import type { Batch } from '@prisma/client';
+import type { batches as Batch } from '@prisma/client';
 
 /**
  * Academic Vault / Courses section.

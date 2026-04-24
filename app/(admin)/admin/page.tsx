@@ -19,8 +19,8 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
   const headerList = headers();
-  const userId = headerList.get('x-user-id');
-  const role = headerList.get('x-user-role');
+  const userId = headerList.get('x-public_users-id');
+  const role = headerList.get('x-public_users-role');
 
   if (!userId || role !== 'admin') {
     redirect('/login');

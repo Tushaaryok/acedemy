@@ -18,9 +18,9 @@ export default function StudentTests() {
   const [activeTab, setActiveTab] = useState<'available' | 'completed'>('available');
 
   const TESTS = [
-    { id: '1', title: 'Unit Test: Thermodynamics', subject: 'Physics', questions: 25, duration: '45m', deadline: 'Today, 6:00 PM', status: 'available', priority: 'high' },
-    { id: '2', title: 'Board Pattern: Algebra', subject: 'Maths', questions: 50, duration: '120m', deadline: 'Tomorrow', status: 'available', priority: 'normal' },
-    { id: '3', title: 'Periodic Class: Organic', subject: 'Chemistry', questions: 15, duration: '20m', deadline: '24 Apr', status: 'available', priority: 'normal' },
+    { id: '1', title: 'Unit Test: Thermodynamics', subject: 'Physics', questions: 25, duration: '45m', due_date: 'Today, 6:00 PM', status: 'available', priority: 'high' },
+    { id: '2', title: 'Board Pattern: Algebra', subject: 'Maths', questions: 50, duration: '120m', due_date: 'Tomorrow', status: 'available', priority: 'normal' },
+    { id: '3', title: 'Periodic Class: Organic', subject: 'Chemistry', questions: 15, duration: '20m', due_date: '24 Apr', status: 'available', priority: 'normal' },
   ];
 
   const RESULTS = [
@@ -81,7 +81,7 @@ export default function StudentTests() {
                              <div className="flex flex-wrap gap-x-6 gap-y-2">
                                 <span className="flex items-center gap-2 text-xs font-bold text-slate-500"><ClipboardCheck size={14} /> {test.questions} Questions</span>
                                 <span className="flex items-center gap-2 text-xs font-bold text-slate-500"><Clock size={14} /> {test.duration}</span>
-                                <span className="flex items-center gap-2 text-xs font-bold text-slate-500 italic"><Info size={14} /> Deadline: {test.deadline}</span>
+                                <span className="flex items-center gap-2 text-xs font-bold text-slate-500 italic"><Info size={14} /> due_date: {test.due_date}</span>
                              </div>
                           </div>
                           

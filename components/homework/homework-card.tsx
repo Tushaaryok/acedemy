@@ -28,7 +28,7 @@ export const HomeworkCard: FC<HomeworkCardProps> = ({
   className 
 }) => {
   const isPending = homework.submissions.length === 0;
-  const isLate = homework.deadline ? isAfter(new Date(), new Date(homework.deadline)) : false;
+  const isLate = homework.due_date ? isAfter(new Date(), new Date(homework.due_date)) : false;
   const isSubmitted = !isPending;
   const submission = homework.submissions[0];
 
@@ -83,8 +83,8 @@ export const HomeworkCard: FC<HomeworkCardProps> = ({
             <span className="text-[10px] font-bold">
               {isSubmitted 
                 ? `Submitted ${formatDistanceToNow(new Date(submission.submitted_at))} ago`
-                : homework.deadline 
-                  ? `Due in ${formatDistanceToNow(new Date(homework.deadline))}`
+                : homework.due_date 
+                  ? `Due in ${formatDistanceToNow(new Date(homework.due_date))}`
                   : 'No deadline'
               }
             </span>

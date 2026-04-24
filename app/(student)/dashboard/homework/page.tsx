@@ -32,7 +32,7 @@ export default function StudentHomework() {
 
       const [hwRes, subRes] = await Promise.all([
         supabase.from('homework').select('*, users!teacher_id(full_name), subjects(name)').order('created_at', { ascending: false }),
-        supabase.from('homework_submissions').select('*').eq('student_id', session.user.id)
+        supabase.from('homework_submissions').select('*').eq('student_id', session.public_users.id)
       ]);
 
       if (hwRes.data) setTasks(hwRes.data);
@@ -49,7 +49,7 @@ export default function StudentHomework() {
     
     const { error } = await supabase.from('homework_submissions').insert([{
       homework_id: selectedTask.id,
-      student_id: session?.user?.id,
+      student_id: session?.public_users?.id,
       file_url: fileUrl,
       status: 'submitted'
     }]);
@@ -110,7 +110,7 @@ export default function StudentHomework() {
                            <span className="text-blue-600 underline underline-offset-4">{task.subjects?.name}</span>
                            <span>{task.users?.full_name}</span>
                            <span className={`flex items-center gap-1 ${task.urgency === 'high' ? 'text-rose-500' : ''}`}>
-                              <Clock size={12} /> {new Date(task.deadline).toLocaleDateString()}
+                              <Clock size={12} /> {new Date(task.due_date).toLocaleDateString()}
                            </span>
                         </div>
                      </div>

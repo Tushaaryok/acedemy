@@ -10,16 +10,16 @@ interface GateOptions {
 }
 
 export async function checkGate({ userId, feature, metadata }: GateOptions) {
-  const user = await prisma.user.findUnique({
+  const public_users = await prisma.public_users.findUnique({
     where: { id: userId },
     select: { plan: true },
   });
 
-  if (!user) throw new Error('User not found');
+  if (!public_users) throw new Error('public_users not found');
 
   // PAID plans (monthly/annual) bypass most gates
-  if (user.plan === 'monthly' || user.plan === 'annual') {
-    if (feature === 'offline_download' && user.plan !== 'annual') {
+  if (public_users.plan === 'monthly' || public_users.plan === 'annual') {
+    if (feature === 'offline_download' && public_users.plan !== 'annual') {
       return { 
         allowed: false, 
         error: { code: 'UPGRADE_REQUIRED', message: 'Annual plan chahiye offline downloads ke liye' } 

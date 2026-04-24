@@ -6,7 +6,7 @@ import {
   CheckCircle, 
   XCircle, 
   Clock, 
-  User, 
+  public_users, 
   BookOpen, 
   TrendingUp,
   Save,
@@ -28,12 +28,12 @@ export default function MarkAttendance() {
   useEffect(() => {
     async function fetchData() {
       const { data: { session } } = await supabase.auth.getSession();
-      setTeacherId(session?.user.id || null);
+      setTeacherId(session?.public_users.id || null);
 
       const { data: subData } = await supabase
         .from('subjects')
         .select('*')
-        .eq('teacher_id', session?.user.id);
+        .eq('teacher_id', session?.public_users.id);
       
       if (subData) {
         setSubjects(subData);
@@ -213,7 +213,7 @@ export default function MarkAttendance() {
           </table>
           {students.length === 0 && (
             <div className="py-20 flex flex-col items-center justify-center gap-4 opacity-40">
-              <User size={48} className="text-slate-300" />
+              <public_users size={48} className="text-slate-300" />
               <p className="font-bold text-slate-500 italic">No registered students found in this batch.</p>
             </div>
           )}

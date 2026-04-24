@@ -23,7 +23,7 @@ export default function TeacherHomework() {
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({ title: '', batch_id: '', deadline: '', description: '' });
+  const [formData, setFormData] = useState({ title: '', batch_id: '', due_date: '', description: '' });
 
   const supabase = createClient();
 
@@ -59,7 +59,7 @@ export default function TeacherHomework() {
 
     const { error } = await supabase.from('homework').insert([{
       ...formData,
-      teacher_id: session?.user?.id,
+      teacher_id: session?.public_users?.id,
       urgency: 'medium'
     }]);
 
@@ -156,7 +156,7 @@ export default function TeacherHomework() {
                        <div className="flex items-center gap-6 pt-4">
                           <div className="flex items-center gap-2 text-slate-400">
                              <Clock size={16} />
-                             <span className="text-xs font-bold">{new Date(hw.deadline).toLocaleDateString()}</span>
+                             <span className="text-xs font-bold">{new Date(hw.due_date).toLocaleDateString()}</span>
                           </div>
                        </div>
                     </div>
@@ -215,11 +215,11 @@ export default function TeacherHomework() {
                         </select>
                      </div>
                      <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Deadline</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">due_date</label>
                         <input 
                           type="datetime-local" 
                           className="w-full bg-slate-50 rounded-2xl px-6 py-4 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-900 transition-all cursor-pointer" 
-                          onChange={(e) => setFormData({...formData, deadline: e.target.value})}
+                          onChange={(e) => setFormData({...formData, due_date: e.target.value})}
                         />
                      </div>
                   </div>

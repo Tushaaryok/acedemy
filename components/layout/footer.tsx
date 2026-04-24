@@ -1,7 +1,7 @@
 'use client';
 
 import { 
-  User,
+  public_users,
   MapPin, 
   Phone, 
   Mail, 
@@ -116,7 +116,7 @@ export default function Footer() {
                </div>
             <div className="flex flex-col gap-4">
                <Link href="/login" className="flex items-center gap-3 bg-white/10 px-6 py-4 rounded-2xl hover:bg-indigo-600 hover:text-white transition-all border border-white/5 font-bold text-white group">
-                  <User size={18} className="text-indigo-400 group-hover:text-white" />
+                  <public_users size={18} className="text-indigo-400 group-hover:text-white" />
                   <span className="text-sm">STUDENT PORTAL LOGIN</span>
                </Link>
                <Link href="mailto:upletakrishnaacademy@gmail.com" className="flex items-center gap-3 bg-white/5 px-6 py-4 rounded-2xl hover:bg-white/10 transition-all border border-white/5">

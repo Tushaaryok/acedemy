@@ -40,12 +40,12 @@ export async function POST(req: NextRequest) {
 
       // Handle async upgrade (idempotency managed by verify route)
       // This is a safety net for failed client-side verification
-      await prisma.user.update({
+      await prisma.public_users.update({
         where: { id: userId },
         data: { plan: planType }
       });
       
-      console.log(`[Webhook] Payment successful for user ${userId}`);
+      console.log(`[Webhook] Payment successful for public_users ${userId}`);
     }
 
     return NextResponse.json({ success: true }, { status: 200 });

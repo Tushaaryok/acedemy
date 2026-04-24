@@ -12,7 +12,7 @@ const RequestSchema = z.object({
 });
 
 /**
- * Generates and sends a hashed OTP to the user's phone.
+ * Generates and sends a hashed OTP to the public_users's phone.
  */
 export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>> {
   try {

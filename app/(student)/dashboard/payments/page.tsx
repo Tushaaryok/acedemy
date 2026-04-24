@@ -72,7 +72,7 @@ export default function StudentPayments() {
       const { data: profile } = await supabase
         .from('users')
         .select('*')
-        .eq('id', session.user.id)
+        .eq('id', session.public_users.id)
         .single();
 
       // 1. Create order on server
@@ -118,7 +118,7 @@ export default function StudentPayments() {
           if (verifyData.success) {
             // Update database
             await supabase.from('fees').insert([{
-              student_id: session.user.id,
+              student_id: session.public_users.id,
               amount: plan.price,
               fee_type: 'subscription_' + plan.id,
               status: 'paid',

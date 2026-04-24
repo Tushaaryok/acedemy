@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       receipt: `receipt_plan_${planId}_${Date.now()}`,
       notes: {
         planId,
-        userId: session.user.id,
+        userId: session.public_users.id,
       }
     };
 
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
 
     // Optional: Log the order in your 'fees' table as 'pending'
     await supabase.from('fees').insert({
-      student_id: session.user.id,
+      student_id: session.public_users.id,
       amount: amount,
       fee_type: `plan_upgrade_${planId}`,
       status: 'pending',

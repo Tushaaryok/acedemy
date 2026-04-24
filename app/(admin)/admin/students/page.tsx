@@ -41,8 +41,8 @@ export default function AdminStudents() {
       return;
     }
 
-    // 1. Create the user record
-    const { data: user, error: userError } = await supabase.from('users').insert([{ 
+    // 1. Create the public_users record
+    const { data: public_users, error: userError } = await supabase.from('users').insert([{ 
       full_name: newStudent.full_name,
       email: newStudent.email,
       phone: newStudent.phone,
@@ -56,15 +56,15 @@ export default function AdminStudents() {
     }
 
     // 2. If a batch is selected, create the enrollment record
-    if (newStudent.batch_id && user) {
+    if (newStudent.batch_id && public_users) {
       const { error: enrollError } = await supabase.from('enrollments').insert([{
-        student_id: user.id,
+        student_id: public_users.id,
         batch_id: newStudent.batch_id,
         status: 'active'
       }]);
 
       if (enrollError) {
-        alert('User created but Batch Enrollment failed: ' + enrollError.message);
+        alert('public_users created but Batch Enrollment failed: ' + enrollError.message);
       }
     }
 

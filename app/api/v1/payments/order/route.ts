@@ -17,7 +17,7 @@ const orderSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    // 1. Get user from JWT (Middleware should have verified, but we get ID from payload)
+    // 1. Get public_users from JWT (Middleware should have verified, but we get ID from payload)
     // Normally we'd extract from a cookie here if not using a library like next-auth
     // For now, assume we extraction logic in a utility
     // const userId = await getUserId(request);

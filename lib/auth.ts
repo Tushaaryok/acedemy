@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import { SignJWT, jwtVerify } from 'jose';
 import { createHash } from 'crypto';
 import prisma from './prisma';
-import type { User } from '@prisma/client';
+import type { public_users as User } from '@prisma/client';
 import type { JwtPayload } from '@/types/auth';
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback_secret_32char_min');
@@ -19,14 +19,14 @@ export function hashString(input: string): string {
 /**
  * Creates a short-lived access token (JWT).
  */
-export async function createAccessToken(user: User): Promise<string> {
+export async function createAccessToken(public_users: public_users): Promise<string> {
   const iat = Math.floor(Date.now() / 1000);
   const exp = iat + (15 * 60); // 15 minutes
 
   return new SignJWT({ 
-    userId: user.id, 
-    role: user.role, 
-    plan: user.plan 
+    userId: public_users.id, 
+    role: public_users.role, 
+    plan: public_users.plan 
   })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt(iat)
@@ -35,25 +35,25 @@ export async function createAccessToken(user: User): Promise<string> {
 }
 
 /**
- * Extracts and verifies the user from the x-user-id header set by middleware.
+ * Extracts and verifies the public_users from the x-public_users-id header set by middleware.
  * @param req - The incoming Next.js request
  */
-export async function getUserFromRequest(req: NextRequest): Promise<User> {
-  const userId = req.headers.get('x-user-id');
+export async function getUserFromRequest(req: NextRequest): Promise<public_users> {
+  const userId = req.headers.get('x-public_users-id');
 
   if (!userId) {
     throw new Error('UNAUTHORIZED');
   }
 
-  const user = await prisma.user.findUnique({
+  const public_users = await prisma.public_users.findUnique({
     where: { id: userId },
   });
 
-  if (!user || user.deletedAt) {
+  if (!public_users || public_users.deletedAt) {
     throw new Error('USER_NOT_FOUND');
   }
 
-  return user;
+  return public_users;
 }
 
 /**

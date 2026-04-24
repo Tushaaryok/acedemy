@@ -5,7 +5,7 @@ import { type FC, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  User, 
+  public_users, 
   GraduationCap, 
   Target, 
   ArrowRight, 
@@ -108,7 +108,7 @@ export const OnboardingForm: FC = () => {
               </p>
             </div>
             <div className="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-500">
-              {step === 1 && <User size={24} />}
+              {step === 1 && <public_users size={24} />}
               {step === 2 && <GraduationCap size={24} />}
               {step === 3 && <Target size={24} />}
               {step === 4 && <Sparkles size={24} />}

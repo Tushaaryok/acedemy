@@ -7,7 +7,7 @@ import {
   Search, 
   Filter, 
   Phone, 
-  User, 
+  public_users, 
   Calendar, 
   CheckCircle2, 
   Clock, 
@@ -274,7 +274,7 @@ export default function AdminEnquiries() {
                            <Phone size={14} className="text-indigo-400" /> {selectedEnquiry.phone}
                         </div>
                         <div className="flex items-center gap-3 text-slate-600 font-bold text-sm">
-                           <User size={14} className="text-indigo-400" /> Guardian: {selectedEnquiry.parent_name}
+                           <public_users size={14} className="text-indigo-400" /> Guardian: {selectedEnquiry.parent_name}
                         </div>
                         <div className="flex items-center gap-3 text-slate-600 font-bold text-sm">
                            <Inbox size={14} className="text-indigo-400" /> Source: {selectedEnquiry.source || 'Website'}

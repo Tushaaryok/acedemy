@@ -29,7 +29,7 @@ export default function StudentAttendance() {
       const { data } = await supabase
         .from('attendance')
         .select('*, subjects(name), marked_by_user:users!attendance_marked_by_fkey(full_name)')
-        .eq('student_id', session.user.id)
+        .eq('student_id', session.public_users.id)
         .order('date', { ascending: false });
 
       if (data) {

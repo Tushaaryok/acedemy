@@ -21,7 +21,7 @@ const ProfileSchema = z.object({
  */
 export async function PATCH(req: NextRequest): Promise<NextResponse<ApiResponse>> {
   try {
-    const user = await getUserFromRequest(req);
+    const public_users = await getUserFromRequest(req);
     const body = await req.json();
     
     const parsed = ProfileSchema.safeParse(body);
@@ -29,8 +29,8 @@ export async function PATCH(req: NextRequest): Promise<NextResponse<ApiResponse>
        return NextResponse.json({ success: false, error: { code: 'VALIDATION_ERR', issues: parsed.error.issues } }, { status: 422 });
     }
 
-    const updatedUser = await prisma.user.update({
-      where: { id: user.id },
+    const updatedUser = await prisma.public_users.update({
+      where: { id: public_users.id },
       data: parsed.data,
       select: {
         id: true,

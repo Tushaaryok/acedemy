@@ -43,24 +43,24 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
     // Clear OTP after successful verify
     await redis.del(`otp:${phone}`);
 
-    // 2. Find or Create User
-    let user = await prisma.user.findUnique({ where: { phone } });
+    // 2. Find or Create public_users
+    let public_users = await prisma.public_users.findUnique({ where: { phone } });
 
-    if (!user) {
-      user = await prisma.user.create({
+    if (!public_users) {
+      public_users = await prisma.public_users.create({
         data: { phone, role: 'student', plan: 'free' }
       });
     }
 
     // 3. Generate Access Token (JWT)
-    const accessToken = await createAccessToken(user);
+    const accessToken = await createAccessToken(public_users);
 
     // 4. Generate Refresh Token (UUID hashed)
     const refreshToken = uuidv4();
     const refreshTokenHash = hashString(refreshToken);
     
-    await prisma.user.update({
-      where: { id: user.id },
+    await prisma.public_users.update({
+      where: { id: public_users.id },
       data: {
         refresh_token_hash: refreshTokenHash,
         refresh_token_expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
         success: true, 
         data: { 
           accessToken, 
-          user: { id: user.id, phone: user.phone, role: user.role, plan: user.plan, onboarding_completed: user.onboarding_completed } 
+          public_users: { id: public_users.id, phone: public_users.phone, role: public_users.role, plan: public_users.plan, onboarding_completed: public_users.onboarding_completed } 
         } 
       },
       { status: 200 }

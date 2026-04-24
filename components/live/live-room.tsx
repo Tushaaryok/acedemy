@@ -52,16 +52,16 @@ export const LiveRoom: FC<LiveRoomProps> = ({
       client.current = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
       
       // Events
-      client.current.on('user-published', async (user, mediaType) => {
-        await client.current?.subscribe(user, mediaType);
+      client.current.on('public_users-published', async (public_users, mediaType) => {
+        await client.current?.subscribe(public_users, mediaType);
         if (mediaType === 'video') {
-          setRemoteUsers(prev => [...prev.filter(u => u.uid !== user.uid), user]);
+          setRemoteUsers(prev => [...prev.filter(u => u.uid !== public_users.uid), public_users]);
         }
-        if (mediaType === 'audio') user.audioTrack?.play();
+        if (mediaType === 'audio') public_users.audioTrack?.play();
       });
 
-      client.current.on('user-unpublished', (user) => {
-        setRemoteUsers(prev => prev.filter(u => u.uid !== user.uid));
+      client.current.on('public_users-unpublished', (public_users) => {
+        setRemoteUsers(prev => prev.filter(u => u.uid !== public_users.uid));
       });
 
       try {

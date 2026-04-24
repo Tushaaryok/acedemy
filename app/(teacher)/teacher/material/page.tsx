@@ -38,7 +38,7 @@ export default function FacultyMaterial() {
 
       const [batchesRes, materialsRes] = await Promise.all([
         supabase.from('batches').select('*').order('name'),
-        supabase.from('materials').select('*').eq('teacher_id', session.user.id).order('created_at', { ascending: false })
+        supabase.from('materials').select('*').eq('teacher_id', session.public_users.id).order('created_at', { ascending: false })
       ]);
 
       if (batchesRes.data) {
@@ -62,7 +62,7 @@ export default function FacultyMaterial() {
 
     const { error } = await supabase.from('materials').insert([{
       ...uploadData,
-      teacher_id: session?.user?.id,
+      teacher_id: session?.public_users?.id,
       file_size: Math.floor(Math.random() * 5000) + ' KB' // Simulating size calculation
     }]);
 

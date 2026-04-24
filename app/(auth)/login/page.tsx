@@ -172,18 +172,18 @@ export default function LoginPage() {
       const res = await api.post('/auth/otp/verify', { phone: formattedPhone, otp: cleanOtp });
 
       if (res.data.success) {
-        const { accessToken, user } = res.data.data;
+        const { accessToken, public_users } = res.data.data;
         
         // Save to Zustand store
-        setAuth(user, accessToken);
+        setAuth(public_users, accessToken);
 
         // Routing based on onboarding state
-        if (!user.onboarding_completed) {
+        if (!public_users.onboarding_completed) {
           router.push('/onboarding');
         } else {
           // Role-based routing
-          if (user.role === 'admin') router.push('/admin');
-          else if (user.role === 'teacher') router.push('/teacher');
+          if (public_users.role === 'admin') router.push('/admin');
+          else if (public_users.role === 'teacher') router.push('/teacher');
           else router.push('/dashboard');
         }
       }

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { 
-  User, 
+  public_users, 
   MapPin, 
   Phone, 
   Mail, 
@@ -26,7 +26,7 @@ export default function StudentProfile() {
     async function fetchProfile() {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        const { data } = await supabase.from('users').select('*').eq('id', session.user.id).single();
+        const { data } = await supabase.from('users').select('*').eq('id', session.public_users.id).single();
         setProfile(data);
       }
       setLoading(false);
@@ -97,7 +97,7 @@ export default function StudentProfile() {
               </div>
               
               <div className="absolute -right-10 -bottom-10 opacity-5 group-hover:scale-110 transition-transform">
-                 <User size={300} />
+                 <public_users size={300} />
               </div>
            </div>
 

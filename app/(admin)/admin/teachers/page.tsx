@@ -40,7 +40,7 @@ export default function AdminTeachers() {
 
   const handleAddTeacher = async () => {
     // In a real app, this would trigger an invite or creation flow
-    alert('Invitation feature coming soon. Use Supabase Auth to manually add the user with role: teacher.');
+    alert('Invitation feature coming soon. Use Supabase Auth to manually add the public_users with role: teacher.');
     setShowModal(false);
   };
 

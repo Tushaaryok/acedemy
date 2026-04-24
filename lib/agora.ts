@@ -7,7 +7,7 @@ const APP_CERTIFICATE = process.env.AGORA_APP_CERTIFICATE!;
 /**
  * Generates an RTC token for an Agora live session.
  * @param channelName - The unique channel identifier
- * @param role - Role of the user (PUBLISHER for teacher, SUBSCRIBER for student)
+ * @param role - Role of the public_users (PUBLISHER for teacher, SUBSCRIBER for student)
  * @param expireTimeInSeconds - Validity duration of the token
  */
 export function generateLiveToken(

@@ -5,7 +5,7 @@ import {
   Sparkles, 
   Send, 
   Bot, 
-  User, 
+  public_users, 
   HelpCircle, 
   ChevronRight,
   TrendingUp,
@@ -23,7 +23,7 @@ export default function StudentAIChat() {
 
   const handleSend = () => {
     if (!input.trim()) return;
-    setMessages([...messages, { role: 'user', text: input, type: 'user' }]);
+    setMessages([...messages, { role: 'public_users', text: input, type: 'public_users' }]);
     setInput('');
     
     // Mock bot response
@@ -68,12 +68,12 @@ export default function StudentAIChat() {
             initial={{ opacity: 0, y: 10 }} 
             animate={{ opacity: 1, y: 0 }} 
             key={i} 
-            className={`flex gap-4 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}
+            className={`flex gap-4 ${m.role === 'public_users' ? 'flex-row-reverse' : ''}`}
            >
               <div className={`w-10 h-10 shrink-0 rounded-2xl flex items-center justify-center text-sm font-bold shadow-sm ${
                 m.role === 'bot' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-900 border border-slate-100'
               }`}>
-                 {m.role === 'bot' ? <Brain size={18} /> : <User size={18} />}
+                 {m.role === 'bot' ? <Brain size={18} /> : <public_users size={18} />}
               </div>
               <div className={`max-w-[80%] space-y-2`}>
                  <div className={`p-5 rounded-3xl text-sm leading-relaxed ${
@@ -83,7 +83,7 @@ export default function StudentAIChat() {
                  }`}>
                     {m.text}
                  </div>
-                 <p className={`text-[8px] font-black text-slate-400 uppercase tracking-widest ${m.role === 'user' ? 'text-right' : ''}`}>10:45 AM</p>
+                 <p className={`text-[8px] font-black text-slate-400 uppercase tracking-widest ${m.role === 'public_users' ? 'text-right' : ''}`}>10:45 AM</p>
               </div>
            </motion.div>
          ))}

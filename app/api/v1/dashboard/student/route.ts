@@ -18,12 +18,12 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
     }
 
     // 2. Authenticate
-    const user = await getUserFromRequest(req);
+    const public_users = await getUserFromRequest(req);
 
     // 3. Fetch Aggregate Data
     const [profile, enrollment, notices] = await Promise.all([
-      prisma.user.findUnique({
-        where: { id: user.id },
+      prisma.public_users.findUnique({
+        where: { id: public_users.id },
         select: {
           id: true,
           full_name: true,
@@ -39,7 +39,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
         },
       }),
       prisma.enrollment.findFirst({
-        where: { student_id: user.id, status: 'active' },
+        where: { student_id: public_users.id, status: 'active' },
         include: {
           batch: {
             select: {
@@ -53,7 +53,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
         where: {
           OR: [
             { batch_id: null }, // Global notices
-            { batch_id: { in: await prisma.enrollment.findMany({ where: { student_id: user.id }, select: { batch_id: true } }).then((e: any[]) => e.map((b: any) => b.batch_id)) } }
+            { batch_id: { in: await prisma.enrollment.findMany({ where: { student_id: public_users.id }, select: { batch_id: true } }).then((e: any[]) => e.map((b: any) => b.batch_id)) } }
           ]
         },
         orderBy: { created_at: 'desc' },

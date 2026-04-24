@@ -18,14 +18,14 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse>> 
     }
 
     // 2. Authenticate & Role Check
-    const user = await getUserFromRequest(req);
-    if (user.role !== 'admin') {
+    const public_users = await getUserFromRequest(req);
+    if (public_users.role !== 'admin') {
       return NextResponse.json({ success: false, error: { code: 'FORBIDDEN' } }, { status: 403 });
     }
 
     // 3. Command Central Aggregation
     const [stats, recentEnquiries, revenue] = await Promise.all([
-      prisma.user.groupBy({
+      prisma.public_users.groupBy({
         by: ['role'],
         _count: { id: true }
       }),

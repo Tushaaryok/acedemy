@@ -1,14 +1,14 @@
 // types/homework.ts
-import { Homework, HomeworkSubmission, Subject } from '@prisma/client';
+import { homeworks, homework_submissions, subjects } from '@prisma/client';
 
 /**
  * Extended homework type including subject and submission status for scholar dashboards.
  */
-export interface HomeworkWithMeta extends Homework {
+export interface HomeworkWithMeta extends homeworks {
   subject: {
     name: string;
   };
-  submissions: HomeworkSubmission[];
+  submissions: homework_submissions[];
 }
 
 /**

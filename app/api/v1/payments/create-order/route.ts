@@ -15,8 +15,8 @@ const OrderSchema = z.object({
  */
 export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>> {
   try {
-    // 1. Authenticate user
-    const user = await getUserFromRequest(req);
+    // 1. Authenticate public_users
+    const public_users = await getUserFromRequest(req);
 
     // 2. Validate payload
     const body = await req.json();
@@ -40,9 +40,9 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
     const order = await razorpay.orders.create({
       amount: amountInPaise,
       currency: "INR",
-      receipt: `receipt_${user.id}_${Date.now()}`,
+      receipt: `receipt_${public_users.id}_${Date.now()}`,
       notes: {
-        userId: user.id,
+        userId: public_users.id,
         planType: planType
       }
     });
@@ -54,8 +54,8 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
         orderId: order.id,
         amount: order.amount,
         keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        userName: user.full_name || 'Student',
-        userPhone: user.phone
+        userName: public_users.full_name || 'Student',
+        userPhone: public_users.phone
       }
     }, { status: 200 });
 

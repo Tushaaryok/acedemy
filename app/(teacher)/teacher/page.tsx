@@ -19,14 +19,14 @@ export const dynamic = 'force-dynamic';
 
 export default async function TeacherDashboard() {
   const headerList = headers();
-  const userId = headerList.get('x-user-id');
-  const role = headerList.get('x-user-role');
+  const userId = headerList.get('x-public_users-id');
+  const role = headerList.get('x-public_users-role');
 
   if (!userId || role !== 'teacher') {
     redirect('/login');
   }
 
-  const profile = await prisma.user.findUnique({
+  const profile = await prisma.public_users.findUnique({
     where: { id: userId }
   });
 

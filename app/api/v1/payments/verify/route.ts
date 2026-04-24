@@ -19,8 +19,8 @@ const VerifySchema = z.object({
  */
 export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>> {
   try {
-    // 1. Authenticate user
-    const user = await getUserFromRequest(req);
+    // 1. Authenticate public_users
+    const public_users = await getUserFromRequest(req);
 
     // 2. Validate payload
     const body = await req.json();
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
       );
     }
 
-    // 4. Update Database (User Plan + Create Subscription)
+    // 4. Update Database (public_users Plan + Create Subscription)
     const expiryDate = new Date();
     if (planType === 'monthly') {
       expiryDate.setMonth(expiryDate.getMonth() + 1);
@@ -68,13 +68,13 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
     const amount = planType === 'monthly' ? 149 : 1499;
 
     await prisma.$transaction([
-      prisma.user.update({
-        where: { id: user.id },
+      prisma.public_users.update({
+        where: { id: public_users.id },
         data: { plan: planType }
       }),
       prisma.subscription.create({
         data: {
-          user_id: user.id,
+          user_id: public_users.id,
           plan_type: planType,
           amount: amount,
           status: 'active',

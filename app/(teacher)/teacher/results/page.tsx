@@ -8,7 +8,7 @@ import {
   Download, 
   ArrowUpRight, 
   ChevronRight,
-  User,
+  public_users,
   GraduationCap,
   Sparkles,
   BarChart3

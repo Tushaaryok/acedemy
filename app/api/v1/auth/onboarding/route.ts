@@ -9,7 +9,7 @@ import type { ApiResponse } from '@/types';
 
 /**
  * Finalizes scholar profile setup after OTP verification.
- * Transitions user state from 'PENDING' to 'ACTIVE'.
+ * Transitions public_users state from 'PENDING' to 'ACTIVE'.
  */
 export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>> {
   try {
@@ -19,8 +19,8 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
        return NextResponse.json({ success: true, data: {} as any }, { status: 200 });
     }
 
-    // 2. Authenticate user
-    const user = await getUserFromRequest(req);
+    // 2. Authenticate public_users
+    const public_users = await getUserFromRequest(req);
 
     // 3. Validate payload
     const OnboardingSchema = z.object({
@@ -41,9 +41,9 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse>>
       );
     }
 
-    // 4. Update User Profile
-    const updatedUser = await prisma.user.update({
-      where: { id: user.id },
+    // 4. Update public_users Profile
+    const updatedUser = await prisma.public_users.update({
+      where: { id: public_users.id },
       data: {
         full_name: parsed.data.fullName,
         standard: parsed.data.standard,

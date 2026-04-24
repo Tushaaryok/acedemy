@@ -14,7 +14,7 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeLink, setActiveLink] = useState('#home');
   
-  const { isAuthenticated, user, logout } = useAuthStore();
+  const { isAuthenticated, public_users, logout } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -107,7 +107,7 @@ export default function Header() {
 
            <div className="flex items-center gap-4 desktop-only">
              <Link 
-               href={isAuthenticated ? (user?.role === 'admin' ? '/admin' : user?.role === 'teacher' ? '/teacher' : '/dashboard') : "/login"} 
+               href={isAuthenticated ? (public_users?.role === 'admin' ? '/admin' : public_users?.role === 'teacher' ? '/teacher' : '/dashboard') : "/login"} 
                className="btn btn-enroll flex items-center gap-2 group"
              >
                {isAuthenticated ? 'Dashboard' : 'Student Portal'}

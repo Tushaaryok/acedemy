@@ -174,7 +174,7 @@ export default function FeeManagement() {
                              {fee.users?.full_name?.charAt(0) || 'U'}
                           </div>
                           <div>
-                            <span className="block font-black text-slate-800 text-sm leading-none mb-1">{fee.users?.full_name || 'Unknown User'}</span>
+                            <span className="block font-black text-slate-800 text-sm leading-none mb-1">{fee.users?.full_name || 'Unknown public_users'}</span>
                             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{fee.fee_type.replace('_', ' ')}</span>
                           </div>
                        </div>
